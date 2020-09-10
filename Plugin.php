@@ -7,6 +7,7 @@ use RainLab\User\Models\User as UserModel;
 use RainLab\User\Controllers\Users as UsersController;
 use Codalia\Profile\Models\Profile as ProfileModel;
 use Codalia\Profile\Helpers\ProfileHelper;
+use Codalia\Membership\Models\Member as MemberModel;
 use BackendAuth;
 use Event;
 use Lang;
@@ -55,7 +56,7 @@ class Plugin extends PluginBase
 	}
 
         UserModel::extend(function($model) {
-	    // Relation
+	    // Sets the relationship.
 	    $model->hasOne['profile'] = ['Codalia\Profile\Models\Profile'];
 
 	    $model->bindEvent('model.afterSave', function() use ($model) {
@@ -87,6 +88,11 @@ class Plugin extends PluginBase
 		if ($model->profile->checked_out) {
 		    throw new \Exception(Lang::get('codalia.profile::lang.action.checked_out_item'));
 		}
+	    });
+
+	    $model->bindEvent('model.afterDelete', function () use ($model) {
+		// Deletes the profile model linked to the deleted user.
+		ProfileModel::where('user_id', $model->id)->delete();
 	    });
 	});
 
@@ -226,6 +232,20 @@ class Plugin extends PluginBase
 
 	Event::listen('rainlab.user.logout', function($user) {
 	    //
+	});
+
+	// Ensures that the Codalia Membership plugin is installed and activated.
+	if (!PluginManager::instance()->exists('Codalia.Membership')) {
+	    return;
+	}
+
+        MemberModel::extend(function($model) {
+	    $model->bindEvent('model.afterDelete', function () use ($model) {
+		// Deletes the profile model linked to the deleted member.
+		ProfileModel::where('user_id', $model->user_id)->delete();
+		// Finally deletes the user model linked to the deleted member.
+		UserModel::where('id', $model->user_id)->delete();
+	    });
 	});
     }
 
