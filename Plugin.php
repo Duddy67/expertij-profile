@@ -85,7 +85,7 @@ class Plugin extends PluginBase
 	    });
 
 	    $model->bindEvent('model.beforeDelete', function () use ($model) {
-		if ($model->profile->checked_out) {
+		if (isset($model->profile) && $model->profile->checked_out) {
 		    throw new \Exception(Lang::get('codalia.profile::lang.action.checked_out_item'));
 		}
 	    });
@@ -201,7 +201,7 @@ class Plugin extends PluginBase
 	    } 
 
 	       //file_put_contents('debog_file_test.txt', print_r($column->columnName, true)); 
-	    if ($record->profile->checked_out && $column->columnName == 'name') {
+	    if (isset($record->profile) && $record->profile->checked_out && $column->columnName == 'name') {
 		return ProfileHelper::instance()->getCheckInHtml($record, BackendAuth::findUserById($record->profile->checked_out));
 	    }
 	});
@@ -244,7 +244,9 @@ class Plugin extends PluginBase
 		// Deletes the profile model linked to the deleted member.
 		ProfileModel::where('user_id', $model->user_id)->delete();
 		// Finally deletes the user model linked to the deleted member.
-		UserModel::where('id', $model->user_id)->delete();
+		//UserModel::where('id', $model->user_id)->delete();
+		$userModel = UserModel::find($model->user_id);
+		$userModel->forceDelete();
 	    });
 	});
     }
