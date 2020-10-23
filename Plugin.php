@@ -55,6 +55,11 @@ class Plugin extends PluginBase
 	    return;
 	}
 
+	$MembershipPlugin = false;
+	if (PluginManager::instance()->exists('Codalia.Membership')) {
+	    $MembershipPlugin = true;
+	}
+
         UserModel::extend(function($model) {
 	    // Sets the relationship.
 	    $model->hasOne['profile'] = ['Codalia\Profile\Models\Profile'];
@@ -69,7 +74,7 @@ class Plugin extends PluginBase
 		    $profile = ProfileModel::getFromUser($model);
 
 		    if (isset($data['context']) && $data['context'] == 'membership') {
-			Event::fire('codalia.profile.registerMember', [$model, $profile, $data]);
+			Event::fire('codalia.profile.registerMember', [$profile, $data]);
 		    }
 		}
 
@@ -84,17 +89,69 @@ class Plugin extends PluginBase
 		}
 	    });
 
+	    // A user is about to be deleted.
 	    $model->bindEvent('model.beforeDelete', function () use ($model) {
-		if (isset($model->profile) && $model->profile->checked_out) {
-		    throw new \Exception(Lang::get('codalia.profile::lang.action.checked_out_item'));
+		// Checks for a possible event loop.
+		if ($model->profile === null) {
+		    return;
 		}
+
+		if (PluginManager::instance()->exists('Codalia.Membership')) {
+		    $member = MemberModel::where('profile_id', $model->profile->id)->first();
+
+		    if ($member->checked_out) {
+			throw new \Exception(Lang::get('codalia.profile::lang.action.checked_out_item'));
+		    }
+		}
+
 	    });
 
+	    // A user has been deleted.
 	    $model->bindEvent('model.afterDelete', function () use ($model) {
-		// Deletes the profile model linked to the deleted user.
-		ProfileModel::where('user_id', $model->id)->delete();
+	        // Gets the corresponding profile model.
+	        $profile = ProfileModel::where('user_id', $model->id)->first();
+
+		// Checks for a possible event loop.
+		if ($profile === null) {
+		    return;
+		}
+
+		$profileId = $profile->id;
+		// Deletes the profile model right away to prevent of being caught in a event loop.
+		$profile->delete();
+
+		// Ensures that the Codalia Membership plugin is installed and activated.
+		if (PluginManager::instance()->exists('Codalia.Membership')) {
+		    // Informs the Membership plugin about the user deletion.
+		    Event::fire('codalia.profile.userDeletion', [$profileId]);
+		    // N.B: An afterDelete event is going to be triggered after the member deletion.
+		}
 	    });
 	});
+
+	// Ensures that the Codalia Membership plugin is installed and activated.
+	if (PluginManager::instance()->exists('Codalia.Membership')) {
+	    MemberModel::extend(function($model) {
+		// A member has been deleted.
+		$model->bindEvent('model.afterDelete', function () use ($model) {
+		    // Retrieves the profile model linked to the deleted member.
+		    $profile = ProfileModel::find($model->profile_id);
+
+		    // Checks for a possible event loop.
+		    if ($profile === null) {
+			return;
+		    }
+
+		    // Gets the corresponding user model.
+		    $userModel = UserModel::find($profile->user_id);
+		    // First deletes the profile model to prevent of being caught in a event loop.
+		    $profile->delete();
+		    // Finally deletes the corresponding user model.
+		    $userModel->forceDelete();
+		    // N.B: An afterDelete event is going to be triggered after the user deletion.
+		});
+	    });
+	}
 
 	UsersController::extendFormFields(function($form, $model, $context) {
 	    // Ensures that the model exists and it's a User model. 
@@ -149,7 +206,6 @@ class Plugin extends PluginBase
 
                  return $controller->listRefresh();
 	    });
-
 	});
 
 	// Extends some backend methods.
@@ -184,8 +240,8 @@ class Plugin extends PluginBase
 	});
 
 	Event::listen('backend.list.injectRowClass', function ($listWidget, $record, &$value) {
-            // Only for the User controller
-	    if (!$listWidget->getController() instanceof \RainLab\User\Controllers\Users) {
+            // Only for the User controller and the existing user profile.
+	    if (!isset($record->profile) || !$listWidget->getController() instanceof \RainLab\User\Controllers\Users) {
 		return;
 	    } 
 
@@ -195,25 +251,14 @@ class Plugin extends PluginBase
 	});
 
 	Event::listen('backend.list.overrideColumnValue', function ($listWidget, $record, $column, &$value) {
-            // Only for the User controller
-	    if (!$listWidget->getController() instanceof \RainLab\User\Controllers\Users) {
+            // Only for the User controller and the existing user profile.
+	    if (!isset($record->profile) || !$listWidget->getController() instanceof \RainLab\User\Controllers\Users) {
 		return;
 	    } 
 
-	       //file_put_contents('debog_file_test.txt', print_r($column->columnName, true)); 
-	    if (isset($record->profile) && $record->profile->checked_out && $column->columnName == 'name') {
+	    if ($record->profile->checked_out && $column->columnName == 'name') {
 		return ProfileHelper::instance()->getCheckInHtml($record, BackendAuth::findUserById($record->profile->checked_out));
 	    }
-	});
-
-	// Extend all backend list usage
-        Event::listen('backend.list.extendColumns', function($widget) {
-            // Only for the User controller
-            if (!$widget->getController() instanceof \RainLab\User\Controllers\Users) {
-                return;
-            }
-
-	    // Add an extra birthday column
 	});
 
 	// Events fired by the User plugin.
@@ -232,22 +277,6 @@ class Plugin extends PluginBase
 
 	Event::listen('rainlab.user.logout', function($user) {
 	    //
-	});
-
-	// Ensures that the Codalia Membership plugin is installed and activated.
-	if (!PluginManager::instance()->exists('Codalia.Membership')) {
-	    return;
-	}
-
-        MemberModel::extend(function($model) {
-	    $model->bindEvent('model.afterDelete', function () use ($model) {
-		// Deletes the profile model linked to the deleted member.
-		ProfileModel::where('user_id', $model->user_id)->delete();
-		// Finally deletes the user model linked to the deleted member.
-		//UserModel::where('id', $model->user_id)->delete();
-		$userModel = UserModel::find($model->user_id);
-		$userModel->forceDelete();
-	    });
 	});
     }
 
