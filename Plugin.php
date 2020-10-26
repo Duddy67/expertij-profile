@@ -55,12 +55,13 @@ class Plugin extends PluginBase
 	    return;
 	}
 
-	$MembershipPlugin = false;
+	$isMembershipPlugin = false;
+	// Checks whether the Membership plugin is installed and activated.
 	if (PluginManager::instance()->exists('Codalia.Membership')) {
-	    $MembershipPlugin = true;
+	    $isMembershipPlugin = true;
 	}
 
-        UserModel::extend(function($model) {
+        UserModel::extend(function($model) use($isMembershipPlugin) {
 	    // Sets the relationship.
 	    $model->hasOne['profile'] = ['Codalia\Profile\Models\Profile'];
 
@@ -90,13 +91,13 @@ class Plugin extends PluginBase
 	    });
 
 	    // A user is about to be deleted.
-	    $model->bindEvent('model.beforeDelete', function () use ($model) {
+	    $model->bindEvent('model.beforeDelete', function () use ($model, $isMembershipPlugin) {
 		// Checks for a possible event loop.
 		if ($model->profile === null) {
 		    return;
 		}
 
-		if (PluginManager::instance()->exists('Codalia.Membership')) {
+		if ($isMembershipPlugin) {
 		    $member = MemberModel::where('profile_id', $model->profile->id)->first();
 
 		    if ($member->checked_out) {
@@ -107,7 +108,7 @@ class Plugin extends PluginBase
 	    });
 
 	    // A user has been deleted.
-	    $model->bindEvent('model.afterDelete', function () use ($model) {
+	    $model->bindEvent('model.afterDelete', function () use ($model, $isMembershipPlugin) {
 	        // Gets the corresponding profile model.
 	        $profile = ProfileModel::where('user_id', $model->id)->first();
 
@@ -117,11 +118,11 @@ class Plugin extends PluginBase
 		}
 
 		$profileId = $profile->id;
-		// Deletes the profile model right away to prevent of being caught in a event loop.
+		// Deletes the profile model BEFORE firing a Membership event in order to 
+		// prevent of being caught in a event loop.
 		$profile->delete();
 
-		// Ensures that the Codalia Membership plugin is installed and activated.
-		if (PluginManager::instance()->exists('Codalia.Membership')) {
+		if ($isMembershipPlugin) {
 		    // Informs the Membership plugin about the user deletion.
 		    Event::fire('codalia.profile.userDeletion', [$profileId]);
 		    // N.B: An afterDelete event is going to be triggered after the member deletion.
@@ -129,8 +130,7 @@ class Plugin extends PluginBase
 	    });
 	});
 
-	// Ensures that the Codalia Membership plugin is installed and activated.
-	if (PluginManager::instance()->exists('Codalia.Membership')) {
+	if ($isMembershipPlugin) {
 	    MemberModel::extend(function($model) {
 		// A member has been deleted.
 		$model->bindEvent('model.afterDelete', function () use ($model) {
@@ -144,9 +144,9 @@ class Plugin extends PluginBase
 
 		    // Gets the corresponding user model.
 		    $userModel = UserModel::find($profile->user_id);
-		    // First deletes the profile model to prevent of being caught in a event loop.
+		    // Deletes the profile model BEFORE deleting the user in order to 
+		    // prevent of being caught in a event loop.
 		    $profile->delete();
-		    // Finally deletes the corresponding user model.
 		    $userModel->forceDelete();
 		    // N.B: An afterDelete event is going to be triggered after the user deletion.
 		});
