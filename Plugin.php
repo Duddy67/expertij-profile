@@ -66,20 +66,13 @@ class Plugin extends PluginBase
 	    $model->hasOne['profile'] = ['Codalia\Profile\Models\Profile'];
 
 	    $model->bindEvent('model.afterSave', function() use ($model) {
-	        $data = post();
-		$names = ProfileModel::getAttributeNames();
-
 		// A brand new user has just been registered.
 		if ($model->profile === null) {
 		    // Creates a new profile model for this user.
 		    $profile = ProfileModel::getFromUser($model);
 
-		    if (isset($data['context']) && $data['context'] == 'membership') {
-			Event::fire('codalia.profile.registerMember', [$profile, $data]);
-		    }
-		}
-
-		if (isset($data[$names[0]])) {
+		    $data = post();
+		    $names = ProfileModel::getAttributeNames();
 		    $update = [];
 
 		    foreach ($names as $name) {
@@ -87,7 +80,24 @@ class Plugin extends PluginBase
 		    }
 
 		    $model->profile()->update($update);
+
+		    if (isset($data['context']) && $data['context'] == 'membership') {
+			Event::fire('codalia.profile.registerMember', [$profile, $data]);
+		    }
 		}
+		else {
+		}
+
+		/*if (isset($data[$names[0]])) {
+file_put_contents('debog_file.txt', print_r($data[$names[0]], true));
+		    $update = [];
+
+		    foreach ($names as $name) {
+			$update[$name] = $data[$name];
+		    }
+
+		    $model->profile()->update($update);
+		}*/
 	    });
 
 	    // A user is about to be deleted.

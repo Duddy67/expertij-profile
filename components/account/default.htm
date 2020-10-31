@@ -1,15 +1,37 @@
 {% if not user %}
 
+
     <div class="row">
 
-        <div class="col-md-6">
-            <h3>Sign in</h3>
-            {% partial __SELF__ ~ '::signin' %}
-        </div>
+        {% if template == "signin" %}
 
-        <div class="col-md-6">
-            {% partial __SELF__ ~ '::register' %}
-        </div>
+	  <div class="col-md-6">
+	      <h3>Sign in</h3>
+	      {% partial __SELF__ ~ '::signin' %}
+	      <br />
+	      <a href="{{ "#{url('/')}/register" }}">Not registered yet ?</a>
+	  </div>
+
+        {% elseif template == "register" %}
+
+	  <div class="col-md-6">
+	      {% partial __SELF__ ~ '::register' %}
+	      <br />
+	      <a href="{{ "#{url('/')}/signin" }}">Already registered ?</a>
+	  </div>
+
+        {% else %}
+
+	  <div class="col-md-6">
+	      <h3>Sign in</h3>
+	      {% partial __SELF__ ~ '::signin' %}
+	  </div>
+
+	  <div class="col-md-6">
+	      {% partial __SELF__ ~ '::register' %}
+	  </div>
+
+        {% endif %}
 
     </div>
 
