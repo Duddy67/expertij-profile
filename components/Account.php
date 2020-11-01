@@ -90,4 +90,24 @@ class Account extends \RainLab\User\Components\Account
     {
         return ['signin' => 'Sign in', 'register' => 'Register', 'both' => 'Both'];
     }
+
+    public function onUpdate()
+    {
+	$validator = Validator::make(
+            $form = Input::all(), [
+               'first_name' => 'required',
+               'last_name' => 'required'
+            ]
+        );
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
+        }
+
+	// Concatenates the first and last name in the User plugin's 'name' field.
+	$data = post();
+	Input::merge(['name' => $data['first_name'].' '.$data['last_name']]);
+
+        parent::onUpdate();
+    }
 }

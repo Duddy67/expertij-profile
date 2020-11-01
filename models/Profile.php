@@ -87,6 +87,18 @@ class Profile extends Model
 	return $profile;
     }
 
+    public static function updateProfile($data, $model)
+    {
+	$attrNames = self::getAttributeNames();
+	$update = [];
+
+	foreach ($attrNames as $attrName) {
+	    $update[$attrName] = $data[$attrName];
+	}
+
+	$model->profile()->update($update);
+    }
+
     public static function getAttributeNames()
     {
         return ['first_name', 'last_name', 'street', 'postcode', 'city', 'country'];

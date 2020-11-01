@@ -71,33 +71,28 @@ class Plugin extends PluginBase
 		    // Creates a new profile model for this user.
 		    $profile = ProfileModel::getFromUser($model);
 
+		    // Updates the newly created profile with the corresponding data.
 		    $data = post();
-		    $names = ProfileModel::getAttributeNames();
-		    $update = [];
-
-		    foreach ($names as $name) {
-			$update[$name] = $data[$name];
-		    }
-
-		    $model->profile()->update($update);
+		    ProfileModel::updateProfile($data, $model);
 
 		    if (isset($data['context']) && $data['context'] == 'membership') {
 			Event::fire('codalia.profile.registerMember', [$profile, $data]);
 		    }
 		}
 		else {
-		}
-
-		/*if (isset($data[$names[0]])) {
-file_put_contents('debog_file.txt', print_r($data[$names[0]], true));
-		    $update = [];
-
-		    foreach ($names as $name) {
-			$update[$name] = $data[$name];
+		    $data = post();
+		    if (isset($data['context']) && $data['context'] == 'membership') {
+                        ProfileModel::updateProfile($data, $model);
+			// Informs the Membership plugin that the corresponding member can now be updated.
+			Event::fire('codalia.profile.updateMember', [$model->profile->id, $data]);
 		    }
-
-		    $model->profile()->update($update);
-		}*/
+		    else {
+		      // In case of user updating from the back-end, there is no need to update the profile attributes 
+		      // as it's already done in the User model through the hasOne relationship.
+		      //
+		      // N.B: The afterSave event is also triggered during the signin/signout processes in front-end.
+		    }
+		}
 	    });
 
 	    // A user is about to be deleted.
@@ -133,9 +128,9 @@ file_put_contents('debog_file.txt', print_r($data[$names[0]], true));
 		$profile->delete();
 
 		if ($isMembershipPlugin) {
-		    // Informs the Membership plugin about the user deletion.
+		    // Informs the Membership plugin about a user deletion.
 		    Event::fire('codalia.profile.userDeletion', [$profileId]);
-		    // N.B: An afterDelete event is going to be triggered after the member deletion.
+		    // N.B: An afterDelete event is going to be triggered after the member deletion (if any).
 		}
 	    });
 	});
@@ -200,7 +195,6 @@ file_put_contents('debog_file.txt', print_r($data[$names[0]], true));
 	UsersController::extend( function($controller) {
 	    $controller->addViewPath('$/codalia/profile/partials');
 
-		    //file_put_contents('debog_file_test.txt', print_r('', true)); 
             $controller->addDynamicMethod('index_onCheckIn', function() use ($controller) {
 		 // Ensures one or more items are selected.
 		 if (($checkedIds = post('checked')) && is_array($checkedIds) && count($checkedIds)) {
