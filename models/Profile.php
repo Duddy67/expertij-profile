@@ -17,17 +17,23 @@ class Profile extends Model
     /**
      * @var array Guarded fields
      */
-    protected $guarded = ['*'];
+    protected $guarded = [];
 
     /**
      * @var array Fillable fields
      */
-    protected $fillable = [];
+    protected $fillable = ['first_name', 'last_name', 'street', 'city', 'postcode', 'country'];
+    //protected $fillable = [];
 
     /**
      * @var array Validation rules for attributes
      */
-    public $rules = [];
+    public $rules = [
+	'first_name' => 'required|between:2,255',
+	'last_name' => 'required|between:2,255',
+	'street' => 'required|between:10,255',
+    ];
+    //public $rules = [];
 
     /**
      * @var array Attributes to be cast to native types
@@ -81,22 +87,12 @@ class Profile extends Model
 
 	$profile = new static;
 	$profile->user = $user;
-	$profile->save();
+	// Important: Creates a profile without validation.
+	// NB. The validation has been performed earlier in the code.
+	$profile->forceSave();
 	$user->profile = $profile;
 
 	return $profile;
-    }
-
-    public static function updateProfile($data, $model)
-    {
-	$attrNames = self::getAttributeNames();
-	$update = [];
-
-	foreach ($attrNames as $attrName) {
-	    $update[$attrName] = $data[$attrName];
-	}
-
-	$model->profile()->update($update);
     }
 
     public static function getAttributeNames()

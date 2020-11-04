@@ -4,6 +4,7 @@ use Cms\Classes\ComponentBase;
 use RainLab\User\Models\User as UserModel;
 use RainLab\User\Models\Settings as UserSettings;
 use Cms\Classes\CodeBase;
+use Codalia\Profile\Models\Profile;
 use Validator;
 use Input;
 use ValidationException;
@@ -68,20 +69,16 @@ class Account extends \RainLab\User\Components\Account
 
     public function onRegister()
     {
-	$validator = Validator::make(
-            $form = Input::all(), [
-               'first_name' => 'required',
-               'last_name' => 'required'
-            ]
-        );
-
-        if ($validator->fails()) {
-            throw new ValidationException($validator);
-        }
-
 	// Concatenates the first and last name in the User plugin's 'name' field.
 	$data = post();
 	Input::merge(['name' => $data['first_name'].' '.$data['last_name']]);
+
+        $rules = (new Profile)->rules;
+
+	$validation = Validator::make($data, $rules);
+	if ($validation->fails()) {
+	    throw new ValidationException($validation);
+	}
 
 	return parent::onRegister();
     }
@@ -93,21 +90,17 @@ class Account extends \RainLab\User\Components\Account
 
     public function onUpdate()
     {
-	$validator = Validator::make(
-            $form = Input::all(), [
-               'first_name' => 'required',
-               'last_name' => 'required'
-            ]
-        );
-
-        if ($validator->fails()) {
-            throw new ValidationException($validator);
-        }
-
 	// Concatenates the first and last name in the User plugin's 'name' field.
 	$data = post();
 	Input::merge(['name' => $data['first_name'].' '.$data['last_name']]);
 
-        parent::onUpdate();
+        $rules = (new Profile)->rules;
+
+	$validation = Validator::make($data, $rules);
+	if ($validation->fails()) {
+	    throw new ValidationException($validation);
+	}
+
+        return parent::onUpdate();
     }
 }
