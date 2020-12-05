@@ -1,10 +1,8 @@
 {% if canRegister %}
     <h3>Register</h3>
 
-    <!--<form method="POST" action="{{ url('register') }}" accept-charset="UTF8" enctype="multipart/form-data">-->
-    <form data-request="onRegister" data-request-files data-request-flash>
+    {{ form_ajax('onRegister', {files: 1, flash: ''}) }}
 
-      <!--<input type="hidden" name="_handler" value="onRegister">-->
 	{{ form_token() }}
 	{{ form_sessionKey }}
 
@@ -70,17 +68,17 @@
 	  <input type="text" name="country" class="form-control" id="inputCountry">
 	</div>
 
-	<div class="form-group">
-	  <label for="inputAttestation">Attestation</label>
-	  <input type="file" name="attestation" class="form-control" id="inputAttestation">
-	</div>
+	{% set pluginPartial = '@' ~ ((template == 'register') ? 'membership' : 'training') %}
+
+	{% if partial(pluginPartial) %}
+	  {% partial pluginPartial %}
+        {% endif %}
 
 	<input name="name" type="hidden" id="registerName" />
-	<input type="hidden" name="context" value="membership">
 
         <button type="submit" class="btn btn-success">Register</button>
 
-    </form>
+    {{ form_close() }}
 {% else %}
     <!-- Registration is disabled. -->
 {% endif %}

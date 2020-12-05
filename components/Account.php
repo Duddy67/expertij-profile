@@ -5,6 +5,7 @@ use RainLab\User\Models\User as UserModel;
 use RainLab\User\Models\Settings as UserSettings;
 use Cms\Classes\CodeBase;
 use Codalia\Profile\Models\Profile;
+use Codalia\Membership\Models\Member as MemberModel;
 use Validator;
 use Input;
 use ValidationException;
@@ -69,11 +70,17 @@ class Account extends \RainLab\User\Components\Account
 
     public function onRegister()
     {
-	// Concatenates the first and last name in the User plugin's 'name' field.
 	$data = post();
+	// Concatenates the first and last name in the User plugin's 'name' field.
 	Input::merge(['name' => $data['first_name'].' '.$data['last_name']]);
 
         $rules = (new Profile)->rules;
+
+	// Adds Membership extra rules.
+	if (isset($data['_context']) && $data['_context'] == 'membership') {
+	    $extra = (new MemberModel)->rules;
+	    $rules = array_merge($rules, $extra);
+	}
 
 	$validation = Validator::make($data, $rules);
 	if ($validation->fails()) {
@@ -90,8 +97,8 @@ class Account extends \RainLab\User\Components\Account
 
     public function onUpdate()
     {
-	// Concatenates the first and last name in the User plugin's 'name' field.
 	$data = post();
+	// Concatenates the first and last name in the User plugin's 'name' field.
 	Input::merge(['name' => $data['first_name'].' '.$data['last_name']]);
 
         $rules = (new Profile)->rules;

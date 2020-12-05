@@ -31,7 +31,9 @@ class Profile extends Model
     public $rules = [
 	'first_name' => 'required|between:2,255',
 	'last_name' => 'required|between:2,255',
-	'street' => 'required|between:10,255',
+	'street' => 'required|between:5,255',
+	'city' => 'required|between:2,255',
+	'postcode' => 'required|between:2,255',
     ];
     //public $rules = [];
 

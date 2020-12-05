@@ -75,13 +75,14 @@ class Plugin extends PluginBase
 		    // Updates the newly created profile with the corresponding data.
 		    $profile->update($data);
 
-		    if (isset($data['context']) && $data['context'] == 'membership') {
+		    if (isset($data['_context']) && $data['_context'] == 'membership') {
 			Event::fire('codalia.profile.registerMember', [$profile, $data]);
 		    }
 		}
 		else {
 		    $data = post();
-		    if (isset($data['context']) && $data['context'] == 'membership') {
+
+		    if (isset($data['_context']) && $data['_context'] == 'membership') {
 			$profile = ProfileModel::find($model->profile->id);
 			$profile->update($data);
 			// Informs the Membership plugin that the corresponding member can now be updated.
