@@ -75,14 +75,16 @@ class Account extends \RainLab\User\Components\Account
 	Input::merge(['name' => $data['first_name'].' '.$data['last_name']]);
 
         $rules = (new Profile)->rules;
+	$messages = [];
 
 	// Adds Membership extra rules.
 	if (isset($data['_context']) && $data['_context'] == 'membership') {
 	    $extra = (new MemberModel)->rules;
 	    $rules = array_merge($rules, $extra);
+	    $messages = (new MemberModel)->ruleMessages;
 	}
 
-	$validation = Validator::make($data, $rules);
+	$validation = Validator::make(Input::all(), $rules, $messages);
 	if ($validation->fails()) {
 	    throw new ValidationException($validation);
 	}
