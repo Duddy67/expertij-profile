@@ -8,6 +8,7 @@ use RainLab\User\Controllers\Users as UsersController;
 use Codalia\Profile\Models\Profile as ProfileModel;
 use Codalia\Profile\Helpers\ProfileHelper;
 use Codalia\Membership\Models\Member as MemberModel;
+use Codalia\Membership\Models\Trainee as TraineeModel;
 use BackendAuth;
 use Event;
 use Lang;
@@ -55,13 +56,11 @@ class Plugin extends PluginBase
 	    return;
 	}
 
-	$isMembershipPlugin = false;
-	// Checks whether the Membership plugin is installed and activated.
-	if (PluginManager::instance()->exists('Codalia.Membership')) {
-	    $isMembershipPlugin = true;
-	}
+	// Checks whether both Membership and Training plugins are installed and activated.
+	$isMembershipPlugin = (PluginManager::instance()->exists('Codalia.Membership')) ? true : false;
+	$isTrainingPlugin = (PluginManager::instance()->exists('Codalia.Training')) ? true : false;
 
-        UserModel::extend(function($model) use($isMembershipPlugin) {
+        UserModel::extend(function($model) use($isMembershipPlugin, $isTrainingPlugin) {
 	    // Sets the relationship.
 	    $model->hasOne['profile'] = ['Codalia\Profile\Models\Profile'];
 
@@ -75,30 +74,16 @@ class Plugin extends PluginBase
 		    // Updates the newly created profile with the corresponding data.
 		    $profile->update($data);
 
-		    if (isset($data['_context']) && $data['_context'] == 'membership') {
-			Event::fire('codalia.profile.registerMember', [$profile, $data]);
-		    }
-		}
-		else {
-		    $data = post();
-
-		    if (isset($data['_context']) && $data['_context'] == 'membership') {
-			$profile = ProfileModel::find($model->profile->id);
-			$profile->update($data);
-			// Informs the Membership plugin that the corresponding member can now be updated.
-			Event::fire('codalia.profile.updateMember', [$model->profile->id, $data]);
-		    }
-		    else {
-		      // In case of user updating from the back-end, there is no need to update the profile attributes 
-		      // as it's already done in the User model through the hasOne relationship.
-		      //
-		      // N.B: The afterSave event is also triggered during the signin/signout processes in front-end.
+		    if (isset($data['_context'])) {
+		        // Informs the Membership or Training plugin according to the context.
+		        $itemName = ($data['_context'] == 'membership') ? 'Member' : 'Trainee';
+			Event::fire('codalia.profile.register'.$itemName, [$profile, $data]);
 		    }
 		}
 	    });
 
 	    // A user is about to be deleted.
-	    $model->bindEvent('model.beforeDelete', function () use ($model, $isMembershipPlugin) {
+	    $model->bindEvent('model.beforeDelete', function () use ($model, $isMembershipPlugin, $isTrainingPlugin) {
 		// Checks for a possible event loop.
 		if ($model->profile === null) {
 		    return;
@@ -112,10 +97,17 @@ class Plugin extends PluginBase
 		    }
 		}
 
+		if ($isTrainingPlugin) {
+		    $trainee = TraineeModel::where('profile_id', $model->profile->id)->first();
+
+		    if ($trainee->checked_out) {
+			throw new \Exception(Lang::get('codalia.profile::lang.action.checked_out_item'));
+		    }
+		}
 	    });
 
 	    // A user has been deleted.
-	    $model->bindEvent('model.afterDelete', function () use ($model, $isMembershipPlugin) {
+	    $model->bindEvent('model.afterDelete', function () use ($model) {
 	        // Gets the corresponding profile model.
 	        $profile = ProfileModel::where('user_id', $model->id)->first();
 
@@ -129,11 +121,9 @@ class Plugin extends PluginBase
 		// prevent of being caught in a event loop.
 		$profile->delete();
 
-		if ($isMembershipPlugin) {
-		    // Informs the Membership plugin about a user deletion.
-		    Event::fire('codalia.profile.userDeletion', [$profileId]);
-		    // N.B: An afterDelete event is going to be triggered after the member deletion (if any).
-		}
+		// Informs the Membership and Training plugins about a user deletion.
+		Event::fire('codalia.profile.userDeletion', [$profileId]);
+		// N.B: An afterDelete event is going to be triggered after the member deletion (if any).
 	    });
 	});
 
@@ -141,21 +131,16 @@ class Plugin extends PluginBase
 	    MemberModel::extend(function($model) {
 		// A member has been deleted.
 		$model->bindEvent('model.afterDelete', function () use ($model) {
-		    // Retrieves the profile model linked to the deleted member.
-		    $profile = ProfileModel::find($model->profile_id);
+		    $this->deleteUser($model, 'trainee');
+		});
+	    });
+	}
 
-		    // Checks for a possible event loop.
-		    if ($profile === null) {
-			return;
-		    }
-
-		    // Gets the corresponding user model.
-		    $userModel = UserModel::find($profile->user_id);
-		    // Deletes the profile model BEFORE deleting the user in order to 
-		    // prevent of being caught in a event loop.
-		    $profile->delete();
-		    $userModel->forceDelete();
-		    // N.B: An afterDelete event is going to be triggered after the user deletion.
+	if ($isTrainingPlugin) {
+	    TraineeModel::extend(function($model) {
+		// A trainee has been deleted.
+		$model->bindEvent('model.afterDelete', function () use ($model) {
+		    $this->deleteUser($model, 'member');
 		});
 	    });
 	}
@@ -284,6 +269,26 @@ class Plugin extends PluginBase
 	Event::listen('rainlab.user.logout', function($user) {
 	    //
 	});
+    }
+
+    private function deleteUser($model, $userRelationship)
+    {
+	// Retrieves the profile model linked to the deleted member or trainee.
+	$profile = ProfileModel::find($model->profile_id);
+
+	// Checks for a possible event loop or for an existing and valid user relationship.
+	if ($profile === null || (isset($profile->$userRelationship) && $profile->$userRelationship !== null)) {
+	    // Do not delete the User model as either it no longer exists or it still linked to another plugin item.
+	    return;
+	}
+
+        // Gets the corresponding user model.
+	$userModel = UserModel::find($profile->user_id);
+	// Deletes the profile model BEFORE deleting the user in order to 
+	// prevent of being caught in a event loop.
+	$profile->delete();
+	$userModel->forceDelete();
+	// N.B: An afterDelete event is going to be triggered after the user deletion.
     }
 
     /**

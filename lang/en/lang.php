@@ -8,5 +8,11 @@ return [
     ],
     'messages' => [
 	'required_field' => 'This field is required',
+    ],
+    'account' => [
+	'template' => 'Template',
+	'template_desc' => 'The template to display when the user is logged out.',
+	'extraRegistration' => 'Extra Registration',
+	'extraRegistration_desc' => 'Extra Registration',
     ]
 ];

@@ -32,9 +32,15 @@ class Account extends \RainLab\User\Components\Account
                 'default'     => ''
             ],
             'template' => [
-                'title'       => /*Redirect to*/'rainlab.user::lang.account.redirect_to',
-                'description' => /*Page name to redirect to after update, sign in or registration.*/'rainlab.user::lang.account.redirect_to_desc',
+                'title'       => /*Redirect to*/'codalia.profile::lang.account.template',
+                'description' => /*Page name to redirect to after update, sign in or registration.*/'codalia.profile::lang.account.template_desc',
                 'type'        => 'dropdown',
+                'default'     => ''
+            ],
+            'extraRegistration' => [
+                'title'       => 'codalia.profile::lang.account.extraRegistration',
+                'description' => 'codalia.profile::lang.account.extraRegistration_desc',
+                'type'        => 'string',
                 'default'     => ''
             ],
             'paramCode' => [
@@ -102,7 +108,7 @@ class Account extends \RainLab\User\Components\Account
 	$data = post();
 	// Concatenates the first and last name in the User plugin's 'name' field.
 	Input::merge(['name' => $data['first_name'].' '.$data['last_name']]);
-
+	// TODO: Find a way to delete 'email' variable from post (just in case).
         $rules = (new Profile)->rules;
 
 	$validation = Validator::make($data, $rules);
@@ -110,6 +116,20 @@ class Account extends \RainLab\User\Components\Account
 	    throw new ValidationException($validation);
 	}
 
-        return parent::onUpdate();
+	// Updates first the User data.
+        parent::onUpdate();
+
+	$user = $this->user();
+        $profile = Profile::where('user_id', $user->id)->first();
+	$profile->update($data);
+
+        /*
+         * Redirect
+         */
+        if ($redirect = $this->makeRedirection()) {
+            return $redirect;
+        }
+
+        $this->prepareVars();
     }
 }
