@@ -131,7 +131,7 @@ class Plugin extends PluginBase
 	    MemberModel::extend(function($model) {
 		// A member has been deleted.
 		$model->bindEvent('model.afterDelete', function () use ($model) {
-		    $this->deleteUser($model, 'trainee');
+		    $this->deleteUser($model);
 		});
 	    });
 	}
@@ -140,7 +140,7 @@ class Plugin extends PluginBase
 	    TraineeModel::extend(function($model) {
 		// A trainee has been deleted.
 		$model->bindEvent('model.afterDelete', function () use ($model) {
-		    $this->deleteUser($model, 'member');
+		    $this->deleteUser($model);
 		});
 	    });
 	}
@@ -271,15 +271,23 @@ class Plugin extends PluginBase
 	});
     }
 
-    private function deleteUser($model, $userRelationship)
+    private function deleteUser($model)
     {
 	// Retrieves the profile model linked to the deleted member or trainee.
 	$profile = ProfileModel::find($model->profile_id);
 
-	// Checks for a possible event loop or for an existing and valid user relationship.
-	if ($profile === null || (isset($profile->$userRelationship) && $profile->$userRelationship !== null)) {
-	    // Do not delete the User model as either it no longer exists or it still linked to another plugin item.
+	// Checks for a possible event loop
+	if ($profile === null) {
 	    return;
+	}
+
+	$userRelationships = ['member', 'trainee'];
+        // Checks for an existing and valid user relationship.
+	foreach ($userRelationships as $userRelationship) {
+	    if (isset($profile->$userRelationship) && $profile->$userRelationship !== null) {
+		// Do not delete the User model as it still linked to another plugin item.
+	        return;
+	    }
 	}
 
         // Gets the corresponding user model.
