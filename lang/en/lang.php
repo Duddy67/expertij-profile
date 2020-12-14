@@ -12,7 +12,7 @@ return [
     'account' => [
 	'template' => 'Template',
 	'template_desc' => 'The template to display when the user is logged out.',
-	'extraRegistration' => 'Extra Registration',
-	'extraRegistration_desc' => 'Extra Registration',
+	'extraRegistrationFields' => 'Extra Registration Fields',
+	'extraRegistrationFields_desc' => 'The name of a partial which provides extra registration fields on the behalf of another plugin. Only used with the register template.',
     ]
 ];

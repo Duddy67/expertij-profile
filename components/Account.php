@@ -37,11 +37,12 @@ class Account extends \RainLab\User\Components\Account
                 'type'        => 'dropdown',
                 'default'     => ''
             ],
-            'extraRegistration' => [
-                'title'       => 'codalia.profile::lang.account.extraRegistration',
-                'description' => 'codalia.profile::lang.account.extraRegistration_desc',
+            'extraRegistrationFields' => [
+                'title'       => 'codalia.profile::lang.account.extraRegistrationFields',
+                'description' => 'codalia.profile::lang.account.extraRegistrationFields_desc',
                 'type'        => 'string',
-                'default'     => ''
+                'default'     => '',
+		'showExternalParam' => false
             ],
             'paramCode' => [
                 'title'       => /*Activation Code Param*/'rainlab.user::lang.account.code_param',
@@ -70,6 +71,7 @@ class Account extends \RainLab\User\Components\Account
     public function prepareVars()
     {
         $this->page['template'] = $this->property('template');
+        $this->page['extraRegistrationFields'] = $this->property('extraRegistrationFields');
 
         parent::prepareVars();
     }
