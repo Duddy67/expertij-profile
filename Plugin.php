@@ -8,7 +8,7 @@ use RainLab\User\Controllers\Users as UsersController;
 use Codalia\Profile\Models\Profile as ProfileModel;
 use Codalia\Profile\Helpers\ProfileHelper;
 use Codalia\Membership\Models\Member as MemberModel;
-use Codalia\Membership\Models\Trainee as TraineeModel;
+use Codalia\Training\Models\Trainee as TraineeModel;
 use BackendAuth;
 use Event;
 use Lang;
