@@ -10,6 +10,7 @@ use Validator;
 use Input;
 use ValidationException;
 use Flash;
+use Lang;
 
 
 class Account extends \RainLab\User\Components\Account
@@ -71,7 +72,8 @@ class Account extends \RainLab\User\Components\Account
     public function prepareVars()
     {
         $this->page['template'] = $this->property('template');
-        $this->page['extraRegistrationFields'] = $this->property('extraRegistrationFields');
+        $pluginName = $this->page['extraRegistrationFields'] = $this->property('extraRegistrationFields');
+	$this->page['langVariables'] = $this->getLangVariables($pluginName);
 
         parent::prepareVars();
     }
@@ -133,5 +135,24 @@ class Account extends \RainLab\User\Components\Account
         }
 
         $this->prepareVars();
+    }
+
+    /*
+     * Gets the 'profile' section from the language file of a given plugin. 
+     * TODO: Make it compatible with the Translate plugin from RainLab.
+     */
+    private function getLangVariables($pluginName)
+    {
+        // Gets the locale by default.
+	$config = include 'config/app.php';
+	$langVariables = [];
+
+	if(file_exists('plugins/codalia/'.$pluginName.'/lang/'.$config['locale'].'/lang.php')) {
+	    $langVariables = include 'plugins/codalia/'.$pluginName.'/lang/'.$config['locale'].'/lang.php';
+            // Checks for a valid profile section.
+	    $langVariables = (isset($langVariables['profile'])) ? $langVariables['profile'] : [];
+	}
+
+	return $langVariables;
     }
 }

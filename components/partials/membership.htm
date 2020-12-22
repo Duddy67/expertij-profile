@@ -1,5 +1,14 @@
 <div class="form-group">
-  <label for="inputAttestation">Attestation</label>
+  <label for="inputAppealCourt">Appeal Court</label>
+  <select name="appeal_court" class="form-control" id="inputAppealCourt">
+    {% for code, appealCourt in langVariables.appeal_courts %}
+      <option value="{{ code }}">{{ appealCourt }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+<div class="form-group">
+  <label for="inputAttestation">{{ langVariables.attestation }}</label>
   <input type="file" name="attestation" class="form-control" id="inputAttestation">
 </div>
 
