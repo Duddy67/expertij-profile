@@ -45,6 +45,13 @@ class Account extends \RainLab\User\Components\Account
                 'default'     => '',
 		'showExternalParam' => false
             ],
+            'sharedFields' => [
+                'title'       => 'codalia.profile::lang.account.sharedFields',
+                'description' => 'codalia.profile::lang.account.sharedFields_desc',
+                'type'        => 'string',
+                'default'     => '',
+		'showExternalParam' => false
+            ],
             'paramCode' => [
                 'title'       => /*Activation Code Param*/'rainlab.user::lang.account.code_param',
                 'description' => /*The page URL parameter used for the registration activation code*/ 'rainlab.user::lang.account.code_param_desc',
@@ -73,7 +80,7 @@ class Account extends \RainLab\User\Components\Account
     {
         $this->page['template'] = $this->property('template');
         $pluginName = $this->page['extraRegistrationFields'] = $this->property('extraRegistrationFields');
-	$this->page['langVariables'] = $this->getLangVariables($pluginName);
+	$this->page['sharedFields'] = $this->getSharedFields();
 
         parent::prepareVars();
     }
@@ -137,22 +144,29 @@ class Account extends \RainLab\User\Components\Account
         $this->prepareVars();
     }
 
-    /*
-     * Gets the 'profile' section from the language file of a given plugin. 
-     * TODO: Make it compatible with the Translate plugin from RainLab.
-     */
-    private function getLangVariables($pluginName)
+    private function getSharedFields()
     {
-        // Gets the locale by default.
-	$config = include 'config/app.php';
-	$langVariables = [];
+	$plugin = explode(':', $this->property('sharedFields'));
+	$sharedFields = [];
 
-	if(file_exists('plugins/codalia/'.$pluginName.'/lang/'.$config['locale'].'/lang.php')) {
-	    $langVariables = include 'plugins/codalia/'.$pluginName.'/lang/'.$config['locale'].'/lang.php';
-            // Checks for a valid profile section.
-	    $langVariables = (isset($langVariables['profile'])) ? $langVariables['profile'] : [];
+	if (isset($plugin[0]) && isset($plugin[1])) {
+	    // Gets the field variable names.
+	    $fields = Profile::getSharedFields($plugin[0], $plugin[1]);
+
+	    // Now adds the associated labels.
+	    foreach ($fields as $key => $value) {
+	        // Handles the possible option arrays.
+	        if (is_array($value)) {
+		    foreach ($value as $val) {
+			$sharedFields[$key][$val] = Lang::get('codalia.'.$plugin[0].'::lang.profile.'.$key.'.'.$val);
+		    }
+		}
+		else {
+		    $sharedFields[$value] = Lang::get('codalia.'.$plugin[0].'::lang.profile.'.$value);
+		}
+	    }
 	}
 
-	return $langVariables;
+	return $sharedFields;
     }
 }

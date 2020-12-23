@@ -101,4 +101,15 @@ class Profile extends Model
     {
         return ['first_name', 'last_name', 'street', 'postcode', 'city', 'country'];
     }
+
+    public static function getSharedFields($pluginName, $modelName)
+    {
+	$fields = [];
+
+	if(file_exists('plugins/codalia/'.strtolower($pluginName).'/models/'.strtolower($modelName).'/share/fields.php')) {
+	    $fields = include 'plugins/codalia/'.strtolower($pluginName).'/models/'.strtolower($modelName).'/share/fields.php';
+	}
+
+	return $fields;
+    }
 }
