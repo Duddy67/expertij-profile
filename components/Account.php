@@ -38,13 +38,6 @@ class Account extends \RainLab\User\Components\Account
                 'type'        => 'dropdown',
                 'default'     => ''
             ],
-            'extraRegistrationFields' => [
-                'title'       => 'codalia.profile::lang.account.extraRegistrationFields',
-                'description' => 'codalia.profile::lang.account.extraRegistrationFields_desc',
-                'type'        => 'string',
-                'default'     => '',
-		'showExternalParam' => false
-            ],
             'sharedFields' => [
                 'title'       => 'codalia.profile::lang.account.sharedFields',
                 'description' => 'codalia.profile::lang.account.sharedFields_desc',
@@ -79,8 +72,16 @@ class Account extends \RainLab\User\Components\Account
     public function prepareVars()
     {
         $this->page['template'] = $this->property('template');
-        $pluginName = $this->page['extraRegistrationFields'] = $this->property('extraRegistrationFields');
 	$this->page['sharedFields'] = $this->getSharedFields();
+        // Gets the plugin name and model.
+	$plugin = explode(':', $this->property('sharedFields'));
+	$this->page['sharedPartial'] = strtolower($plugin[0]);
+	$this->page['sharedCategories'] = [];
+
+	$categoryClass = '\Codalia\\'.$plugin[0].'\\Models\Category';
+	if (class_exists($categoryClass)) {
+	    $this->page['sharedCategories'] = $categoryClass::get()->pluck('name', 'id')->toArray();
+	}
 
         parent::prepareVars();
     }
@@ -146,7 +147,8 @@ class Account extends \RainLab\User\Components\Account
 
     private function getSharedFields()
     {
-	$plugin = explode(':', $this->property('sharedFields'));
+        // Gets the plugin name and model.
+	$plugin = explode(':', strtolower($this->property('sharedFields')));
 	$sharedFields = [];
 
 	if (isset($plugin[0]) && isset($plugin[1])) {

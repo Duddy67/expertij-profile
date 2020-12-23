@@ -67,8 +67,8 @@
 	  <label for="inputCountry">Country</label>
 	  <input type="text" name="country" class="form-control" id="inputCountry">
 	</div>
-	{% if __SELF__.property('extraRegistrationFields') %}
-	    {% set pluginPartial = '@' ~  __SELF__.property('extraRegistrationFields') %}
+	{% if sharedPartial %}
+	    {% set pluginPartial = '@' ~  sharedPartial %}
 
 	    {% if partial(pluginPartial) %}
 	      {% partial pluginPartial %}

@@ -8,6 +8,9 @@
   </select>
 </div>
 
+    {% for id, name in sharedCategories %}
+      <li>{{ name }}</li>
+    {% endfor %}
 <div class="form-group">
   <label for="inputAttestation">{{ sharedFields.attestation }}</label>
   <input type="file" name="attestation" class="form-control" id="inputAttestation">
