@@ -72,16 +72,10 @@ class Account extends \RainLab\User\Components\Account
     public function prepareVars()
     {
         $this->page['template'] = $this->property('template');
-	$this->page['sharedFields'] = $this->getSharedFields();
         // Gets the plugin name and model.
 	$plugin = explode(':', $this->property('sharedFields'));
 	$this->page['sharedPartial'] = strtolower($plugin[0]);
-	$this->page['sharedCategories'] = [];
-
-	$categoryClass = '\Codalia\\'.$plugin[0].'\\Models\Category';
-	if (class_exists($categoryClass)) {
-	    $this->page['sharedCategories'] = $categoryClass::get()->pluck('name', 'id')->toArray();
-	}
+	$this->page['sharedFields'] = $this->getSharedFields($plugin);
 
         parent::prepareVars();
     }
@@ -145,26 +139,23 @@ class Account extends \RainLab\User\Components\Account
         $this->prepareVars();
     }
 
-    private function getSharedFields()
+    private function getSharedFields($plugin)
     {
-        // Gets the plugin name and model.
-	$plugin = explode(':', strtolower($this->property('sharedFields')));
 	$sharedFields = [];
 
 	if (isset($plugin[0]) && isset($plugin[1])) {
-	    // Gets the field variable names.
-	    $fields = Profile::getSharedFields($plugin[0], $plugin[1]);
+	    $model = '\Codalia\\'.$plugin[0].'\\Models\\'.$plugin[1];
 
-	    // Now adds the associated labels.
-	    foreach ($fields as $key => $value) {
-	        // Handles the possible option arrays.
-	        if (is_array($value)) {
-		    foreach ($value as $val) {
-			$sharedFields[$key][$val] = Lang::get('codalia.'.$plugin[0].'::lang.profile.'.$key.'.'.$val);
+	    // Ensures the class and method exists.
+	    if (method_exists($model, 'getSharedFields')) {
+		$sharedFields = $model::getSharedFields();
+
+		foreach ($sharedFields as $key => $value) {
+		    // Ensures a language variable is available.
+		    if (!is_array($value) && strpos($value, '::lang') !== false) {
+		        // Replaces the language variable with the actual label.
+			$sharedFields[$key] = Lang::get($value);
 		    }
-		}
-		else {
-		    $sharedFields[$value] = Lang::get('codalia.'.$plugin[0].'::lang.profile.'.$value);
 		}
 	    }
 	}
