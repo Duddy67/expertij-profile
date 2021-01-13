@@ -22,7 +22,7 @@ class Profile extends Model
     /**
      * @var array Fillable fields
      */
-    protected $fillable = ['first_name', 'last_name', 'street', 'city', 'postcode', 'country'];
+    protected $fillable = ['first_name', 'last_name', 'birth_date', 'street', 'city', 'postcode', 'country'];
     //protected $fillable = [];
 
     /**

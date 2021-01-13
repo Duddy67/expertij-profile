@@ -39,6 +39,17 @@
     {% endif %}
 
     <div class="form-group">
+      <label for="birth-datepiker">Birth Date</label>
+	<div class="input-group">
+	  <input type="text" class="form-control col-md-6" id="birth-datepicker" autocomplete="off" aria-describedby="basic-addon1">
+	  <div class="input-group-append">
+	    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+	  </div>
+	</div>
+      <input type="hidden" name="birth_date" id="birth-date" value="{{ user.profile.birth_date }}">
+    </div>
+
+    <div class="form-group">
       <label for="inputStreet">Street</label>
       <input type="text" name="street" class="form-control col-md-6" id="inputStreet" value="{{ user.profile.street }}">
     </div>
@@ -53,12 +64,9 @@
       <input type="text" name="city" class="form-control col-md-6" id="inputCity" value="{{ user.profile.city }}">
     </div>
 
-    <div class="form-group">
-      <label for="inputCountry">Country</label>
-      <input type="text" name="country" class="form-control col-md-6" id="inputCountry" value="{{ user.profile.country }}">
-    </div>
-
     <input name="name" type="hidden" id="accountName" value="{{ user.name }}">
+    <input type="hidden" id="locale" value="{{ locale }}" />
+
     <button type="submit" class="btn btn-success">Save</button>
 
 {{ form_close() }}

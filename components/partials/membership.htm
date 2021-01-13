@@ -1,6 +1,6 @@
 <div class="form-group">
   <label for="inputAppealCourt">{{ sharedFields.appeal_court }}</label>
-  <select name="appeal_court" class="form-control" id="inputAppealCourt">
+  <select name="appealCourt" class="form-control" id="inputAppealCourt">
     <option value="">- Select -</option>
     {% for id, name in sharedFields.appeal_court_options %}
       <option value="{{ id }}">{{ name }}</option>
@@ -12,7 +12,7 @@
   <label>{{ sharedFields.categories }}</label>
     {% for id, name in sharedFields.category_options %}
       <div>
-	<input type="checkbox"  id="{{ id }}" name="categories" value="{{ id }}">
+	<input type="checkbox"  id="{{ id }}" name="categories[]" value="{{ id }}">
 	<label for="{{ id }}">{{ name }}</label>
       </div>
     {% endfor %}
@@ -23,5 +23,9 @@
   <input type="file" name="attestation" class="form-control" id="inputAttestation">
 </div>
 
-<input type="hidden" name="_upload" value="1">
+<div class="form-group">
+  <label for="inputPhoto">{{ sharedFields.photo }}</label>
+  <input type="file" name="photo" class="form-control" id="inputPhoto">
+</div>
+
 <input type="hidden" name="_context" value="membership">

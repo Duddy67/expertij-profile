@@ -2,3 +2,15 @@
 1.0.2:
   - Created profiles table
   - create_profiles_table.php
+1.0.3:
+  - Updated profiles table
+  - update_profiles_table.php
+1.0.4:
+  - Created appeal court table
+  - create_appeal_court_list_table.php
+  - Created country table
+  - create_country_list_table.php
+  - Created language table
+  - create_language_list_table.php
+  - Seeded list tables
+  - seed_list_tables.php

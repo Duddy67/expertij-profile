@@ -71,7 +71,9 @@ class Account extends \RainLab\User\Components\Account
      */
     public function prepareVars()
     {
+	$this->addJs('assets/js/profile.js');
         $this->page['template'] = $this->property('template');
+	$this->page['locale'] = \App::getLocale();
         // Gets the plugin name and model.
 	$plugin = explode(':', $this->property('sharedFields'));
 	$this->page['sharedPartial'] = strtolower($plugin[0]);
@@ -136,7 +138,7 @@ class Account extends \RainLab\User\Components\Account
             return $redirect;
         }
 
-        $this->prepareVars();
+        //$this->prepareVars();
     }
 
     private function getSharedFields($plugin)
