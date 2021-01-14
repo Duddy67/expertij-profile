@@ -3,39 +3,31 @@
 use Model;
 
 /**
- * Profile Model
+ * Language Model
  */
-class Profile extends Model
+class Language extends Model
 {
     use \October\Rain\Database\Traits\Validation;
 
     /**
      * @var string The database table used by the model.
      */
-    public $table = 'codalia_profile_profiles';
+    public $table = 'codalia_profile_languages';
 
     /**
      * @var array Guarded fields
      */
-    protected $guarded = [];
+    protected $guarded = ['id, created_at, updated_at'];
 
     /**
      * @var array Fillable fields
      */
-    protected $fillable = ['first_name', 'last_name', 'birth_date', 'street', 'city', 'postcode', 'country'];
-    //protected $fillable = [];
+    protected $fillable = [];
 
     /**
      * @var array Validation rules for attributes
      */
-    public $rules = [
-	'first_name' => 'required|between:2,255',
-	'last_name' => 'required|between:2,255',
-	'street' => 'required|between:5,255',
-	'city' => 'required|between:2,255',
-	'postcode' => 'required|between:2,255',
-    ];
-    //public $rules = [];
+    public $rules = [];
 
     /**
      * @var array Attributes to be cast to native types
@@ -69,11 +61,9 @@ class Profile extends Model
      * @var array Relations
      */
     public $hasOne = [];
-    public $hasMany = [
-        'licences' => ['Codalia\Profile\Models\Licence'],
-    ];
+    public $hasMany = [];
     public $belongsTo = [
-        'user' => ['RainLab\User\Models\User']
+        'licence' => ['Codalia\Profile\Models\Licence'],
     ];
     public $belongsToMany = [];
     public $morphTo = [];
@@ -81,26 +71,4 @@ class Profile extends Model
     public $morphMany = [];
     public $attachOne = [];
     public $attachMany = [];
-
-
-    public static function getFromUser($user)
-    {
-        if ($user->profile) {
-	    return $user->profile;
-	}
-
-	$profile = new static;
-	$profile->user = $user;
-	// Important: Creates a profile without validation.
-	// NB. The validation has been performed earlier in the code.
-	$profile->forceSave();
-	$user->profile = $profile;
-
-	return $profile;
-    }
-
-    public static function getAttributeNames()
-    {
-        return ['first_name', 'last_name', 'street', 'postcode', 'city', 'country'];
-    }
 }

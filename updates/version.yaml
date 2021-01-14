@@ -14,3 +14,8 @@
   - create_language_list_table.php
   - Seeded list tables
   - seed_list_tables.php
+1.0.5:
+  - Created licences table
+  - create_licences_table.php
+  - Created languages table
+  - create_languages_table.php
