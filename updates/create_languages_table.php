@@ -11,6 +11,7 @@ class CreateLanguagesTable extends Migration
         Schema::create('codalia_profile_languages', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
+            $table->integer('licence_id')->unsigned()->index()->nullable();
             $table->char('alpha_2', 2)->nullable();
             $table->boolean('interpreter')->nullable();
             $table->boolean('translator')->nullable();

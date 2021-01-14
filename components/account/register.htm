@@ -3,41 +3,53 @@
 
     {{ form_ajax('onRegister', {files: 1, flash: ''}) }}
 
-	{{ form_token() }}
-	{{ form_sessionKey }}
-
 	<div class="row">
 	    <div class="col">
 		<div class="row">
-		    <div class="col-sm-6">
-			<div class="form-group">
-			  <label for="inputLastName">Last Name</label>
-			  <input type="text" name="last_name" class="form-control" id="inputLastName">
-			</div>
+		    <div class="form-group col-sm-6">
+		      <label for="inputLastName">Last Name</label>
+		      <input type="text" name="last_name" class="form-control" id="inputLastName">
 		    </div>
 
-		    <div class="col-sm-6">
-			<div class="form-group">
-			  <label for="inputFirstName">First Name</label>
-			  <input type="text" name="first_name" class="form-control" id="inputFirstName">
-			</div>
+		    <div class="form-group col-sm-6">
+		      <label for="inputFirstName">First Name</label>
+		      <input type="text" name="first_name" class="form-control" id="inputFirstName">
 		    </div>
 		</div>
 
-		<div class="form-group">
-		  <label for="inputBirthName">Birth Name</label>
-		  <input type="text" name="birth_name" class="form-control" id="inputBirthName">
+		<div class="row">
+		    <div class="form-group col-sm-6">
+		      <label for="inputBirthName">Birth Name</label>
+		      <input type="text" name="birth_name" class="form-control" id="inputBirthName">
+		    </div>
+
+		    <div class="form-group col-sm-6">
+		      <label for="birth-datepiker">Birth Date</label>
+			<div class="input-group">
+			  <input type="text" class="form-control" id="birth-datepicker" autocomplete="off" aria-describedby="basic-addon1">
+			  <div class="input-group-append">
+			    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+			  </div>
+			</div>
+		      <input type="hidden" name="birth_date" id="birth-date" value="">
+		    </div>
 		</div>
 
-		<div class="form-group">
-		  <label for="birth-datepiker">Birth Date</label>
-		    <div class="input-group">
-		      <input type="text" class="form-control col-md-6" id="birth-datepicker" autocomplete="off" aria-describedby="basic-addon1">
-		      <div class="input-group-append">
-			<span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-		      </div>
+		<div class="row">
+		    <div class="form-group col-sm-6">
+		      <label for="inputBirthLocation">Birth Location</label>
+		      <input type="text" name="birth_location" class="form-control" id="inputBirthLocation">
 		    </div>
-		  <input type="hidden" name="birth_date" id="birth-date" value="">
+
+		    <div class="form-group col-sm-6">
+		      <label for="inputCitizenship">Citizenship</label>
+		      <select name="citizenship" class="form-control" id="inputCitizenship">
+			<option value="">- Select -</option>
+			{% for alpha_3 in citizenships %}
+			  <option value="{{ alpha_3 }}">{{ alpha_3 }}</option>
+			{% endfor %}
+		      </select>
+		    </div>
 		</div>
 
 		{% if loginAttribute == "username" %}
@@ -93,6 +105,8 @@
 		  <label for="inputPhone">Phone</label>
 		  <input type="text" name="phone" class="form-control" id="inputPhone">
 		</div>
+
+		{% partial '@licences' %}
 
 		<input name="name" type="hidden" id="registerName" />
 		<input type="hidden" id="locale" value="{{ locale }}" />

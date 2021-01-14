@@ -103,4 +103,8 @@ class Profile extends Model
     {
         return ['first_name', 'last_name', 'street', 'postcode', 'city', 'country'];
     }
+
+    public function saveLicences($data)
+    {
+    }
 }

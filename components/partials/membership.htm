@@ -1,21 +1,25 @@
 <div class="form-group">
-  <label for="inputAppealCourt">{{ sharedFields.appeal_court }}</label>
-  <select name="appealCourt" class="form-control" id="inputAppealCourt">
-    <option value="">- Select -</option>
-    {% for id, name in sharedFields.appeal_court_options %}
-      <option value="{{ id }}">{{ name }}</option>
-    {% endfor %}
-  </select>
+  <label for="inputProStatus">{{ sharedFields.pro_status }}</label>
+    <select name="pro_status" class="form-control custom-select" id="inputProStatus">
+      {% for id, name in sharedFields.pro_status_options %}
+	  <option value="{{ id }}">{{ name }}</option>
+      {% endfor %}
+    </select>
 </div>
 
 <div class="form-group">
-  <label>{{ sharedFields.categories }}</label>
-    {% for id, name in sharedFields.category_options %}
-      <div>
-	<input type="checkbox"  id="{{ id }}" name="categories[]" value="{{ id }}">
-	<label for="{{ id }}">{{ name }}</label>
-      </div>
-    {% endfor %}
+  <label for="inputProStatusInfo">{{ sharedFields.pro_status_info}}</label>
+  <input type="text" name="pro_status_info" class="form-control" id="inputProStatusInfo">
+</div>
+
+<div class="form-group">
+  <label for="inputSiretNumber">{{ sharedFields.siret_number }}</label>
+  <input type="text" name="siret_number" class="form-control" id="inputSiretNumber">
+</div>
+
+<div class="form-group">
+  <label for="inputNafCode">{{ sharedFields.naf_code }}</label>
+  <input type="text" name="naf_code" class="form-control" id="inputNafCode">
 </div>
 
 <div class="form-group">

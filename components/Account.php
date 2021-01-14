@@ -9,6 +9,7 @@ use Codalia\Membership\Models\Member as MemberModel;
 use Validator;
 use Input;
 use ValidationException;
+use Db;
 use Flash;
 use Lang;
 
@@ -78,6 +79,9 @@ class Account extends \RainLab\User\Components\Account
 	$plugin = explode(':', $this->property('sharedFields'));
 	$this->page['sharedPartial'] = strtolower($plugin[0]);
 	$this->page['sharedFields'] = $this->getSharedFields($plugin);
+	$this->page['appealCourts'] = $this->getAppealCourts();
+	$this->page['languages'] = $this->getLanguages();
+	$this->page['citizenships'] = $this->getCitizenships();
 
         parent::prepareVars();
     }
@@ -87,7 +91,8 @@ class Account extends \RainLab\User\Components\Account
 	$data = post();
 	// Concatenates the first and last name in the User plugin's 'name' field.
 	Input::merge(['name' => $data['first_name'].' '.$data['last_name']]);
-
+//file_put_contents('debog_file.txt', print_r($data, true));
+//return;
         $rules = (new Profile)->rules;
 	$messages = [];
 
@@ -139,6 +144,21 @@ class Account extends \RainLab\User\Components\Account
         }
 
         //$this->prepareVars();
+    }
+
+    public function getAppealCourts()
+    {
+	return Db::table('codalia_profile_appeal_court_list')->get()->pluck('name', 'id')->toArray();
+    }
+
+    public function getLanguages()
+    {
+	return Db::table('codalia_profile_language_list')->get()->pluck('alpha_2')->toArray();
+    }
+
+    public function getCitizenships()
+    {
+	return Db::table('codalia_profile_country_list')->get()->pluck('alpha_3')->toArray();
     }
 
     private function getSharedFields($plugin)

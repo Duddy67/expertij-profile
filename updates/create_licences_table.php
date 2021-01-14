@@ -11,6 +11,7 @@ class CreateSkillsTable extends Migration
         Schema::create('codalia_profile_licences', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
+            $table->integer('profile_id')->unsigned()->index()->nullable();
             $table->string('type')->nullable();
             $table->integer('appeal_court_id')->unsigned()->nullable();
             $table->string('court')->nullable();
