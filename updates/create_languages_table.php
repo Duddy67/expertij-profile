@@ -15,7 +15,6 @@ class CreateLanguagesTable extends Migration
             $table->char('alpha_2', 2)->nullable();
             $table->boolean('interpreter')->nullable();
             $table->boolean('translator')->nullable();
-            $table->timestamps();
         });
     }
 

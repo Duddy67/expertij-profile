@@ -14,10 +14,13 @@ class Language extends Model
      */
     public $table = 'codalia_profile_languages';
 
+
+    public $timestamps = false;
+
     /**
      * @var array Guarded fields
      */
-    protected $guarded = ['id, created_at, updated_at'];
+    protected $guarded = ['id'];
 
     /**
      * @var array Fillable fields

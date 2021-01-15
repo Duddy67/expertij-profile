@@ -90,9 +90,10 @@ class Account extends \RainLab\User\Components\Account
     {
 	$data = post();
 	// Concatenates the first and last name in the User plugin's 'name' field.
-	Input::merge(['name' => $data['first_name'].' '.$data['last_name']]);
-//file_put_contents('debog_file.txt', print_r($data, true));
+	Input::merge(['name' => $data['profile']['first_name'].' '.$data['profile']['last_name']]);
+
 //return;
+
         $rules = (new Profile)->rules;
 	$messages = [];
 

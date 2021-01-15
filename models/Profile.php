@@ -1,6 +1,7 @@
 <?php namespace Codalia\Profile\Models;
 
 use Model;
+use Codalia\Profile\Models\Licence;
 
 /**
  * Profile Model
@@ -17,23 +18,23 @@ class Profile extends Model
     /**
      * @var array Guarded fields
      */
-    protected $guarded = [];
+    protected $guarded = ['id', 'user_id', 'created_at', 'updated_at'];
 
     /**
      * @var array Fillable fields
      */
-    protected $fillable = ['first_name', 'last_name', 'birth_date', 'street', 'city', 'postcode', 'country'];
+    protected $fillable = [];
     //protected $fillable = [];
 
     /**
      * @var array Validation rules for attributes
      */
     public $rules = [
-	'first_name' => 'required|between:2,255',
+/*	'first_name' => 'required|between:2,255',
 	'last_name' => 'required|between:2,255',
 	'street' => 'required|between:5,255',
 	'city' => 'required|between:2,255',
-	'postcode' => 'required|between:2,255',
+	'postcode' => 'required|between:2,255',*/
     ];
     //public $rules = [];
 
@@ -83,7 +84,7 @@ class Profile extends Model
     public $attachMany = [];
 
 
-    public static function getFromUser($user)
+    public static function getFromUser($user, $data)
     {
         if ($user->profile) {
 	    return $user->profile;
@@ -96,6 +97,10 @@ class Profile extends Model
 	$profile->forceSave();
 	$user->profile = $profile;
 
+	// Updates the newly created profile with the corresponding data.
+	$profile->update($data['profile']);
+	$profile->saveLicences($data);
+
 	return $profile;
     }
 
@@ -106,5 +111,22 @@ class Profile extends Model
 
     public function saveLicences($data)
     {
+        $types = ['expert', 'ceseda'];
+
+        foreach ($data['licences'] as $values) {
+	    if (isset($values['type']) && in_array($values['type'], $types)) {
+	        // 
+		$licence = $this->licences()->where('type', $values['type'])->first();
+
+	        if ($licence) {
+		    $licence->update($values);
+		}
+		else {
+		    $licence = $this->licences()->create($values);
+		}
+
+		$licence->saveLanguages($values['languages']);
+	    }
+	}
     }
 }

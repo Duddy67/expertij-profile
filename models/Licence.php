@@ -74,6 +74,21 @@ class Licence extends Model
     public $attachOne = [];
     public $attachMany = [
 	// Deletes the attached files once a model is removed.
-        'attestations' => ['System\Models\File', 'order' => 'created_at desc', 'delete' => true]
+        'expert_attestations' => ['System\Models\File', 'order' => 'created_at desc', 'delete' => true],
+        'ceseda_attestations' => ['System\Models\File', 'order' => 'created_at desc', 'delete' => true]
     ];
+
+
+    public function saveLanguages($languages)
+    {
+        $this->languages()->delete();
+
+        foreach ($languages as $key => $language) {
+	    if (!empty($language['alpha_2'])) {
+	        $language['ordering'] = $key;
+file_put_contents('debog_file.txt', print_r($language, true), FILE_APPEND);
+	        $this->languages()->create($language);
+	    }
+	}
+    }
 }

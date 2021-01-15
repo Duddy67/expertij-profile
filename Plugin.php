@@ -67,12 +67,9 @@ class Plugin extends PluginBase
 	    $model->bindEvent('model.afterSave', function() use ($model) {
 		// A brand new user has just been registered.
 		if ($model->profile === null) {
-		    // Creates a new profile model for this user.
-		    $profile = ProfileModel::getFromUser($model);
-
 		    $data = post();
-		    // Updates the newly created profile with the corresponding data.
-		    $profile->update($data);
+		    // Creates a new profile model for this user.
+		    $profile = ProfileModel::getFromUser($model, $data);
 
 		    if (isset($data['_context'])) {
 		        // Informs the Membership or Training plugin according to the context.

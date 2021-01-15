@@ -1,6 +1,6 @@
 <div class="form-group">
   <label for="inputProStatus">{{ sharedFields.pro_status }}</label>
-    <select name="pro_status" class="form-control custom-select" id="inputProStatus">
+    <select name="membership[pro_status]" class="form-control custom-select" id="inputProStatus">
       {% for id, name in sharedFields.pro_status_options %}
 	  <option value="{{ id }}">{{ name }}</option>
       {% endfor %}
@@ -9,17 +9,17 @@
 
 <div class="form-group">
   <label for="inputProStatusInfo">{{ sharedFields.pro_status_info}}</label>
-  <input type="text" name="pro_status_info" class="form-control" id="inputProStatusInfo">
+  <input type="text" name="membership[pro_status_info]" class="form-control" id="inputProStatusInfo">
 </div>
 
 <div class="form-group">
   <label for="inputSiretNumber">{{ sharedFields.siret_number }}</label>
-  <input type="text" name="siret_number" class="form-control" id="inputSiretNumber">
+  <input type="text" name="membership[siret_number]" class="form-control" id="inputSiretNumber">
 </div>
 
 <div class="form-group">
   <label for="inputNafCode">{{ sharedFields.naf_code }}</label>
-  <input type="text" name="naf_code" class="form-control" id="inputNafCode">
+  <input type="text" name="membership[naf_code]" class="form-control" id="inputNafCode">
 </div>
 
 <div class="form-group">
