@@ -6,6 +6,7 @@ use RainLab\User\Models\Settings as UserSettings;
 use Cms\Classes\CodeBase;
 use Codalia\Profile\Models\Profile;
 use Codalia\Membership\Models\Member as MemberModel;
+use Auth;
 use Validator;
 use Input;
 use ValidationException;
@@ -72,18 +73,28 @@ class Account extends \RainLab\User\Components\Account
      */
     public function prepareVars()
     {
+        // User Plugin
+        parent::prepareVars();
+
 	$this->addJs('assets/js/profile.js');
         $this->page['template'] = $this->property('template');
 	$this->page['locale'] = \App::getLocale();
-        // Gets the plugin name and model.
+        // Gets the external plugin name and model.
 	$plugin = explode(':', $this->property('sharedFields'));
 	$this->page['sharedPartial'] = strtolower($plugin[0]);
 	$this->page['sharedFields'] = $this->getSharedFields($plugin);
-	$this->page['appealCourts'] = $this->getAppealCourts();
-	$this->page['languages'] = $this->getLanguages();
-	$this->page['citizenships'] = $this->getCitizenships();
 
-        parent::prepareVars();
+	$this->page['appealCourts'] = Profile::getAppealCourts();
+	$this->page['languages'] = Profile::getLanguages();
+	$this->page['citizenships'] = Profile::getCitizenships();
+
+	if ($this->page['user']) {
+	    $this->page['profile'] = $this->page['user']->profile;
+
+	    foreach ($this->page['profile']->licences as $licence) {
+	        $this->page['license'.ucfirst($licence->type)] = $licence;
+	    }
+	}
     }
 
     public function onRegister()
@@ -91,8 +102,6 @@ class Account extends \RainLab\User\Components\Account
 	$data = post();
 	// Concatenates the first and last name in the User plugin's 'name' field.
 	Input::merge(['name' => $data['profile']['first_name'].' '.$data['profile']['last_name']]);
-
-//return;
 
         $rules = (new Profile)->rules;
 	$messages = [];
@@ -135,7 +144,8 @@ class Account extends \RainLab\User\Components\Account
 
 	$user = $this->user();
         $profile = Profile::where('user_id', $user->id)->first();
-	$profile->update($data);
+	$profile->update($data['profile']);
+	$profile->saveLicences($data);
 
         /*
          * Redirect
@@ -145,21 +155,6 @@ class Account extends \RainLab\User\Components\Account
         }
 
         //$this->prepareVars();
-    }
-
-    public function getAppealCourts()
-    {
-	return Db::table('codalia_profile_appeal_court_list')->get()->pluck('name', 'id')->toArray();
-    }
-
-    public function getLanguages()
-    {
-	return Db::table('codalia_profile_language_list')->get()->pluck('alpha_2')->toArray();
-    }
-
-    public function getCitizenships()
-    {
-	return Db::table('codalia_profile_country_list')->get()->pluck('alpha_3')->toArray();
     }
 
     private function getSharedFields($plugin)

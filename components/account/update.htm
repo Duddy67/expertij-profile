@@ -1,72 +1,113 @@
 <h4>Profile</h4>
 
-{{ form_ajax('onUpdate') }}
+{{ form_ajax('onUpdate', {files: 1, flash: ''}) }}
 
-    {{ form_token() }}
-    {{ form_sessionKey }}
+<div class="row">
+    <div class="col col-md-6">
+	<div class="row">
+	    <div class="form-group col-md-6">
+	      <label for="inputFirstname">First Name</label>
+	      <input type="text" name="profile[first_name]" class="form-control" id="inputFirstname" value="{{ profile.first_name }}">
+	    </div>
 
-    <div class="form-group">
-      <label for="inputFirstname">First Name</label>
-      <input type="text" name="first_name" class="form-control col-md-6" id="inputFirstname" value="{{ user.profile.first_name }}">
-    </div>
-
-    <div class="form-group">
-      <label for="inputLastname">Last Name</label>
-      <input type="text" name="last_name" class="form-control col-md-6" id="inputLastname" value="{{ user.profile.last_name }}">
-    </div>
-
-    <div class="form-group">
-        <label for="accountEmail">Email</label>
-        <input name="email" type="email" class="form-control col-md-6" disabled="disabled" id="accountEmail" value="{{ user.email }}">
-    </div>
-
-    <div class="form-group">
-        <label for="accountPassword">New Password</label>
-        <input name="password" type="password" class="form-control col-md-6" id="accountPassword">
-    </div>
-
-    <div class="form-group">
-        <label for="accountPasswordConfirm">Confirm New Password</label>
-        <input name="password_confirmation" type="password" class="form-control col-md-6" id="accountPasswordConfirm">
-    </div>
-
-    {% if updateRequiresPassword %}
-        <p>To change these details, please confirm your current password.</p>
-        <div class="form-group">
-            <label for="accountPasswordCurrent">Current Password <small class="text-danger">* required</small></label>
-            <input name="password_current" type="password" class="form-control col-md-6" id="accountPasswordCurrent">
-        </div>
-    {% endif %}
-
-    <div class="form-group">
-      <label for="birth-datepiker">Birth Date</label>
-	<div class="input-group">
-	  <input type="text" class="form-control col-md-6" id="birth-datepicker" autocomplete="off" aria-describedby="basic-addon1">
-	  <div class="input-group-append">
-	    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-	  </div>
+	    <div class="form-group col-md-6">
+	      <label for="inputLastname">Last Name</label>
+	      <input type="text" name="profile[last_name]" class="form-control" id="inputLastname" value="{{ profile.last_name }}">
+	    </div>
 	</div>
-      <input type="hidden" name="birth_date" id="birth-date" value="{{ user.profile.birth_date }}">
+
+	{% if profile.member %}
+	    <div class="row">
+		<div class="form-group col-md-6">
+		  <label for="inputBirthName">Birth Name</label>
+		  <input type="text" name="profile[birth_name]" class="form-control" id="inputBirthName" value="{{ profile.birth_name }}">
+		</div>
+
+		<div class="form-group col-md-6">
+		  <label for="birth-datepiker">Birth Date</label>
+		    <div class="input-group">
+		      <input type="text" class="form-control" id="birth-datepicker" autocomplete="off" aria-describedby="basic-addon1">
+		      <div class="input-group-append">
+			<span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+		      </div>
+		    </div>
+		  <input type="hidden" name="profile[birth_date]" id="birth-date" value="{{ profile.birth_date }}">
+		</div>
+	    </div>
+
+	    <div class="row">
+		<div class="form-group col-sm-6">
+		  <label for="inputBirthLocation">Birth Location</label>
+		  <input type="text" name="profile[birth_location]" class="form-control" id="inputBirthLocation" value="{{ profile.birth_location }}">
+		</div>
+
+		<div class="form-group col-sm-6">
+		  <label for="inputCitizenship">Citizenship</label>
+		  <select name="profile[citizenship]" class="form-control" id="inputCitizenship">
+		    <option value="">- Select -</option>
+		    {% for alpha_3 in citizenships %}
+		      <option value="{{ alpha_3 }}" {{ (profile.citizenship == alpha_3) ? 'selected' : '' }}>{{ alpha_3 }}</option>
+		    {% endfor %}
+		  </select>
+		</div>
+	    </div>
+	{% endif %}
+
+
+	<div class="form-group">
+	    <label for="accountEmail">Email</label>
+	    <input name="email" type="email" class="form-control col-md-6" disabled="disabled" id="accountEmail" value="{{ user.email }}">
+	</div>
+
+	<div class="form-group">
+	    <label for="accountPassword">New Password</label>
+	    <input name="password" type="password" class="form-control col-md-6" id="accountPassword">
+	</div>
+
+	<div class="form-group">
+	    <label for="accountPasswordConfirm">Confirm New Password</label>
+	    <input name="password_confirmation" type="password" class="form-control col-md-6" id="accountPasswordConfirm">
+	</div>
+
+	{% if updateRequiresPassword %}
+	    <p>To change these details, please confirm your current password.</p>
+	    <div class="form-group">
+		<label for="accountPasswordCurrent">Current Password <small class="text-danger">* required</small></label>
+		<input name="password_current" type="password" class="form-control col-md-6" id="accountPasswordCurrent">
+	    </div>
+	{% endif %}
+
+	<div class="form-group">
+	  <label for="inputStreet">Street</label>
+	  <input type="text" name="profile[street]" class="form-control col-md-6" id="inputStreet" value="{{ profile.street }}">
+	</div>
+
+	<div class="row">
+	    <div class="form-group col-md-6">
+	      <label for="inputPostcode">Postcode</label>
+	      <input type="text" name="profile[postcode]" class="form-control" id="inputPostcode" value="{{ profile.postcode }}">
+	    </div>
+
+	    <div class="form-group col-md-6">
+	      <label for="inputCity">City</label>
+	      <input type="text" name="profile[city]" class="form-control" id="inputCity" value="{{ profile.city }}">
+	    </div>
+	</div>
+
+	<div class="form-group">
+	  <label for="inputPhone">Phone</label>
+	  <input type="text" name="profile[phone]" class="form-control" id="inputPhone" value="{{ profile.phone }}">
+	</div>
+
+	<input name="name" type="hidden" id="accountName" value="{{ user.name }}">
+	<input type="hidden" id="locale" value="{{ locale }}" />
+
+	<button type="submit" class="btn btn-success">Save</button>
     </div>
 
-    <div class="form-group">
-      <label for="inputStreet">Street</label>
-      <input type="text" name="street" class="form-control col-md-6" id="inputStreet" value="{{ user.profile.street }}">
+    <div class="col col-md-6">
+	{% partial '@update_licences' %}
     </div>
-
-    <div class="form-group">
-      <label for="inputPostcode">Postcode</label>
-      <input type="text" name="postcode" class="form-control col-md-6" id="inputPostcode" value="{{ user.profile.postcode }}">
-    </div>
-
-    <div class="form-group">
-      <label for="inputCity">City</label>
-      <input type="text" name="city" class="form-control col-md-6" id="inputCity" value="{{ user.profile.city }}">
-    </div>
-
-    <input name="name" type="hidden" id="accountName" value="{{ user.name }}">
-    <input type="hidden" id="locale" value="{{ locale }}" />
-
-    <button type="submit" class="btn btn-success">Save</button>
+</div>
 
 {{ form_close() }}

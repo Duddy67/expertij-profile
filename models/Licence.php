@@ -58,11 +58,16 @@ class Licence extends Model
     ];
 
     /**
+     * @var array The licence types.
+     */
+    public $types = ['expert', 'ceseda'];
+
+    /**
      * @var array Relations
      */
     public $hasOne = [];
     public $hasMany = [
-        'languages' => ['Codalia\Profile\Models\Language'],
+        'languages' => ['Codalia\Profile\Models\Language', 'order' => 'ordering asc'],
     ];
     public $belongsTo = [
         'profile' => ['Codalia\Profile\Models\Profile'],
@@ -81,12 +86,11 @@ class Licence extends Model
 
     public function saveLanguages($languages)
     {
-        $this->languages()->delete();
+        //$this->languages()->delete();
 
         foreach ($languages as $key => $language) {
 	    if (!empty($language['alpha_2'])) {
-	        $language['ordering'] = $key;
-file_put_contents('debog_file.txt', print_r($language, true), FILE_APPEND);
+//file_put_contents('debog_file.txt', print_r($language, true), FILE_APPEND);
 	        $this->languages()->create($language);
 	    }
 	}

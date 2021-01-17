@@ -2,6 +2,7 @@
 
 use Model;
 use Codalia\Profile\Models\Licence;
+use Db;
 
 /**
  * Profile Model
@@ -30,11 +31,11 @@ class Profile extends Model
      * @var array Validation rules for attributes
      */
     public $rules = [
-/*	'first_name' => 'required|between:2,255',
-	'last_name' => 'required|between:2,255',
-	'street' => 'required|between:5,255',
-	'city' => 'required|between:2,255',
-	'postcode' => 'required|between:2,255',*/
+	'profile.first_name' => 'sometimes|required|between:2,255',
+	'profile.last_name' => 'sometimes|required|between:2,255',
+	'profile.street' => 'sometimes|required|between:5,255',
+	'profile.city' => 'sometimes|required|between:2,255',
+	'profile.postcode' => 'sometimes|required|between:2,255',
     ];
     //public $rules = [];
 
@@ -92,9 +93,11 @@ class Profile extends Model
 
 	$profile = new static;
 	$profile->user = $user;
+	//$profile->first_name = $data['profile']['first_name'];
+	//$profile->last_name = $data['profile']['last_name'];
 	// Important: Creates a profile without validation.
 	// NB. The validation has been performed earlier in the code.
-	$profile->forceSave();
+	$profile->save();
 	$user->profile = $profile;
 
 	// Updates the newly created profile with the corresponding data.
@@ -107,6 +110,21 @@ class Profile extends Model
     public static function getAttributeNames()
     {
         return ['first_name', 'last_name', 'street', 'postcode', 'city', 'country'];
+    }
+
+    public static function getAppealCourts()
+    {
+	return Db::table('codalia_profile_appeal_court_list')->get()->pluck('name', 'id')->toArray();
+    }
+
+    public static function getLanguages()
+    {
+	return Db::table('codalia_profile_language_list')->get()->pluck('alpha_2')->toArray();
+    }
+
+    public static function getCitizenships()
+    {
+	return Db::table('codalia_profile_country_list')->get()->pluck('alpha_3')->toArray();
     }
 
     public function saveLicences($data)

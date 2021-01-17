@@ -1,7 +1,8 @@
 <div>LICENCES</div>
 <hr class="my-4" />
+
 <div class="checkbox custom-checkbox">
-    <input name="licences[1][type]" value="expert" type="checkbox" id="expert" />
+    <input name="licences[1][type]" value="expert" type="checkbox" id="expert" {{ (licenseExpert) ? 'checked' : '' }} />
     <label for="expert">Expert</label>
 </div>
 
@@ -12,14 +13,14 @@
 	<select name="licences[1][appeal_court_id]" class="form-control" id="inputAppealCourt">
 	  <option value="">- Select -</option>
 	  {% for id, name in appealCourts %}
-	    <option value="{{ id }}">{{ name }}</option>
+	    <option value="{{ id }}" {{ (licenseExpert.appeal_court_id == id) ? 'selected' : '' }}>{{ name }}</option>
 	  {% endfor %}
 	</select>
       </div>
 
       <div class="form-group col-sm-6">
 	<label for="inputExpertSince">Since</label>
-	<input type="text" name="licences[1][since]" class="form-control" id="inputExpertSince">
+	<input type="text" name="licences[1][since]" class="form-control" id="inputExpertSince" value="{{ licenseExpert.since }}">
       </div>
   </div>
 
@@ -30,19 +31,21 @@
 	  <select name="licences[1][languages][{{ i }}][alpha_2]" class="form-control" id="inputExpertLanguage{{ i }}">
 	    <option value="">- Select -</option>
 	    {% for alpha_2 in languages %}
-	      <option value="{{ alpha_2 }}">{{ alpha_2 }}</option>
+	    <option value="{{ alpha_2 }}" {{ (licenseExpert.languages[i] and licenseExpert.languages[i].alpha_2 == alpha_2) ? 'selected' : '' }}>{{ alpha_2 }}</option>
 	    {% endfor %}
 	  </select>
 	</div>
 
 	<div class="form-group col-sm-3 checkbox custom-checkbox">
 	  <label for="expert-skill-lang-interpreter-{{ i }}">Interpreter</label>
-	  <input type="checkbox" name="licences[1][languages][{{ i }}][interpreter]" value="1" id="expert-skill-lang-interpreter-{{ i }}" />
+	  <input type="checkbox" name="licences[1][languages][{{ i }}][interpreter]" value="1"
+		 id="expert-skill-lang-interpreter-{{ i }}" {{ (licenseExpert.languages[i].interpreter) ? 'checked' : '' }} />
 	</div>
 
 	<div class="form-group col-sm-3 checkbox custom-checkbox">
 	  <label for="expert-skill-lang-translator-{{ i }}">Translator</label>
-	  <input type="checkbox" name="licences[1][languages][{{ i }}][translator]" value="1" id="expert-skill-lang-translator-{{ i }}" />
+	  <input type="checkbox" name="licences[1][languages][{{ i }}][translator]" value="1"
+		 id="expert-skill-lang-translator-{{ i }}" {{ (licenseExpert.languages[i].translator) ? 'checked' : '' }} />
 	</div>
 
 	<input type="hidden" name="licences[1][languages][{{ i }}][ordering]" value="{{ i + 1 }}" id="expert-skill-lang-ordering-{{ i }}" />
@@ -58,7 +61,7 @@
 <hr class="my-4" />
 	   
 <div class="checkbox custom-checkbox">
-    <input name="licences[2][type]" value="ceseda" type="checkbox" id="ceseda" />
+    <input name="licences[2][type]" value="ceseda" type="checkbox" id="ceseda" {{ (licenseCeseda) ? 'checked' : '' }} />
     <label for="ceseda">CESEDA</label>
 </div>
 
@@ -66,12 +69,12 @@
   <div class="row">
       <div class="form-group col-sm-6">
 	<label for="inputCourt">Court</label>
-	<input type="text" name="licences[2][court]" class="form-control" id="inputCourt">
+	<input type="text" name="licences[2][court]" class="form-control" id="inputCourt" value="{{ licenseCeseda.court }}">
       </div>
 
       <div class="form-group col-sm-6">
 	<label for="inputCesedaSince">Since</label>
-	<input type="text" name="licences[2][since]" class="form-control" id="inputCesedaSince">
+	<input type="text" name="licences[2][since]" class="form-control" id="inputCesedaSince" value="{{ licenseCeseda.since }}">
       </div>
   </div>
 
@@ -82,7 +85,7 @@
 	  <select name="licences[2][languages][{{ i }}][alpha_2]" class="form-control" id="inputCesedaLanguage{{ i }}">
 	    <option value="">- Select -</option>
 	    {% for alpha_2 in languages %}
-	      <option value="{{ alpha_2 }}">{{ alpha_2 }}</option>
+	      <option value="{{ alpha_2 }}" {{ (licenseCeseda.languages[i] and licenseCeseda.languages[i].alpha_2 == alpha_2) ? 'selected' : '' }}>{{ alpha_2 }}</option>
 	    {% endfor %}
 	  </select>
 	</div>
