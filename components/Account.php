@@ -89,8 +89,14 @@ class Account extends \RainLab\User\Components\Account
 	$this->page['citizenships'] = Profile::getCitizenships();
 
 	if ($this->page['user']) {
-	    $this->page['profile'] = $this->page['user']->profile;
-
+	    $prof = $this->page['profile'] = $this->page['user']->profile;
+//$item = $prof->licences->where('type', 'expert')->first();
+//$lang = $item->languages->where('ordering', 1)->first();
+//$item->update(['appeal_court_id' => 8]);
+//$item = $prof->licences()->create(['type' => 'newtype', 'court' => 'lyon']);
+//$item = \Codalia\Profile\Models\Licence::where('type', 'expert');
+//var_dump($lang->alpha_2);
+//$prof->licences()->where('type', 'ceseda')->delete();
 	    foreach ($this->page['profile']->licences as $licence) {
 	        $this->page['license'.ucfirst($licence->type)] = $licence;
 	    }
@@ -130,7 +136,7 @@ class Account extends \RainLab\User\Components\Account
     {
 	$data = post();
 	// Concatenates the first and last name in the User plugin's 'name' field.
-	Input::merge(['name' => $data['first_name'].' '.$data['last_name']]);
+	Input::merge(['name' => $data['profile']['first_name'].' '.$data['profile']['last_name']]);
 	// TODO: Find a way to delete 'email' variable from post (just in case).
         $rules = (new Profile)->rules;
 
@@ -145,7 +151,7 @@ class Account extends \RainLab\User\Components\Account
 	$user = $this->user();
         $profile = Profile::where('user_id', $user->id)->first();
 	$profile->update($data['profile']);
-	$profile->saveLicences($data);
+	$profile->saveLicences($data['licences']);
 
         /*
          * Redirect

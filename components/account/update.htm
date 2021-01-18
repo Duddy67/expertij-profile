@@ -4,6 +4,15 @@
 
 <div class="row">
     <div class="col col-md-6">
+	<div class="form-group">
+	    <label for="inputCivility">Civility</label>
+	    <select name="profile[civility]" class="form-control" id="inputCivility">
+	        <option value="">- Select -</option>
+	        <option value="mr" {{ (profile.civility == 'mr') ? 'selected' : '' }}>Mr</option>
+	        <option value="mrs" {{ (profile.civility == 'mrs') ? 'selected' : '' }}>Mrs</option>
+	    </select>
+	</div>
+
 	<div class="row">
 	    <div class="form-group col-md-6">
 	      <label for="inputFirstname">First Name</label>

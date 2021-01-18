@@ -1,6 +1,7 @@
 <?php namespace Codalia\Profile\Models;
 
 use Model;
+use Codalia\Profile\Models\Language;
 
 /**
  * Licence Model
@@ -60,14 +61,17 @@ class Licence extends Model
     /**
      * @var array The licence types.
      */
-    public $types = ['expert', 'ceseda'];
+    public $types = [
+        'expert', 
+	'ceseda'
+    ];
 
     /**
      * @var array Relations
      */
     public $hasOne = [];
     public $hasMany = [
-        'languages' => ['Codalia\Profile\Models\Language', 'order' => 'ordering asc'],
+        'languages' => ['Codalia\Profile\Models\Language', 'order' => 'ordering asc', 'delete' => true],
     ];
     public $belongsTo = [
         'profile' => ['Codalia\Profile\Models\Profile'],
@@ -86,13 +90,33 @@ class Licence extends Model
 
     public function saveLanguages($languages)
     {
-        //$this->languages()->delete();
+        $ordering = (new Language)->ordering;
 
-        foreach ($languages as $key => $language) {
+        foreach ($languages as $language) {
 	    if (!empty($language['alpha_2'])) {
-//file_put_contents('debog_file.txt', print_r($language, true), FILE_APPEND);
-	        $this->languages()->create($language);
+	        // Searches for an existing language item in the collection.
+		$item = $this->languages->where('ordering', $language['ordering'])->first();
+
+		if ($item) {
+		    // Sets to null the possibly unchecked attribute.    
+		    $language['interpreter'] = (isset($language['interpreter'])) ? $language['interpreter'] : null;
+		    $language['translator'] = (isset($language['translator'])) ? $language['translator'] : null;
+
+		    $item->update($language);
+		}
+		else {
+		    $this->languages()->create($language);
+		}
+
+		// Removes the newly created or updated languages from the ordering array.
+		$key = array_search($language['ordering'], $ordering);
+		unset($ordering[$key]);
 	    }
+	}
+
+	// Deletes the possibly unselected languages.
+        foreach ($ordering as $value) {
+	    $this->languages()->where('ordering', $value)->delete();
 	}
     }
 }

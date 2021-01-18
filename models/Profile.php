@@ -72,7 +72,7 @@ class Profile extends Model
      */
     public $hasOne = [];
     public $hasMany = [
-        'licences' => ['Codalia\Profile\Models\Licence'],
+        'licences' => ['Codalia\Profile\Models\Licence', 'delete' => true],
     ];
     public $belongsTo = [
         'user' => ['RainLab\User\Models\User']
@@ -102,7 +102,7 @@ class Profile extends Model
 
 	// Updates the newly created profile with the corresponding data.
 	$profile->update($data['profile']);
-	$profile->saveLicences($data);
+	$profile->saveLicences($data['licences']);
 
 	return $profile;
     }
@@ -127,23 +127,38 @@ class Profile extends Model
 	return Db::table('codalia_profile_country_list')->get()->pluck('alpha_3')->toArray();
     }
 
-    public function saveLicences($data)
+    public function saveLicences($licences)
     {
-        $types = ['expert', 'ceseda'];
+        $types = (new Licence)->types;
 
-        foreach ($data['licences'] as $values) {
-	    if (isset($values['type']) && in_array($values['type'], $types)) {
-	        // 
-		$licence = $this->licences()->where('type', $values['type'])->first();
+        foreach ($licences as $licence) {
+	    if (isset($licence['type']) && in_array($licence['type'], $types)) {
+	        // Searches for an existing licence item in the collection.
+		$item = $this->licences->where('type', $licence['type'])->first();
+		// Important: Remove the languages from the licence data or an unpredictable behavior
+		//            will occur during updating.  
+		$languages = $licence['languages'];
+		unset($licence['languages']);
 
-	        if ($licence) {
-		    $licence->update($values);
+	        if ($item) {
+		    $item->update($licence);
 		}
 		else {
-		    $licence = $this->licences()->create($values);
+		    $item = $this->licences()->create($licence);
 		}
 
-		$licence->saveLanguages($values['languages']);
+		$item->saveLanguages($languages);
+
+		// Removes the newly created or updated licences from the type array.
+                $key = array_search($licence['type'], $types);
+		unset($types[$key]);
+	    }
+	}
+
+	// Deletes the possibly unselected licences.
+        foreach ($types as $type) {
+	    if ($licence = $this->licences()->where('type', $type)->first()) {
+		$licence->delete();
 	    }
 	}
     }
