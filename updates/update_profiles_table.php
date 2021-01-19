@@ -13,7 +13,7 @@ class UpdateProfilesTable extends Migration
             $table->string('birth_name')->nullable()->after('last_name');
             $table->date('birth_date')->nullable()->after('birth_name');
             $table->string('birth_location', 30)->nullable()->after('birth_date');
-            $table->char('citizenship', 3)->nullable()->after('birth_location');
+            $table->char('citizenship', 2)->nullable()->after('birth_location');
             $table->string('phone', 15)->nullable()->after('country');
         });
     }

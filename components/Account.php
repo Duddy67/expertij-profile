@@ -85,18 +85,12 @@ class Account extends \RainLab\User\Components\Account
 	$this->page['sharedFields'] = $this->getSharedFields($plugin);
 
 	$this->page['appealCourts'] = Profile::getAppealCourts();
-	$this->page['languages'] = Profile::getLanguages();
-	$this->page['citizenships'] = Profile::getCitizenships();
+	$this->page['languages'] = $this->setOptionTexts('language');
+	$this->page['citizenships'] = $this->setOptionTexts('citizenship');
 
 	if ($this->page['user']) {
 	    $prof = $this->page['profile'] = $this->page['user']->profile;
-//$item = $prof->licences->where('type', 'expert')->first();
-//$lang = $item->languages->where('ordering', 1)->first();
-//$item->update(['appeal_court_id' => 8]);
-//$item = $prof->licences()->create(['type' => 'newtype', 'court' => 'lyon']);
-//$item = \Codalia\Profile\Models\Licence::where('type', 'expert');
-//var_dump($lang->alpha_2);
-//$prof->licences()->where('type', 'ceseda')->delete();
+
 	    foreach ($this->page['profile']->licences as $licence) {
 	        $this->page['license'.ucfirst($licence->type)] = $licence;
 	    }
@@ -130,6 +124,18 @@ class Account extends \RainLab\User\Components\Account
     public function getTemplateOptions()
     {
         return ['signin' => 'Sign in', 'register' => 'Register', 'both' => 'Both'];
+    }
+
+    public function setOptionTexts($optionName)
+    {
+        $function = 'get'.ucfirst($optionName).'Options';
+        $options = (new Profile)->$function();
+
+	foreach ($options as $key => $langVar) {
+	    $options[$key] = Lang::get($langVar);
+	}
+
+	return $options;
     }
 
     public function onUpdate()

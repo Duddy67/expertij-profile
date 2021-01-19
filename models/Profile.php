@@ -107,6 +107,36 @@ class Profile extends Model
 	return $profile;
     }
 
+    public function getCivilityOptions()
+    {
+	return ['mr' => 'codalia.profile::lang.profile.mr',
+	        'mrs' => 'codalia.profile::lang.profile.mrs'];
+    }
+
+    public function getCitizenshipOptions()
+    {
+        $codes = self::getCitizenships();
+	$citizenships = [];
+
+	foreach ($codes as $code) {
+	    $citizenships[$code] = 'codalia.profile::lang.citizenship.'.$code;
+	}
+
+	return $citizenships;
+    }
+
+    public function getLanguageOptions()
+    {
+        $codes = self::getLanguages();
+	$languages = [];
+
+	foreach ($codes as $code) {
+	    $languages[$code] = 'codalia.profile::lang.language.'.$code;
+	}
+
+	return $languages;
+    }
+
     public static function getAttributeNames()
     {
         return ['first_name', 'last_name', 'street', 'postcode', 'city', 'country'];
@@ -124,7 +154,7 @@ class Profile extends Model
 
     public static function getCitizenships()
     {
-	return Db::table('codalia_profile_country_list')->get()->pluck('alpha_3')->toArray();
+	return Db::table('codalia_profile_country_list')->get()->pluck('alpha_2')->toArray();
     }
 
     public function saveLicences($licences)

@@ -30,8 +30,8 @@
 	  <label for="inputExpertLanguage{{ i }}">Language {{ i + 1 }}</label>
 	  <select name="licences[1][languages][{{ i }}][alpha_2]" class="form-control" id="inputExpertLanguage{{ i }}">
 	    <option value="">- Select -</option>
-	    {% for alpha_2 in languages %}
-	    <option value="{{ alpha_2 }}" {{ (licenseExpert.languages[i] and licenseExpert.languages[i].alpha_2 == alpha_2) ? 'selected' : '' }}>{{ alpha_2 }}</option>
+	    {% for alpha_2, text in languages %}
+	    <option value="{{ alpha_2 }}" {{ (licenseExpert.languages[i] and licenseExpert.languages[i].alpha_2 == alpha_2) ? 'selected' : '' }}>{{ text }}</option>
 	    {% endfor %}
 	  </select>
 	</div>

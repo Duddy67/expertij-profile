@@ -54,8 +54,8 @@
 		      <label for="inputCitizenship">Citizenship</label>
 		      <select name="profile[citizenship]" class="form-control" id="inputCitizenship">
 			<option value="">- Select -</option>
-			{% for alpha_3 in citizenships %}
-			  <option value="{{ alpha_3 }}">{{ alpha_3 }}</option>
+			{% for alpha_2, text in citizenships %}
+			  <option value="{{ alpha_2 }}">{{ text }}</option>
 			{% endfor %}
 		      </select>
 		    </div>
