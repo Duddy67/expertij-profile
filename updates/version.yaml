@@ -19,3 +19,6 @@
   - create_licences_table.php
   - Created languages table
   - create_languages_table.php
+1.0.6:
+  - Created attestations table
+  - create_attestations_table.php

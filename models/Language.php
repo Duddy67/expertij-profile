@@ -60,7 +60,6 @@ class Language extends Model
         'updated_at'
     ];
 
-    public $ordering = [1, 2, 3, 4, 5];
 
     /**
      * @var array Relations
@@ -68,7 +67,7 @@ class Language extends Model
     public $hasOne = [];
     public $hasMany = [];
     public $belongsTo = [
-        'licence' => ['Codalia\Profile\Models\Licence'],
+        'attestation' => ['Codalia\Profile\Models\Attestation'],
     ];
     public $belongsToMany = [];
     public $morphTo = [];

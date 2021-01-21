@@ -33,6 +33,10 @@ return [
 	'sharedFields_desc' => '',
 	'extraRegistrationFields_desc' => 'The name of a partial which provides extra registration fields on the behalf of another plugin. Only used with the register template.',
     ],
+    'licence' => [
+	'expert' => 'Expert',
+	'ceseda' => 'CESEDA',
+    ],
     'citizenship' => [
 	'AD' => 'Andorian',
 	'AE' => 'Emirian',

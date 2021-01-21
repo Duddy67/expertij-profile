@@ -6,6 +6,7 @@ use RainLab\User\Models\Settings as UserSettings;
 use Cms\Classes\CodeBase;
 use Codalia\Profile\Models\Profile;
 use Codalia\Membership\Models\Member as MemberModel;
+use Codalia\Profile\Models\Licence;
 use Auth;
 use Validator;
 use Input;
@@ -87,6 +88,7 @@ class Account extends \RainLab\User\Components\Account
 	$this->page['appealCourts'] = Profile::getAppealCourts();
 	$this->page['languages'] = $this->setOptionTexts('language');
 	$this->page['citizenships'] = $this->setOptionTexts('citizenship');
+	$this->page['licenceTypes'] = $this->setOptionTexts('licenceType');
 
 	if ($this->page['user']) {
 	    $prof = $this->page['profile'] = $this->page['user']->profile;
@@ -102,7 +104,8 @@ class Account extends \RainLab\User\Components\Account
 	$data = post();
 	// Concatenates the first and last name in the User plugin's 'name' field.
 	Input::merge(['name' => $data['profile']['first_name'].' '.$data['profile']['last_name']]);
-
+file_put_contents('debog_file.txt', print_r($data, true));
+//return;
         $rules = (new Profile)->rules;
 	$messages = [];
 

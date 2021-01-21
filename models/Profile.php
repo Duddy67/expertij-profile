@@ -137,6 +137,18 @@ class Profile extends Model
 	return $languages;
     }
 
+    public function getLicenceTypeOptions()
+    {
+	$types = Licence::getTypes();
+	$licenceTypes = [];
+
+	foreach ($types as $type) {
+	    $licenceTypes[$type] = 'codalia.profile::lang.licence.'.$type;
+	}
+
+	return $licenceTypes;
+    }
+
     public static function getAttributeNames()
     {
         return ['first_name', 'last_name', 'street', 'postcode', 'city', 'country'];
@@ -159,16 +171,19 @@ class Profile extends Model
 
     public function saveLicences($licences)
     {
-        $types = (new Licence)->types;
+        $ids = $this->licences->pluck('id')->toArray();
 
         foreach ($licences as $licence) {
-	    if (isset($licence['type']) && in_array($licence['type'], $types)) {
+	    if (!empty($licence['type'])) {
+	        $id = $licence['_id'];
+	        unset($licence['_id']);
+
 	        // Searches for an existing licence item in the collection.
-		$item = $this->licences->where('type', $licence['type'])->first();
-		// Important: Remove the languages from the licence data or an unpredictable behavior
+		$item = $this->licences->where('id', $id)->first();
+		// Important: Remove the attestations from the licence data or an unpredictable behavior
 		//            will occur during updating.  
-		$languages = $licence['languages'];
-		unset($licence['languages']);
+		$attestations = $licence['attestations'];
+		unset($licence['attestations']);
 
 	        if ($item) {
 		    $item->update($licence);
@@ -177,17 +192,18 @@ class Profile extends Model
 		    $item = $this->licences()->create($licence);
 		}
 
-		$item->saveLanguages($languages);
+		$item->saveAttestations($attestations);
 
 		// Removes the newly created or updated licences from the type array.
-                $key = array_search($licence['type'], $types);
-		unset($types[$key]);
+                if ($key = array_search($id, $ids)) {
+		    unset($ids[$key]);
+		}
 	    }
 	}
 
 	// Deletes the possibly unselected licences.
-        foreach ($types as $type) {
-	    if ($licence = $this->licences()->where('type', $type)->first()) {
+        foreach ($ids as $id) {
+	    if ($licence = $this->licences()->where('id', $id)->first()) {
 		$licence->delete();
 	    }
 	}

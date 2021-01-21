@@ -1,23 +1,24 @@
 <?php namespace Codalia\Profile\Models;
 
 use Model;
+use Codalia\Profile\Models\Language;
 
 /**
- * Licence Model
+ * Attestation Model
  */
-class Licence extends Model
+class Attestation extends Model
 {
     use \October\Rain\Database\Traits\Validation;
 
     /**
      * @var string The database table used by the model.
      */
-    public $table = 'codalia_profile_licences';
+    public $table = 'codalia_profile_attestations';
 
     /**
      * @var array Guarded fields
      */
-    protected $guarded = ['id, created_at, updated_at'];
+    protected $guarded = ['*'];
 
     /**
      * @var array Fillable fields
@@ -62,59 +63,56 @@ class Licence extends Model
      */
     public $hasOne = [];
     public $hasMany = [
-        'attestations' => ['Codalia\Profile\Models\Attestation', 'delete' => true],
+        'languages' => ['Codalia\Profile\Models\Language', 'order' => 'ordering asc', 'delete' => true],
     ];
     public $belongsTo = [
-        'profile' => ['Codalia\Profile\Models\Profile'],
+        'licence' => ['Codalia\Profile\Models\Licence'],
     ];
     public $belongsToMany = [];
     public $morphTo = [];
     public $morphOne = [];
     public $morphMany = [];
-    public $attachOne = [];
+    public $attachOne = [
+	// Deletes the attached files once a model is removed.
+        'attestation' => ['System\Models\File', 'delete' => true]
+    ];
     public $attachMany = [];
 
 
-    public static function getTypes()
+    public function saveLanguages($languages)
     {
-	return ['expert', 'ceseda'];
-    }
+        $ids = $this->languages->pluck('id')->toArray();
 
-    public function saveAttestations($attestations)
-    {
-        $ids = $this->attestations->pluck('id')->toArray();
+        foreach ($languages as $language) {
+	    if (!empty($language['alpha_2'])) {
+	        $id = $language['_id'];
+	        unset($language['_id']);
 
-        foreach ($attestations as $attestation) {
-	    if (!empty($attestation['expiry_date'])) {
-	        $id = $attestation['_id'];
-	        unset($attestation['_id']);
+	        // Searches for an existing language item in the collection.
+		$item = $this->languages->where('id', $id)->first();
 
-		$item = $this->attestations->where('id', $id)->first();
-		// Important: Remove the languages from the licence data or an unpredictable behavior
-		//            will occur during updating.  
-		$languages = $attestation['languages'];
-		unset($attestation['languages']);
+		if ($item) {
+		    // Sets to null the possibly unchecked attribute.    
+		    $language['interpreter'] = (isset($language['interpreter'])) ? $language['interpreter'] : null;
+		    $language['translator'] = (isset($language['translator'])) ? $language['translator'] : null;
 
-	        if ($item) {
-		    $item->update($attestation);
+		    $item->update($language);
 		}
 		else {
-		    $item = $this->attestations()->create($attestation);
+		    $this->languages()->create($language);
 		}
 
-		$item->saveLanguages($languages);
-
-		// Removes the newly created or updated attestations from the id array.
+		// Removes the newly created or updated languages from the id array.
                 if ($key = array_search($id, $ids)) {
 		    unset($ids[$key]);
 		}
 	    }
 	}
 
-	// Deletes the possibly unselected attestations.
+	// Deletes the possibly unselected languages.
         foreach ($ids as $id) {
-	    if ($attestation = $this->attestations()->where('id', $id)->first()) {
-		$attestation->delete();
+	    if ($language = $this->languages()->where('id', $id)->first()) {
+		$language->delete();
 	    }
 	}
     }
