@@ -3,88 +3,89 @@
 
 {% for i in 0..0 %}
 <div class="form-group">
-  <div class="row">
-      <div class="form-group col-sm-6">
-	<label for="licence-type-{{ i }}">Type</label>
-	<select name="licences[{{ i }}][type]" class="form-control" id="licence-type-{{ i }}">
-	  <option value="">- Select -</option>
-	  {% for id, name in licenceTypes %}
-	    <option value="{{ id }}">{{ name }}</option>
-	  {% endfor %}
-	</select>
-      </div>
-
-      <div class="form-group col-sm-6">
-	<label for="licence-court-{{ i }}">Court</label>
-	<input type="text" name="licences[2][court]" class="form-control" id="licence-court-{{ i }}">
-      </div>
-  </div>
-  <div class="row">
-      <div class="form-group col-sm-6">
-	<label for="appeal-court-id-{{ i }}">Appeal court</label>
-	<select name="licences[{{ i }}][appeal_court_id]" class="form-control" id="appeal-court-id-{{ i }}">
-	  <option value="">- Select -</option>
-	  {% for id, name in appealCourts %}
-	    <option value="{{ id }}">{{ name }}</option>
-	  {% endfor %}
-	</select>
-      </div>
-
-      <div class="form-group col-sm-6">
-	<label for="licence-since-{{ i }}">Since</label>
-	<input type="text" name="licences[{{ i }}][since]" class="form-control" id="licence-since-{{ i }}">
-      </div>
-  </div>
-
-  <input type="hidden" name="licences[{{ i }}][_id]" value="">
-
-  {% for j in 0..1 %}
     <div class="row">
-	<div class="form-group">
-	  <label for="licence-attestations-{{ i }}-{{ j }}">{{ sharedFields.attestation }}</label>
-	  <input type="file" name="licences[{{ i }}][attestations][{{ j }}][file]" class="form-control" id="licence-attestations-{{ i }}-{{ j }}">
+	<div class="form-group col-sm-6">
+	    <label for="licence-type-{{ i }}">Type</label>
+	    <select name="licences[{{ i }}][type]" class="form-control" id="licence-type-{{ i }}">
+		<option value="">- Select -</option>
+		{% for id, name in licenceTypes %}
+		    <option value="{{ id }}">{{ name }}</option>
+		{% endfor %}
+	    </select>
+	</div>
+
+	<div class="form-group col-sm-6">
+	    <label for="court-{{ i }}">Court</label>
+	    <input type="text" name="licences[{{ i }}][court]" class="form-control" id="court-{{ i }}">
 	</div>
     </div>
 
     <div class="row">
 	<div class="form-group col-sm-6">
-	  <label for="dp_expert-expiry-{{ i }}-{{ j }}">Expiry Date</label>
-	    <div class="input-group">
-	      <input type="text" class="form-control date-picker" id="dp_expert-expiry-{{ i }}-{{ j }}" autocomplete="off" aria-describedby="basic-addon1">
-	      <div class="input-group-append">
-		<span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-	      </div>
-	    </div>
-	    <input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][expiry_date]" id="expert-expiry-{{ i }}-{{ j }}" value="">
+	    <label for="appeal-court-{{ i }}">Appeal court</label>
+	    <select name="licences[{{ i }}][appeal_court_id]" class="form-control" id="appeal-court-{{ i }}">
+		<option value="">- Select -</option>
+		{% for id, name in appealCourts %}
+		    <option value="{{ id }}">{{ name }}</option>
+		{% endfor %}
+	    </select>
+	</div>
+
+	<div class="form-group col-sm-6">
+	    <label for="since-{{ i }}">Since</label>
+	    <input type="text" name="licences[{{ i }}][since]" class="form-control" id="since-{{ i }}">
 	</div>
     </div>
 
-      <input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][_id]" value="">
+    <input type="hidden" name="licences[{{ i }}][_id]" value="">
 
-      {% for k in 0..1 %}
+    {% for j in 0..1 %}
+	<div class="row">
+	    <div class="form-group">
+		<label for="file-{{ i }}-{{ j }}">{{ sharedFields.attestation }}</label>
+		<input type="file" name="licences[{{ i }}][attestations][{{ j }}][file]" class="form-control" id="file-{{ i }}-{{ j }}">
+	    </div>
+	</div>
+
 	<div class="row">
 	    <div class="form-group col-sm-6">
-	      <label for="inputExpertLanguage{{ k }}">Language {{ k + 1 }}</label>
-	      <select name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][alpha_2]" class="form-control" id="language-{{ i }}-{{ j }}-{{ k }}">
-		<option value="">- Select -</option>
-		{% for value, text in languages %}
-		  <option value="{{ value }}">{{ text }}</option>
-		{% endfor %}
-	      </select>
+		<label for="dp_expert-expiry-{{ i }}-{{ j }}">Expiry Date</label>
+		<div class="input-group">
+		    <input type="text" class="form-control date-picker" id="dp_expiry-date-{{ i }}-{{ j }}" autocomplete="off" aria-describedby="basic-addon1">
+		    <div class="input-group-append">
+			<span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+		    </div>
+		</div>
+		<input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][expiry_date]" id="expiry-date-{{ i }}-{{ j }}" value="">
 	    </div>
-
-	    <div class="form-group col-sm-3 checkbox custom-checkbox">
-	      <label for="expert-skill-lang-interpreter-{{ k }}">Interpreter</label>
-	      <input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][interpreter]" value="1" id="expert-interpreter-{{ j }}-{{ k }}" />
-	    </div>
-
-	    <div class="form-group col-sm-3 checkbox custom-checkbox">
-	      <label for="expert-skill-lang-translator-{{ k }}">Translator</label>
-	      <input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][translator]" value="1" id="expert-translator-{{ j }}-{{ k }}" />
-	    </div>
-
-	    <input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][_id]" value="" />
 	</div>
+
+	<input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][_id]" value="">
+
+	{% for k in 0..1 %}
+	    <div class="row">
+		<div class="form-group col-sm-6">
+		    <label for="inputExpertLanguage{{ k }}">Language {{ k + 1 }}</label>
+		    <select name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][alpha_2]" class="form-control" id="language-{{ i }}-{{ j }}-{{ k }}">
+			<option value="">- Select -</option>
+			{% for value, text in languages %}
+			    <option value="{{ value }}">{{ text }}</option>
+			{% endfor %}
+		    </select>
+		</div>
+
+		<div class="form-group col-sm-3 checkbox custom-checkbox mt-5">
+		    <label for="interpreter-{{ i }}-{{ j }}-{{ k }}">Interpreter</label>
+		    <input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][interpreter]" value="1" id="interpreter-{{ i }}-{{ j }}-{{ k }}" />
+		</div>
+
+		<div class="form-group col-sm-3 checkbox custom-checkbox mt-5">
+		    <label for="translator-{{ i }}-{{ j }}-{{ k }}">Translator</label>
+		    <input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][translator]" value="1" id="translator-{{ i }}-{{ j }}-{{ k }}" />
+		</div>
+
+		<input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][_id]" value="" />
+	    </div>
       {% endfor %}
   {% endfor %}
 </div>

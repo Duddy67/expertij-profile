@@ -91,11 +91,7 @@ class Account extends \RainLab\User\Components\Account
 	$this->page['licenceTypes'] = $this->setOptionTexts('licenceType');
 
 	if ($this->page['user']) {
-	    $prof = $this->page['profile'] = $this->page['user']->profile;
-
-	    foreach ($this->page['profile']->licences as $licence) {
-	        $this->page['license'.ucfirst($licence->type)] = $licence;
-	    }
+	    $this->page['profile'] = $this->page['user']->profile;
 	}
     }
 
@@ -104,7 +100,7 @@ class Account extends \RainLab\User\Components\Account
 	$data = post();
 	// Concatenates the first and last name in the User plugin's 'name' field.
 	Input::merge(['name' => $data['profile']['first_name'].' '.$data['profile']['last_name']]);
-file_put_contents('debog_file.txt', print_r($data, true));
+file_put_contents('debog_file.txt', print_r($_FILES, true));
 //return;
         $rules = (new Profile)->rules;
 	$messages = [];

@@ -195,8 +195,8 @@ class Profile extends Model
 		$item->saveAttestations($attestations);
 
 		// Removes the newly created or updated licences from the type array.
-                if ($key = array_search($id, $ids)) {
-		    unset($ids[$key]);
+                if (array_search($id, $ids) !== false) {
+		    unset($ids[array_search($id, $ids)]);
 		}
 	    }
 	}
@@ -204,7 +204,7 @@ class Profile extends Model
 	// Deletes the possibly unselected licences.
         foreach ($ids as $id) {
 	    if ($licence = $this->licences()->where('id', $id)->first()) {
-		$licence->delete();
+		//$licence->delete();
 	    }
 	}
     }

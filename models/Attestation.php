@@ -74,7 +74,7 @@ class Attestation extends Model
     public $morphMany = [];
     public $attachOne = [
 	// Deletes the attached files once a model is removed.
-        'attestation' => ['System\Models\File', 'delete' => true]
+        'file' => ['System\Models\File', 'delete' => true]
     ];
     public $attachMany = [];
 
@@ -103,8 +103,8 @@ class Attestation extends Model
 		}
 
 		// Removes the newly created or updated languages from the id array.
-                if ($key = array_search($id, $ids)) {
-		    unset($ids[$key]);
+                if (array_search($id, $ids) !== false) {
+		    unset($ids[array_search($id, $ids)]);
 		}
 	    }
 	}
@@ -112,7 +112,7 @@ class Attestation extends Model
 	// Deletes the possibly unselected languages.
         foreach ($ids as $id) {
 	    if ($language = $this->languages()->where('id', $id)->first()) {
-		$language->delete();
+		//$language->delete();
 	    }
 	}
     }

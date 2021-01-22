@@ -1,6 +1,7 @@
 <?php namespace Codalia\Profile\Models;
 
 use Model;
+use Input;
 
 /**
  * Licence Model
@@ -102,11 +103,16 @@ class Licence extends Model
 		    $item = $this->attestations()->create($attestation);
 		}
 
+		if (Input::hasFile('file')) {
+		    $item->file = Input::file('file');
+		    $item->save();
+		}
+
 		$item->saveLanguages($languages);
 
 		// Removes the newly created or updated attestations from the id array.
-                if ($key = array_search($id, $ids)) {
-		    unset($ids[$key]);
+                if (array_search($id, $ids) !== false) {
+		    unset($ids[array_search($id, $ids)]);
 		}
 	    }
 	}
@@ -114,7 +120,7 @@ class Licence extends Model
 	// Deletes the possibly unselected attestations.
         foreach ($ids as $id) {
 	    if ($attestation = $this->attestations()->where('id', $id)->first()) {
-		$attestation->delete();
+		//$attestation->delete();
 	    }
 	}
     }
