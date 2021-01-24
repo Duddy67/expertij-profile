@@ -2,6 +2,7 @@
 
 use Model;
 use Input;
+use Illuminate\Support\Arr;
 
 /**
  * Licence Model
@@ -18,7 +19,7 @@ class Licence extends Model
     /**
      * @var array Guarded fields
      */
-    protected $guarded = ['id, created_at, updated_at'];
+    protected $guarded = ['id', 'profile_id', 'created_at', 'updated_at'];
 
     /**
      * @var array Fillable fields
@@ -81,38 +82,34 @@ class Licence extends Model
 	return ['expert', 'ceseda'];
     }
 
-    public function saveAttestations($attestations)
+    public function saveAttestations($attestations, $licenceKey)
     {
         $ids = $this->attestations->pluck('id')->toArray();
 
-        foreach ($attestations as $attestation) {
+        foreach ($attestations as $key => $attestation) {
 	    if (!empty($attestation['expiry_date'])) {
-	        $id = $attestation['_id'];
-	        unset($attestation['_id']);
-
-		$item = $this->attestations->where('id', $id)->first();
-		// Important: Remove the languages from the licence data or an unpredictable behavior
-		//            will occur during updating.  
-		$languages = $attestation['languages'];
-		unset($attestation['languages']);
+	        // Searches for an existing attestation item in the collection.
+		$item = $this->attestations->where('id', $attestation['_id'])->first();
+		// Removes data which is not part of the Attestation model attributes.
+		$input = Arr::except($attestation, ['languages', '_id']);
 
 	        if ($item) {
-		    $item->update($attestation);
+		    $item->update($input);
 		}
 		else {
-		    $item = $this->attestations()->create($attestation);
+		    $item = $this->attestations()->create($input);
 		}
 
-		if (Input::hasFile('file')) {
-		    $item->file = Input::file('file');
+		if (Input::hasFile('file_'.$licenceKey.'_'.$key)) {
+		    $item->file = Input::file('file_'.$licenceKey.'_'.$key);
 		    $item->save();
-		}
+                }
 
-		$item->saveLanguages($languages);
+		$item->saveLanguages($attestation['languages']);
 
 		// Removes the newly created or updated attestations from the id array.
-                if (array_search($id, $ids) !== false) {
-		    unset($ids[array_search($id, $ids)]);
+                if (($key = array_search($attestation['_id'], $ids)) !== false) {
+		    unset($ids[$key]);
 		}
 	    }
 	}
@@ -120,7 +117,7 @@ class Licence extends Model
 	// Deletes the possibly unselected attestations.
         foreach ($ids as $id) {
 	    if ($attestation = $this->attestations()->where('id', $id)->first()) {
-		//$attestation->delete();
+		$attestation->delete();
 	    }
 	}
     }

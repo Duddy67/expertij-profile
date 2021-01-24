@@ -2,6 +2,7 @@
 
 use Model;
 use Codalia\Profile\Models\Licence;
+use Illuminate\Support\Arr;
 use Db;
 
 /**
@@ -173,30 +174,25 @@ class Profile extends Model
     {
         $ids = $this->licences->pluck('id')->toArray();
 
-        foreach ($licences as $licence) {
+        foreach ($licences as $key => $licence) {
 	    if (!empty($licence['type'])) {
-	        $id = $licence['_id'];
-	        unset($licence['_id']);
-
 	        // Searches for an existing licence item in the collection.
-		$item = $this->licences->where('id', $id)->first();
-		// Important: Remove the attestations from the licence data or an unpredictable behavior
-		//            will occur during updating.  
-		$attestations = $licence['attestations'];
-		unset($licence['attestations']);
+		$item = $this->licences->where('id', $licence['_id'])->first();
+		// Removes data which is not part of the Licence model attributes.
+		$input = Arr::except($licence, ['attestations', '_id']);
 
 	        if ($item) {
-		    $item->update($licence);
+		    $item->update($input);
 		}
 		else {
-		    $item = $this->licences()->create($licence);
+		    $item = $this->licences()->create($input);
 		}
 
-		$item->saveAttestations($attestations);
+		$item->saveAttestations($licence['attestations'], $key);
 
 		// Removes the newly created or updated licences from the type array.
-                if (array_search($id, $ids) !== false) {
-		    unset($ids[array_search($id, $ids)]);
+                if (($key = array_search($licence['_id'], $ids)) !== false) {
+		    unset($ids[$key]);
 		}
 	    }
 	}
@@ -204,7 +200,7 @@ class Profile extends Model
 	// Deletes the possibly unselected licences.
         foreach ($ids as $id) {
 	    if ($licence = $this->licences()->where('id', $id)->first()) {
-		//$licence->delete();
+		$licence->delete();
 	    }
 	}
     }

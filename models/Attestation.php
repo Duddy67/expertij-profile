@@ -1,6 +1,7 @@
 <?php namespace Codalia\Profile\Models;
 
 use Model;
+use Illuminate\Support\Arr;
 use Codalia\Profile\Models\Language;
 
 /**
@@ -18,7 +19,7 @@ class Attestation extends Model
     /**
      * @var array Guarded fields
      */
-    protected $guarded = ['*'];
+    protected $guarded = ['id', 'licence_id'];
 
     /**
      * @var array Fillable fields
@@ -85,26 +86,25 @@ class Attestation extends Model
 
         foreach ($languages as $language) {
 	    if (!empty($language['alpha_2'])) {
-	        $id = $language['_id'];
-	        unset($language['_id']);
-
 	        // Searches for an existing language item in the collection.
-		$item = $this->languages->where('id', $id)->first();
+		$item = $this->languages->where('id', $language['_id'])->first();
+		// Removes data which is not part of the Language model attributes.
+		$input = Arr::except($language, '_id');
 
 		if ($item) {
 		    // Sets to null the possibly unchecked attribute.    
-		    $language['interpreter'] = (isset($language['interpreter'])) ? $language['interpreter'] : null;
-		    $language['translator'] = (isset($language['translator'])) ? $language['translator'] : null;
+		    $input['interpreter'] = (isset($input['interpreter'])) ? $input['interpreter'] : null;
+		    $input['translator'] = (isset($input['translator'])) ? $input['translator'] : null;
 
-		    $item->update($language);
+		    $item->update($input);
 		}
 		else {
-		    $this->languages()->create($language);
+		    $this->languages()->create($input);
 		}
 
 		// Removes the newly created or updated languages from the id array.
-                if (array_search($id, $ids) !== false) {
-		    unset($ids[array_search($id, $ids)]);
+                if (($key = array_search($language['_id'], $ids)) !== false) {
+		    unset($ids[$key]);
 		}
 	    }
 	}
@@ -112,7 +112,7 @@ class Attestation extends Model
 	// Deletes the possibly unselected languages.
         foreach ($ids as $id) {
 	    if ($language = $this->languages()->where('id', $id)->first()) {
-		//$language->delete();
+		$language->delete();
 	    }
 	}
     }

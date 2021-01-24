@@ -41,9 +41,12 @@
 
 	{% for j, attestation in licence.attestations %}
 	    <div class="row">
-		<div class="form-group">
-		    <label for="attestations-{{ i }}-{{ j }}">{{ sharedFields.attestation }}</label>
-		    <input type="file" name="licences[{{ i }}][attestations][{{ j }}][file]" class="form-control" id="attestations-{{ i }}-{{ j }}">
+		<div class="form-group col-sm-12">
+		    <label class="mb-0" for="attestations-{{ i }}-{{ j }}">Proof</label>
+		    <p class="mb-2" id="new-attestation-file">
+			<a target="_blank" href="{{ attestation.file.path }}">{{ attestation.file.filename }}</a>
+		    </p>
+		    <input type="file" name="file_{{ i }}_{{ j }}" class="form-control" id="file-{{ i }}-{{ j }}">
 		</div>
 	    </div>
 
