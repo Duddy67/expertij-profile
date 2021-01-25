@@ -8,6 +8,8 @@
     $('[id^="licence-type-"]').each(function() { 
       $.fn.setLicenceType($(this)); 
     });
+
+    $('[id^="add-language-"]').click(function() { $.fn.addLanguage($(this)); });
   });
 
 
@@ -76,6 +78,20 @@
 	picker.setDate(new Date(date));
       }
     });
+  };
+
+  $.fn.addLanguage = function(elem) {
+    let id = elem.attr('id');
+    let ids = id.match(/add-language-([0-9]+)-([0-9]+)/);
+    //alert(ids[1]);
+    let newIndex = parseInt($('#last-language-index-'+ids[1]+'-'+ids[2]).val()) + 1;
+    $('#language-container-'+ids[1]+'-'+ids[2]).append('<div class="row" id="language-'+ids[1]+'-'+ids[2]+'-'+newIndex+'">');
+    $('#last-language-index-'+ids[1]+'-'+ids[2]).val(newIndex);
+  };
+
+  $.fn.deleteLanguage = function(elem) {
+    //alert(elem.dataset.language);
+    $('#language-'+elem.dataset.licence+'-'+elem.dataset.attestation+'-'+elem.dataset.language).remove();
   };
 
 })(jQuery);

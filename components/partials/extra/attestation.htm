@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="form-group">
+	<label for="file-{{ i }}-{{ j }}">{{ sharedFields.attestation }}</label>
+	<input type="file" name="file_{{ i }}_{{ j }}" class="form-control" id="file-{{ i }}-{{ j }}">
+    </div>
+</div>
+
+<div class="row">
+    <div class="form-group col-sm-6">
+	<label for="dp_expert-expiry-{{ i }}-{{ j }}">Expiry Date</label>
+	<div class="input-group">
+	    <input type="text" class="form-control date-picker" id="dp_expiry-date-{{ i }}-{{ j }}" autocomplete="off" aria-describedby="basic-addon1">
+	    <div class="input-group-append">
+		<span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+	    </div>
+	</div>
+	<input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][expiry_date]" id="expiry-date-{{ i }}-{{ j }}" value="">
+    </div>
+</div>
+
+<input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][_id]" value="">
+
+

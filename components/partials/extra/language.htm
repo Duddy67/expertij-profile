@@ -1,0 +1,28 @@
+<div class="form-group col-sm-4">
+    <label for="alpha2-{{ i }}-{{ j }}-{{ k }}">Language {{ k + 1 }}</label>
+    <select name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][alpha_2]" class="form-control" id="alpha2-{{ i }}-{{ j }}-{{ k }}">
+	<option value="">- Select -</option>
+	{% for value, text in languages %}
+	    <option value="{{ value }}">{{ text }}</option>
+	{% endfor %}
+    </select>
+</div>
+
+<div class="form-group col-sm-3 checkbox custom-checkbox mt-5">
+    <label for="interpreter-{{ i }}-{{ j }}-{{ k }}">Interpreter</label>
+    <input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][interpreter]" value="1" id="interpreter-{{ i }}-{{ j }}-{{ k }}" />
+</div>
+
+<div class="form-group col-sm-3 checkbox custom-checkbox mt-5">
+    <label for="translator-{{ i }}-{{ j }}-{{ k }}">Translator</label>
+    <input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][translator]" value="1" id="translator-{{ i }}-{{ j }}-{{ k }}" />
+</div>
+
+<div class="form-group col-sm-2 mt-4">
+    <button type="button" data-request="onDeleteLanguage" data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _language_index: {{ k }}"
+	    data-request-success="$.fn.deleteLanguage(this);" data-licence="{{ i }}" data-attestation="{{ j }}" data-language="{{ k }}"
+	    class="btn btn-danger" id="delete-language-{{ i }}-{{ j }}-{{ k }}">Delete</button>
+</div>
+
+<input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][_id]" value="" />
+

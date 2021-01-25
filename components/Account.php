@@ -164,8 +164,38 @@ file_put_contents('debog_file.txt', print_r($_FILES, true));
         if ($redirect = $this->makeRedirection()) {
             return $redirect;
         }
+    }
 
-        //$this->prepareVars();
+    public function onAddAttestation()
+    {
+    }
+
+    public function onAddLanguage()
+    {
+	//$licenceId = post('licence_id');
+	//$attestationId = post('attestation_id');
+	//$lastLanguageIndex = post('_last_language_index_'.$licenceId.'_'.$attestationId);
+	//$params = ['i' => $licenceId, 'j' => $attestationId, 'k' => $lastLanguageIndex];
+	//return ['#language-'.$licenceId.'-'.$attestationId.'-'.$lastLanguageIndex => $this->renderPartial('@language', $params)];
+        $params = $this->getParameters(true);
+	$params['languages'] = $this->setOptionTexts('language');
+	file_put_contents('debog_file.txt', print_r($params, true));
+	return ['#language-'.$params['i'].'-'.$params['j'].'-'.$params['k'] => $this->renderPartial('@extra/language', $params)];
+    }
+
+    public function onDeleteLanguage()
+    {
+        $params = $this->getParameters();
+	return ['#language-'.$params['i'].'-'.$params['j'].'-'.$params['k'] => ''];
+    }
+
+    private function getParameters($lastIndex = false)
+    {
+	$i = post('_licence_index');
+	$j = post('_attestation_index');
+	$k = ($lastIndex) ? post('_last_language_index_'.$i.'_'.$j) : post('_language_index');
+
+	return ['i' => $i, 'j' => $j, 'k' => $k, 'k' => $k];
     }
 
     private function getSharedFields($plugin)
