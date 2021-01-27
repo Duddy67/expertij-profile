@@ -100,8 +100,7 @@ class Account extends \RainLab\User\Components\Account
 	$data = post();
 	// Concatenates the first and last name in the User plugin's 'name' field.
 	Input::merge(['name' => $data['profile']['first_name'].' '.$data['profile']['last_name']]);
-file_put_contents('debog_file.txt', print_r($_FILES, true));
-//return;
+return;
         $rules = (new Profile)->rules;
 	$messages = [];
 
@@ -166,36 +165,59 @@ file_put_contents('debog_file.txt', print_r($_FILES, true));
         }
     }
 
-    public function onAddAttestation()
+    public function onAddItem()
     {
+        $params = $this->getItemParameters(true);
+	$indexPattern = $params['itemNewIndex'];
+
+	if ($params['type'] == 'licence') {
+	    $params['i'] = $params['itemNewIndex'];
+	    $params['appealCourts'] = Profile::getAppealCourts();
+	    $params['licenceTypes'] = $this->setOptionTexts('licenceType');
+	}
+	elseif ($params['type'] == 'attestation') {
+	    $indexPattern = $params['i'].'-'.$params['itemNewIndex'];
+	    $params['j'] = $params['itemNewIndex'];
+	}
+	elseif ($params['type'] == 'language') {
+	    $indexPattern = $params['i'].'-'.$params['j'].'-'.$params['itemNewIndex'];
+	    $params['k'] = $params['itemNewIndex'];
+	    $params['languages'] = $this->setOptionTexts('language');
+	}
+
+
+	return ['#'.$params['type'].'-'.$indexPattern => $this->renderPartial('@extra/'.$params['type'], $params)];
     }
 
-    public function onAddLanguage()
+    public function onDeleteItem()
     {
-	//$licenceId = post('licence_id');
-	//$attestationId = post('attestation_id');
-	//$lastLanguageIndex = post('_last_language_index_'.$licenceId.'_'.$attestationId);
-	//$params = ['i' => $licenceId, 'j' => $attestationId, 'k' => $lastLanguageIndex];
-	//return ['#language-'.$licenceId.'-'.$attestationId.'-'.$lastLanguageIndex => $this->renderPartial('@language', $params)];
-        $params = $this->getParameters(true);
-	$params['languages'] = $this->setOptionTexts('language');
-	file_put_contents('debog_file.txt', print_r($params, true));
-	return ['#language-'.$params['i'].'-'.$params['j'].'-'.$params['k'] => $this->renderPartial('@extra/language', $params)];
+        $params = $this->getItemParameters();
+	$indexPattern = $params['i'];
+
+	if ($params['id']) {
+	}
+
+	//file_put_contents('debog_file.txt', print_r(post(), true));
+	if ($params['type'] == 'attestation') {
+	    $indexPattern = $indexPattern.'-'.$params['j'];
+	}
+	elseif ($params['type'] == 'language') {
+	    $indexPattern = $indexPattern.'-'.$params['j'].'-'.$params['k'];
+	}
+
+	return ['#'.$params['type'].'-'.$indexPattern => ''];
     }
 
-    public function onDeleteLanguage()
+    private function getItemParameters()
     {
-        $params = $this->getParameters();
-	return ['#language-'.$params['i'].'-'.$params['j'].'-'.$params['k'] => ''];
-    }
-
-    private function getParameters($lastIndex = false)
-    {
+	$type = post('_item_type');
+	$id = post('_item_id');
 	$i = post('_licence_index');
 	$j = post('_attestation_index');
-	$k = ($lastIndex) ? post('_last_language_index_'.$i.'_'.$j) : post('_language_index');
+	$k = post('_language_index');
+	$newIndex = post('_item_new_index');
 
-	return ['i' => $i, 'j' => $j, 'k' => $k, 'k' => $k];
+	return ['i' => $i, 'j' => $j, 'k' => $k, 'itemNewIndex' => $newIndex, 'type' => $type, 'id' => $id];
     }
 
     private function getSharedFields($plugin)

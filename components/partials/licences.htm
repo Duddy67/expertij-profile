@@ -1,106 +1,23 @@
 <div>LICENCES</div>
 <hr class="my-4" />
 
-{% for i in 0..1 %}
-    <div class="form-group">
-	<div class="row">
-	    <div class="form-group col-sm-6">
-		<label for="licence-type-{{ i }}">Type</label>
-		<select name="licences[{{ i }}][type]" class="form-control" id="licence-type-{{ i }}">
-		    <option value="">- Select -</option>
-		    {% for id, name in licenceTypes %}
-			<option value="{{ id }}">{{ name }}</option>
-		    {% endfor %}
-		</select>
-	    </div>
-
-	    <div class="form-group col-sm-6">
-		<label for="court-{{ i }}">Court</label>
-		<input type="text" name="licences[{{ i }}][court]" class="form-control" id="court-{{ i }}">
-	    </div>
+{% set i = 0 %}
+<div class="form-group" id="licence-container" data-last-index="{{ i }}">
+    <div class="row">
+	<div class="form-group col-sm-12">
+	    <button type="button" data-request="onAddItem" data-request-data="_licence_index: {{ i }}, _item_type: 'licence'"
+		    data-request-success="$.fn.initNewItem(this)" class="btn btn-info float-right" id="add-licence-{{ i }}">New Licence</button>
+	    <input type="hidden" name="licences[{{ i }}][_id]" value="">
 	</div>
-
-	<div class="row">
-	    <div class="form-group col-sm-6">
-		<label for="appeal-court-{{ i }}">Appeal court</label>
-		<select name="licences[{{ i }}][appeal_court_id]" class="form-control" id="appeal-court-{{ i }}">
-		    <option value="">- Select -</option>
-		    {% for id, name in appealCourts %}
-			<option value="{{ id }}">{{ name }}</option>
-		    {% endfor %}
-		</select>
-	    </div>
-
-	    <div class="form-group col-sm-6">
-		<label for="since-{{ i }}">Since</label>
-		<input type="text" name="licences[{{ i }}][since]" class="form-control" id="since-{{ i }}">
-	    </div>
-	</div>
-
-	<input type="hidden" name="licences[{{ i }}][_id]" value="">
-
-	<div class="form-group" id="attestation-container-{{ i }}">
-	    {% for j in 0..0 %}
-		<div class="row" id="attestation-{{ i }}-{{ j }}">
-			<div class="form-group col-sm-12">
-			    <label for="file-{{ i }}-{{ j }}">{{ sharedFields.attestation }}</label>
-			    <input type="file" name="file_{{ i }}_{{ j }}" class="form-control" id="file-{{ i }}-{{ j }}">
-			</div>
-
-			<div class="form-group col-sm-6">
-			    <label for="dp_expert-expiry-{{ i }}-{{ j }}">Expiry Date</label>
-			    <div class="input-group">
-				<input type="text" class="form-control date-picker" id="dp_expiry-date-{{ i }}-{{ j }}" autocomplete="off" aria-describedby="basic-addon1">
-				<div class="input-group-append">
-				    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-				</div>
-			    </div>
-			    <input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][expiry_date]" id="expiry-date-{{ i }}-{{ j }}" value="">
-			</div>
-
-			<div class="form-group col-sm-6 mt-4">
-			    <button type="button" data-request="onAddAttestation" data-request-data="_licence_index: {{ i }}"
-				    class="btn btn-info float-right" id="add-attestation-{{ i }}">Add Attestation</button>
-				    <input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][_id]" value="">
-			</div>
-
-		    {% set k = 0 %}
-		    <div class="form-group col-sm-12" id="language-container-{{ i }}-{{ j }}">
-			{% for k in 0..0 %}
-			    <div class="row" id="language-{{ i }}-{{ j }}-{{ k }}">
-				<div class="form-group col-sm-6">
-				    <label for="alpha2-{{ i }}-{{ j }}-{{ k }}">Language {{ k + 1 }}</label>
-				    <select name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][alpha_2]" class="form-control" id="alpha2-{{ i }}-{{ j }}-{{ k }}">
-					<option value="">- Select -</option>
-					{% for value, text in languages %}
-					    <option value="{{ value }}">{{ text }}</option>
-					{% endfor %}
-				    </select>
-				</div>
-
-				<div class="form-group col-sm-3 checkbox custom-checkbox mt-5">
-				    <label for="interpreter-{{ i }}-{{ j }}-{{ k }}">Interpreter</label>
-				    <input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][interpreter]" value="1" id="interpreter-{{ i }}-{{ j }}-{{ k }}" />
-				</div>
-
-				<div class="form-group col-sm-3 checkbox custom-checkbox mt-5">
-				    <label for="translator-{{ i }}-{{ j }}-{{ k }}">Translator</label>
-				    <input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][translator]" value="1" id="translator-{{ i }}-{{ j }}-{{ k }}" />
-				</div>
-
-				<input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][_id]" value="" />
-			    </div> <!-- language row -->
-			{% endfor %}
-			<button type="button" data-request="onAddLanguage" data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}"
-				class="btn btn-info mb-3" id="add-language-{{ i }}-{{ j }}">Add Language</button>
-			<input type="hidden" name="_last_language_index_{{ i }}_{{ j }}" id="last-language-index-{{ i }}-{{ j }}" value="{{ k }}" />
-		    </div> <!-- language container -->
-		</div> <!-- attestation row -->
-	    {% endfor %}
-	    <input type="hidden" name="_last_attestation_index_{{ i }}" id="last-attestation-index-{{ i }}" value="{{ j }}" />
-	</div> <!-- attestation container -->
     </div>
+{% for i in 0..0 %}
+    <div class="row" id="licence-{{ i }}">
+	{% partial '@extra/licence' i=i %}
+    </div>
+
     <hr class="my-4" />
 {% endfor %}
+</div> <!-- licence container -->
+<input type="hidden" name="_item_new_index" id="item-new-index" value="" />
 
 	   
