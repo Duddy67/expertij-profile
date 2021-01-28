@@ -4,7 +4,7 @@ use Schema;
 use October\Rain\Database\Schema\Blueprint;
 use October\Rain\Database\Updates\Migration;
 
-class CreateSkillsTable extends Migration
+class CreateLicencesTable extends Migration
 {
     public function up()
     {
@@ -14,7 +14,7 @@ class CreateSkillsTable extends Migration
             $table->integer('profile_id')->unsigned()->index()->nullable();
             $table->string('type')->nullable();
             $table->integer('appeal_court_id')->unsigned()->nullable();
-            $table->string('court')->nullable();
+            $table->integer('court_id')->unsigned()->nullable();
             $table->smallInteger('since')->unsigned()->nullable();
             $table->timestamps();
         });

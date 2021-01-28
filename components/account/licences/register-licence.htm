@@ -2,23 +2,28 @@
     <label for="licence-type-{{ i }}">Type</label>
     <select name="licences[{{ i }}][type]" class="form-control" id="licence-type-{{ i }}">
 	<option value="">- Select -</option>
-	{% for id, name in licenceTypes %}
-	    <option value="{{ id }}">{{ name }}</option>
+	{% for value, text in licenceTypes %}
+	    <option value="{{ value }}">{{ text }}</option>
 	{% endfor %}
     </select>
 </div>
 
 <div class="form-group col-sm-6">
     <label for="court-{{ i }}">Court</label>
-    <input type="text" name="licences[{{ i }}][court]" class="form-control" id="court-{{ i }}">
+    <select name="licences[{{ i }}][court_id]" class="form-control" id="court-{{ i }}">
+	<option value="">- Select -</option>
+	{% for value, text in courts %}
+	    <option value="{{ value }}">{{ text }}</option>
+	{% endfor %}
+    </select>
 </div>
 
 <div class="form-group col-sm-6">
     <label for="appeal-court-{{ i }}">Appeal court</label>
     <select name="licences[{{ i }}][appeal_court_id]" class="form-control" id="appeal-court-{{ i }}">
 	<option value="">- Select -</option>
-	{% for id, name in appealCourts %}
-	    <option value="{{ id }}">{{ name }}</option>
+	{% for value, text in appealCourts %}
+	    <option value="{{ value }}">{{ text }}</option>
 	{% endfor %}
     </select>
 </div>
@@ -34,7 +39,7 @@
 <div class="form-group" id="attestation-container-{{ i }}" data-last-index="{{ j }}">
     {% for j in 0..0 %}
 	<div class="row" id="attestation-{{ i }}-{{ j }}">
-	    {% partial '@extra/attestation' i=i j=j %}
+	    {% partial '@licences/register-attestation' i=i j=j %}
 	</div> <!-- attestation row -->
     {% endfor %}
 </div> <!-- attestation container -->

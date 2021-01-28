@@ -86,6 +86,7 @@ class Account extends \RainLab\User\Components\Account
 	$this->page['sharedFields'] = $this->getSharedFields($plugin);
 
 	$this->page['appealCourts'] = Profile::getAppealCourts();
+	$this->page['courts'] = Profile::getCourts();
 	$this->page['languages'] = $this->setOptionTexts('language');
 	$this->page['citizenships'] = $this->setOptionTexts('citizenship');
 	$this->page['licenceTypes'] = $this->setOptionTexts('licenceType');
@@ -100,7 +101,8 @@ class Account extends \RainLab\User\Components\Account
 	$data = post();
 	// Concatenates the first and last name in the User plugin's 'name' field.
 	Input::merge(['name' => $data['profile']['first_name'].' '.$data['profile']['last_name']]);
-return;
+file_put_contents('debog_file.txt', print_r($data, true));
+//return;
         $rules = (new Profile)->rules;
 	$messages = [];
 
@@ -181,6 +183,7 @@ return;
 	    $params['i'] = $params['newIndex'];
 	    // Sets the variables needed in the licence partial.
 	    $params['appealCourts'] = Profile::getAppealCourts();
+	    $params['courts'] = Profile::getCourts();
 	    $params['licenceTypes'] = $this->setOptionTexts('licenceType');
 	    $params['languages'] = $this->setOptionTexts('language');
 	}
@@ -196,7 +199,7 @@ return;
 	}
 
         // Renders the new item in the div container previously created in JS.
-	return ['#'.$params['type'].'-'.$indexPattern => $this->renderPartial('@extra/'.$params['type'], $params)];
+	return ['#'.$params['type'].'-'.$indexPattern => $this->renderPartial('@licences/'.$params['context'].'-'.$params['type'], $params)];
     }
 
     /*
@@ -233,11 +236,12 @@ return;
 	$type = post('_item_type');
 	$id = post('_item_id');
 	$newIndex = post('_item_new_index');
+	$context = post('_item_context');
 	$i = post('_licence_index');
 	$j = post('_attestation_index');
 	$k = post('_language_index');
 
-	return ['i' => $i, 'j' => $j, 'k' => $k, 'newIndex' => $newIndex, 'type' => $type, 'id' => $id];
+	return ['i' => $i, 'j' => $j, 'k' => $k, 'newIndex' => $newIndex, 'type' => $type, 'context' => $context, 'id' => $id];
     }
 
     private function getSharedFields($plugin)

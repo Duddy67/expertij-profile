@@ -22,7 +22,7 @@
     </div>
 {% else %}
     <div class="form-group col-sm-6 mt-4">
-	<button type="button" data-request="onAddItem" data-request-data="_licence_index: {{ i }}, _item_type: 'attestation'" 
+	<button type="button" data-request="onAddItem" data-request-data="_licence_index: {{ i }}, _item_type: 'attestation', _item_context: 'register'" 
 		data-request-success="$.fn.initNewItem(this)" class="btn btn-info float-right" id="add-attestation-{{ i }}-{{ j }}">New Attestation</button>
 	<input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][_id]" value="">
     </div>
@@ -32,9 +32,9 @@
 <div class="form-group col-sm-12" id="language-container-{{ i }}-{{ j }}" data-last-index="{{ k }}">
     {% for k in 0..0 %}
 	<div class="row" id="language-{{ i }}-{{ j }}-{{ k }}">
-	    {% partial '@extra/language' k=k %}
+	    {% partial '@licences/register-language' k=k %}
 	</div> <!-- language row -->
     {% endfor %}
-    <button type="button" data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _item_type: 'language'" 
+    <button type="button" data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _item_type: 'language', _item_context: 'register'" 
 	    data-request="onAddItem" data-request-success="$.fn.initNewItem(this)" class="btn btn-info mb-3" id="add-language-{{ i }}-{{ j }}">Add Language</button>
 </div> <!-- language container -->

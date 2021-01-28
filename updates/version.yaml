@@ -22,3 +22,8 @@
 1.0.6:
   - Created attestations table
   - create_attestations_table.php
+1.0.7:
+  - Created court table
+  - create_court_list_table.php
+  - Seeded court tables
+  - seed_court_table.php

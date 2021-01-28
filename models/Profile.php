@@ -160,6 +160,11 @@ class Profile extends Model
 	return Db::table('codalia_profile_appeal_court_list')->get()->pluck('name', 'id')->toArray();
     }
 
+    public static function getCourts()
+    {
+	return Db::table('codalia_profile_court_list')->get()->pluck('name', 'id')->toArray();
+    }
+
     public static function getLanguages()
     {
 	return Db::table('codalia_profile_language_list')->get()->pluck('alpha_2')->toArray();
