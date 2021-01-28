@@ -165,39 +165,54 @@ return;
         }
     }
 
+    /*
+     * Adds a given item dynamically.
+     * Index pattern description: identifier-i[, -j[, -k]]
+     * ie: i = licence index, j = attestation index, k = language index.
+     */
     public function onAddItem()
     {
-        $params = $this->getItemParameters(true);
-	$indexPattern = $params['itemNewIndex'];
+        $params = $this->getItemParameters();
+        // Sets the licence index pattern by default.
+	$indexPattern = $params['newIndex'];
 
 	if ($params['type'] == 'licence') {
-	    $params['i'] = $params['itemNewIndex'];
+	    // Updates the licence index.
+	    $params['i'] = $params['newIndex'];
+	    // Sets the variables needed in the licence partial.
 	    $params['appealCourts'] = Profile::getAppealCourts();
 	    $params['licenceTypes'] = $this->setOptionTexts('licenceType');
+	    $params['languages'] = $this->setOptionTexts('language');
 	}
 	elseif ($params['type'] == 'attestation') {
-	    $indexPattern = $params['i'].'-'.$params['itemNewIndex'];
-	    $params['j'] = $params['itemNewIndex'];
+	    $indexPattern = $params['i'].'-'.$params['newIndex'];
+	    $params['j'] = $params['newIndex'];
+	    $params['languages'] = $this->setOptionTexts('language');
 	}
 	elseif ($params['type'] == 'language') {
-	    $indexPattern = $params['i'].'-'.$params['j'].'-'.$params['itemNewIndex'];
-	    $params['k'] = $params['itemNewIndex'];
+	    $indexPattern = $params['i'].'-'.$params['j'].'-'.$params['newIndex'];
+	    $params['k'] = $params['newIndex'];
 	    $params['languages'] = $this->setOptionTexts('language');
 	}
 
-
+        // Renders the new item in the div container previously created in JS.
 	return ['#'.$params['type'].'-'.$indexPattern => $this->renderPartial('@extra/'.$params['type'], $params)];
     }
 
+    /*
+     * Deletes a given item dynamically.
+     */
     public function onDeleteItem()
     {
         $params = $this->getItemParameters();
+        // Sets the licence index pattern by default.
 	$indexPattern = $params['i'];
 
+	// Deletes the item from the database.
 	if ($params['id']) {
 	}
 
-	//file_put_contents('debog_file.txt', print_r(post(), true));
+        // Sets the index pattern accordingly.
 	if ($params['type'] == 'attestation') {
 	    $indexPattern = $indexPattern.'-'.$params['j'];
 	}
@@ -205,19 +220,24 @@ return;
 	    $indexPattern = $indexPattern.'-'.$params['j'].'-'.$params['k'];
 	}
 
+	// Removes the given item from the div container.
 	return ['#'.$params['type'].'-'.$indexPattern => ''];
     }
 
+    /*
+     * Retrieves and gathers the variables sent through the POST array
+     * by the data attributes API.
+     */
     private function getItemParameters()
     {
 	$type = post('_item_type');
 	$id = post('_item_id');
+	$newIndex = post('_item_new_index');
 	$i = post('_licence_index');
 	$j = post('_attestation_index');
 	$k = post('_language_index');
-	$newIndex = post('_item_new_index');
 
-	return ['i' => $i, 'j' => $j, 'k' => $k, 'itemNewIndex' => $newIndex, 'type' => $type, 'id' => $id];
+	return ['i' => $i, 'j' => $j, 'k' => $k, 'newIndex' => $newIndex, 'type' => $type, 'id' => $id];
     }
 
     private function getSharedFields($plugin)
