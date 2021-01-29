@@ -124,6 +124,7 @@
       $.fn.setDateFields('#dp_expiry-date-'+lastIndex+'-0');
       $('#licence-type-'+lastIndex).change(function() { $.fn.setLicenceType($(this)); });
       $.fn.setLicenceType($('#licence-type-'+lastIndex));
+      $('#add-licence-'+lastIndex).click(function() { $.fn.addItem(this); });
     }
     else if (item.type == 'attestation' && item.action == 'add') {
       let lastIndex = $('#attestation-container-'+item.i).attr('data-last-index');

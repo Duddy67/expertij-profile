@@ -175,6 +175,18 @@ class Profile extends Model
 	return Db::table('codalia_profile_country_list')->get()->pluck('alpha_2')->toArray();
     }
 
+    public static function getYears()
+    {
+	$year = date('Y');
+	$years = [$year];
+
+	while ($year >= 1980) {
+	    $years[] = $year--;
+	}
+
+	return $years;
+    }
+
     public function saveLicences($licences)
     {
         $ids = $this->licences->pluck('id')->toArray();

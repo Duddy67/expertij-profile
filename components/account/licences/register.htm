@@ -1,22 +1,15 @@
-<div>LICENCES</div>
+<div>Licences</div>
 <hr class="my-4" />
 
 {% set i = 0 %}
 <div class="form-group" id="licence-container" data-last-index="{{ i }}">
-    <div class="row">
-	<div class="form-group col-sm-12">
-	    <button type="button" data-request="onAddItem" data-request-data="_licence_index: {{ i }}, _item_type: 'licence', _item_context: 'register'"
-		    data-request-success="$.fn.initNewItem(this)" class="btn btn-info float-right" id="add-licence-{{ i }}">New Licence</button>
-	    <input type="hidden" name="licences[{{ i }}][_id]" value="">
+    {% for i in 0..0 %}
+	<div class="row border rounded" id="licence-{{ i }}">
+	    {% partial '@licences/register-licence' i=i %}
 	</div>
-    </div>
-{% for i in 0..0 %}
-    <div class="row" id="licence-{{ i }}">
-	{% partial '@licences/register-licence' i=i %}
-    </div>
 
-    <hr class="my-4" />
-{% endfor %}
+	<hr class="my-4" />
+    {% endfor %}
 </div> <!-- licence container -->
 <input type="hidden" name="_item_new_index" id="item-new-index" value="" />
 

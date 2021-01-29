@@ -1,6 +1,10 @@
 {% if canRegister %}
     <h3>Register</h3>
 
+    {% put scripts %}
+	<link rel="stylesheet" href="plugins/codalia/profile/assets/css/profile.css">
+    {% endput %}
+
     {{ form_ajax('onRegister', {files: 1, flash: ''}) }}
 
 	<div class="row">

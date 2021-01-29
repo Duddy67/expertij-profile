@@ -9,11 +9,11 @@
 </div>
 
 <div class="form-group col-sm-6">
-    <label for="court-{{ i }}">Court</label>
-    <select name="licences[{{ i }}][court_id]" class="form-control" id="court-{{ i }}">
+    <label for="since-{{ i }}">Since</label>
+    <select name="licences[{{ i }}][since]" class="form-control" id="since-{{ i }}">
 	<option value="">- Select -</option>
-	{% for value, text in courts %}
-	    <option value="{{ value }}" {{ (licence.court_id == value) ? 'selected' : '' }}>{{ text }}</option>
+	{% for year in years %}
+	    <option value="{{ year }}" {{ (licence.since == year) ? 'selected' : '' }}>{{ year }}</option>
 	{% endfor %}
     </select>
 </div>
@@ -29,24 +29,47 @@
 </div>
 
 <div class="form-group col-sm-6">
-    <label for="since-{{ i }}">Since</label>
-    <input type="text" name="licences[{{ i }}][since]" class="form-control" id="since-{{ i }}" value="{{ licence.since }}">
+    <label for="court-{{ i }}">Court</label>
+    <select name="licences[{{ i }}][court_id]" class="form-control" id="court-{{ i }}">
+	<option value="">- Select -</option>
+	{% for value, text in courts %}
+	    <option value="{{ value }}" {{ (licence.court_id == value) ? 'selected' : '' }}>{{ text }}</option>
+	{% endfor %}
+    </select>
 </div>
 
 <input type="hidden" name="licences[{{ i }}][_id]" value="{{ licence.id }}">
 
 {% set lastIndex  = (licence.attestations|length > 0) ? licence.attestations|length - 1 : 0 %}
-<div class="form-group" id="attestation-container-{{ i }}" data-last-index="{{ lastIndex }}">
-    {% for j, attestation in licence.attestations %}
-	<div class="row" id="attestation-{{ i }}-{{ j }}">
-	    {% partial '@licences/update-attestation' i=i j=j attestation=attestation %}
-	</div> <!-- attestation row -->
-    {% endfor %}
+<div class="col-sm-12" id="attestation-container-{{ i }}" data-last-index="{{ lastIndex }}">
+    {% if licence.attestations|length > 0 %}
+	{% for j, attestation in licence.attestations %}
+	    <div class="row" id="attestation-{{ i }}-{{ j }}">
+		{% partial '@licences/update-attestation' i=i j=j attestation=attestation %}
+	    </div> <!-- attestation row -->
+	{% endfor %}
+    {% else %}
+	{% for j in 0..0 %}
+	    <div class="row" id="attestation-{{ i }}-{{ j }}">
+		{% partial '@licences/register-attestation' i=i j=j %}
+	    </div> <!-- attestation row -->
+	{% endfor %}
+    {% endif %}
 </div> <!-- attestation container -->
 
-{% if i > 0 %}
-    <div class="form-group col-sm-12">
-	<button type="button" data-request="onDeleteItem" data-request-data="_licence_index: {{ i }}, _item_type: 'licence', _item_id: ''"
-		data-request-success="$.fn.deleteItem(this);" class="btn btn-danger float-right" id="delete-licence-{{ i }}">Delete Licence</button>
+<div class="form-group col-sm-12">
+    <div class="row">
+	<div class="form-group col-sm-6">
+	    <button type="button" data-request="onAddItem" data-request-data="_licence_index: {{ i }}, _item_type: 'licence', _item_context: 'update'"
+		    data-request-success="$.fn.initNewItem(this)" class="btn btn-info" id="add-licence-{{ i }}">New Licence</button>
+	</div>
+
+	{% if i > 0 %}
+	    <div class="form-group col-sm-6">
+		<button type="button" data-request="onDeleteItem" data-request-data="_licence_index: {{ i }}, _item_type: 'licence', _item_id: ''"
+			data-request-success="$.fn.deleteItem(this);" data-request-confirm="Are you sure ?"
+			class="btn btn-danger float-right" id="delete-licence-{{ i }}">Delete Licence</button>
+	    </div>
+	{% endif %}
     </div>
-{% endif %}
+</div>

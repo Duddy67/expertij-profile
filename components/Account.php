@@ -87,6 +87,7 @@ class Account extends \RainLab\User\Components\Account
 
 	$this->page['appealCourts'] = Profile::getAppealCourts();
 	$this->page['courts'] = Profile::getCourts();
+	$this->page['years'] = Profile::getYears();
 	$this->page['languages'] = $this->setOptionTexts('language');
 	$this->page['citizenships'] = $this->setOptionTexts('citizenship');
 	$this->page['licenceTypes'] = $this->setOptionTexts('licenceType');
@@ -101,8 +102,7 @@ class Account extends \RainLab\User\Components\Account
 	$data = post();
 	// Concatenates the first and last name in the User plugin's 'name' field.
 	Input::merge(['name' => $data['profile']['first_name'].' '.$data['profile']['last_name']]);
-file_put_contents('debog_file.txt', print_r($data, true));
-//return;
+
         $rules = (new Profile)->rules;
 	$messages = [];
 
@@ -184,6 +184,7 @@ file_put_contents('debog_file.txt', print_r($data, true));
 	    // Sets the variables needed in the licence partial.
 	    $params['appealCourts'] = Profile::getAppealCourts();
 	    $params['courts'] = Profile::getCourts();
+	    $params['years'] = Profile::getYears();
 	    $params['licenceTypes'] = $this->setOptionTexts('licenceType');
 	    $params['languages'] = $this->setOptionTexts('language');
 	}

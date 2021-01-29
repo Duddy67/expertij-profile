@@ -14,6 +14,7 @@
     <input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][expiry_date]" id="expiry-date-{{ i }}-{{ j }}" value="">
 </div>
 
+<input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][_id]" value="">
 
 {% if j > 0 %}
     <div class="form-group col-sm-6 mt-4">
@@ -24,7 +25,6 @@
     <div class="form-group col-sm-6 mt-4">
 	<button type="button" data-request="onAddItem" data-request-data="_licence_index: {{ i }}, _item_type: 'attestation', _item_context: 'register'" 
 		data-request-success="$.fn.initNewItem(this)" class="btn btn-info float-right" id="add-attestation-{{ i }}-{{ j }}">New Attestation</button>
-	<input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][_id]" value="">
     </div>
 {% endif %}
 

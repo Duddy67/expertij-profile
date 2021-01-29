@@ -1,40 +1,49 @@
-<div class="form-group">
-  <label for="inputProStatus">{{ sharedFields.pro_status }}</label>
-    <select name="membership[pro_status]" class="form-control custom-select" id="inputProStatus">
-      {% for id, name in sharedFields.pro_status_options %}
-	  <option value="{{ id }}">{{ name }}</option>
-      {% endfor %}
-    </select>
+<div class="row">
+    <div class="form-group col-sm-6">
+	<label for="inputProStatus">{{ sharedFields.pro_status }}</label>
+	<select name="membership[pro_status]" class="form-control custom-select" id="inputProStatus">
+	  {% for id, name in sharedFields.pro_status_options %}
+	      <option value="{{ id }}">{{ name }}</option>
+	  {% endfor %}
+	</select>
+    </div>
+
+    <div class="form-group col-sm-6">
+        <label for="inputSince">{{ sharedFields.since }}</label>
+        <select name="membership[since]" class="form-control" id="inputSince">
+	    <option value="">- Select -</option>
+	    {% for year in years %}
+		<option value="{{ year }}">{{ year }}</option>
+	    {% endfor %}
+        </select>
+    </div>
 </div>
 
 <div class="form-group">
-  <label for="inputProStatusInfo">{{ sharedFields.pro_status_info}}</label>
-  <input type="text" name="membership[pro_status_info]" class="form-control" id="inputProStatusInfo">
+    <label for="inputProStatusInfo">{{ sharedFields.pro_status_info}}</label>
+    <input type="text" name="membership[pro_status_info]" class="form-control" id="inputProStatusInfo">
+</div>
+
+<div class="row">
+    <div class="form-group col-sm-6">
+	<label for="inputSiretNumber">{{ sharedFields.siret_number }}</label>
+	<input type="text" name="membership[siret_number]" class="form-control" id="inputSiretNumber">
+    </div>
+
+    <div class="form-group col-sm-6">
+	<label for="inputNafCode">{{ sharedFields.naf_code }}</label>
+	<input type="text" name="membership[naf_code]" class="form-control" id="inputNafCode">
+    </div>
 </div>
 
 <div class="form-group">
-  <label for="inputSince">{{ sharedFields.since }}</label>
-  <input type="text" name="membership[since]" class="form-control" id="inputSince">
+    <label for="inputAttestation">{{ sharedFields.attestation }}</label>
+    <input type="file" name="attestation" class="form-control" id="inputAttestation">
 </div>
 
 <div class="form-group">
-  <label for="inputSiretNumber">{{ sharedFields.siret_number }}</label>
-  <input type="text" name="membership[siret_number]" class="form-control" id="inputSiretNumber">
-</div>
-
-<div class="form-group">
-  <label for="inputNafCode">{{ sharedFields.naf_code }}</label>
-  <input type="text" name="membership[naf_code]" class="form-control" id="inputNafCode">
-</div>
-
-<div class="form-group">
-  <label for="inputAttestation">{{ sharedFields.attestation }}</label>
-  <input type="file" name="attestation" class="form-control" id="inputAttestation">
-</div>
-
-<div class="form-group">
-  <label for="inputPhoto">{{ sharedFields.photo }}</label>
-  <input type="file" name="photo" class="form-control" id="inputPhoto">
+    <label for="inputPhoto">{{ sharedFields.photo }}</label>
+    <input type="file" name="photo" class="form-control" id="inputPhoto">
 </div>
 
 <input type="hidden" name="_context" value="membership">
