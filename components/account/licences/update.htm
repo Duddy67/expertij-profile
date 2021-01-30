@@ -1,13 +1,11 @@
-<div>Licences</div>
+<label>Licences</label>
 
 {% set lastIndex  = (profile.licences|length > 0) ? profile.licences|length - 1 : 0 %}
 <div class="form-group" id="licence-container" data-last-index="{{ lastIndex }}">
     {% for i, licence in profile.licences %}
-	<div class="row border rounded" id="licence-{{ i }}">
+	<div class="row licence-row" id="licence-{{ i }}">
 	    {% partial '@licences/update-licence' i=i licence=licence %}
 	</div>
-
-	<hr class="my-4" />
     {% endfor %}
 </div> <!-- licence container -->
 <input type="hidden" name="_item_new_index" id="item-new-index" value="" />

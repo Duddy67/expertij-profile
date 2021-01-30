@@ -44,13 +44,13 @@
 <div class="col-sm-12" id="attestation-container-{{ i }}" data-last-index="{{ lastIndex }}">
     {% if licence.attestations|length > 0 %}
 	{% for j, attestation in licence.attestations %}
-	    <div class="row" id="attestation-{{ i }}-{{ j }}">
+	    <div class="row attestation-row" id="attestation-{{ i }}-{{ j }}">
 		{% partial '@licences/update-attestation' i=i j=j attestation=attestation %}
 	    </div> <!-- attestation row -->
 	{% endfor %}
     {% else %}
 	{% for j in 0..0 %}
-	    <div class="row" id="attestation-{{ i }}-{{ j }}">
+	    <div class="row attestation-row" id="attestation-{{ i }}-{{ j }}">
 		{% partial '@licences/register-attestation' i=i j=j %}
 	    </div> <!-- attestation row -->
 	{% endfor %}

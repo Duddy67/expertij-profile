@@ -1,14 +1,11 @@
-<div>Licences</div>
-<hr class="my-4" />
+<label>Licences</label>
 
 {% set i = 0 %}
 <div class="form-group" id="licence-container" data-last-index="{{ i }}">
     {% for i in 0..0 %}
-	<div class="row border rounded" id="licence-{{ i }}">
+	<div class="row licence-row" id="licence-{{ i }}">
 	    {% partial '@licences/register-licence' i=i %}
 	</div>
-
-	<hr class="my-4" />
     {% endfor %}
 </div> <!-- licence container -->
 <input type="hidden" name="_item_new_index" id="item-new-index" value="" />

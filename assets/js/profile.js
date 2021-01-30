@@ -95,12 +95,12 @@
     if (item.type == 'licence') {
       // N.B: The licence container has no index as it's unique.
       newIndex = parseInt($('#'+item.type+'-container').attr('data-last-index')) + 1;
-      $('#licence-container').append('<div class="row" id="licence-'+newIndex+'">');
+      $('#licence-container').append('<div class="row licence-row" id="licence-'+newIndex+'">');
       // Updates the last item index.
       $('#licence-container').attr('data-last-index', newIndex);
     }
     else {
-      $('#'+item.type+'-container-'+item.indexPattern).append('<div class="row" id="'+item.type+'-'+item.indexPattern+'-'+newIndex+'">');
+      $('#'+item.type+'-container-'+item.indexPattern).append('<div class="row '+item.type+'-row" id="'+item.type+'-'+item.indexPattern+'-'+newIndex+'">');
       $('#'+item.type+'-container-'+item.indexPattern).attr('data-last-index', newIndex);
     }
 
@@ -128,6 +128,7 @@
     }
     else if (item.type == 'attestation' && item.action == 'add') {
       let lastIndex = $('#attestation-container-'+item.i).attr('data-last-index');
+      $('#add-attestation-'+item.i+'-'+lastIndex).click(function() { $.fn.addItem(this); });
       $('#add-language-'+item.i+'-'+lastIndex).click(function() { $.fn.addItem(this); });
       $.fn.setDateFields('#dp_expiry-date-'+item.i+'-'+lastIndex);
     }

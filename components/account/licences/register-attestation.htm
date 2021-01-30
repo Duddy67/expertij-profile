@@ -16,25 +16,35 @@
 
 <input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][_id]" value="">
 
-{% if j > 0 %}
-    <div class="form-group col-sm-6 mt-4">
-	<button type="button" data-request="onDeleteItem" data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _item_type: 'attestation', _item_id: ''"
-		data-request-success="$.fn.deleteItem(this);" class="btn btn-danger float-right" id="delete-attestation-{{ i }}-{{ j }}">Delete Attestation</button>
-    </div>
-{% else %}
-    <div class="form-group col-sm-6 mt-4">
-	<button type="button" data-request="onAddItem" data-request-data="_licence_index: {{ i }}, _item_type: 'attestation', _item_context: 'register'" 
-		data-request-success="$.fn.initNewItem(this)" class="btn btn-info float-right" id="add-attestation-{{ i }}-{{ j }}">New Attestation</button>
-    </div>
-{% endif %}
 
 {% set k = 0 %}
-<div class="form-group col-sm-12" id="language-container-{{ i }}-{{ j }}" data-last-index="{{ k }}">
+<div class="form-group col-sm-12 border-bottom" id="language-container-{{ i }}-{{ j }}" data-last-index="{{ k }}">
     {% for k in 0..0 %}
 	<div class="row" id="language-{{ i }}-{{ j }}-{{ k }}">
 	    {% partial '@licences/register-language' k=k %}
 	</div> <!-- language row -->
     {% endfor %}
-    <button type="button" data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _item_type: 'language', _item_context: 'register'" 
-	    data-request="onAddItem" data-request-success="$.fn.initNewItem(this)" class="btn btn-info mb-3" id="add-language-{{ i }}-{{ j }}">Add Language</button>
+
+    <div class="row mt-3">
+	<div class="form-group col-sm-12">
+	    <button type="button" data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _item_type: 'language', _item_context: 'register'" 
+		    data-request="onAddItem" data-request-success="$.fn.initNewItem(this)" class="btn btn-info float-right mb-3" id="add-language-{{ i }}-{{ j }}">Add Language</button>
+	</div>
+    </div>
 </div> <!-- language container -->
+
+<div class="form-group col-sm-12">
+    <div class="row">
+	<div class="form-group col-sm-6">
+	    <button type="button" data-request="onAddItem" data-request-data="_licence_index: {{ i }}, _item_type: 'attestation', _item_context: 'register'" 
+		    data-request-success="$.fn.initNewItem(this)" class="btn btn-info" id="add-attestation-{{ i }}-{{ j }}">New Attestation</button>
+	</div>
+
+	{% if j > 0 %}
+	    <div class="form-group col-sm-6">
+		<button type="button" data-request="onDeleteItem" data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _item_type: 'attestation', _item_id: ''"
+			data-request-success="$.fn.deleteItem(this);" class="btn btn-danger float-right" id="delete-attestation-{{ i }}-{{ j }}">Delete Attestation</button>
+	    </div>
+	{% endif %}
+    </div>
+</div>

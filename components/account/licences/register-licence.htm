@@ -43,7 +43,7 @@
 {% set j = 0 %}
 <div class="form-group col-sm-12" id="attestation-container-{{ i }}" data-last-index="{{ j }}">
     {% for j in 0..0 %}
-	<div class="row" id="attestation-{{ i }}-{{ j }}">
+	<div class="row attestation-row" id="attestation-{{ i }}-{{ j }}">
 	    {% partial '@licences/register-attestation' i=i j=j %}
 	</div> <!-- attestation row -->
     {% endfor %}
