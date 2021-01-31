@@ -6,7 +6,6 @@ use RainLab\User\Models\Settings as UserSettings;
 use Cms\Classes\CodeBase;
 use Codalia\Profile\Models\Profile;
 use Codalia\Membership\Models\Member as MemberModel;
-use Codalia\Profile\Models\Licence;
 use Auth;
 use Validator;
 use Input;
@@ -214,6 +213,11 @@ class Account extends \RainLab\User\Components\Account
 
 	// Deletes the item from the database.
 	if ($params['id']) {
+	    $model = '\Codalia\Profile\Models\\'.ucfirst($params['type']);
+	    $item = $model::where('id', $params['id'])->first();
+	    $item->delete();
+
+	    Flash::success(Lang::get('codalia.profile::lang.action.delete_success'));
 	}
 
         // Sets the index pattern accordingly.

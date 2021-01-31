@@ -52,8 +52,9 @@
 	</div>
 
 	{% if j > 0 %}
+	{% set attestationId = (attestation.id) ? attestation.id : '\'\'' %}
 	    <div class="form-group col-sm-6">
-		<button type="button" data-request="onDeleteItem" data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _item_type: 'attestation', _item_id: ''"
+		<button type="button" data-request="onDeleteItem" data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _item_type: 'attestation', _item_id: {{ attestationId }}"
 			data-request-success="$.fn.deleteItem(this);" data-request-confirm="Are you sure ?"
 			class="btn btn-danger float-right" id="delete-attestation-{{ i }}-{{ j }}">Delete Attestation</button>
 	    </div>

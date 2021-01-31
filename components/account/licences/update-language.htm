@@ -25,9 +25,10 @@
 <input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][_id]" value="{{ language.id }}" />
 
 {% if k > 0 %}
+{% set languageId = (language.id) ? language.id : '\'\'' %}
 <div class="form-group col-sm-2 mt-4">
     <button type="button" data-request="onDeleteItem" data-request-success="$.fn.deleteItem(this);" data-request-confirm="Are you sure ?" 
-			  data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _language_index: {{ k }}, _item_type: 'language', _item_id: ''"
+			  data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _language_index: {{ k }}, _item_type: 'language', _item_id: {{ languageId }}"
 			  class="btn btn-danger mt-2" id="delete-language-{{ i }}-{{ j }}-{{ k }}">Delete</button>
 </div>
 {% endif %}
