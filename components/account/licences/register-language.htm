@@ -8,15 +8,29 @@
     </select>
 </div>
 
-<div class="form-group col-sm-3 mb-0 mt-4">
-    <div class="form-group checkbox custom-checkbox mb-0">
-	<label for="interpreter-{{ i }}-{{ j }}-{{ k }}">Interpreter</label>
+<div class="form-group col-sm-4 mb-0 mt-4">
+    <div class="row">
+    <div class="form-group checkbox custom-checkbox mb-0 mr-2">
+	<label for="interpreter-{{ i }}-{{ j }}-{{ k }}" class="mr-2">Interpreter</label>
 	<input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][interpreter]" class="float-right mt-1" value="1" id="interpreter-{{ i }}-{{ j }}-{{ k }}" />
     </div>
-
     <div class="form-group checkbox custom-checkbox mb-0">
-	<label for="translator-{{ i }}-{{ j }}-{{ k }}">Translator</label>
+      <label for="interpreter-cassation-{{ i }}-{{ j }}-{{ k }}" class="mr-2"><small>Cassation</small></label>
+	<input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][interpreter_cassation]"
+	       class="float-right mt-1" value="1" disabled="disabled" id="interpreter-cassation-{{ i }}-{{ j }}-{{ k }}" />
+    </div>
+    </div>
+
+    <div class="row">
+    <div class="form-group checkbox custom-checkbox mb-0 mr-2">
+	<label for="translator-{{ i }}-{{ j }}-{{ k }}" class="mr-2">Translator</label>
 	<input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][translator]" class="float-right mt-1" value="1" id="translator-{{ i }}-{{ j }}-{{ k }}" />
+    </div>
+    <div class="form-group checkbox custom-checkbox mb-0">
+      <label for="translator-cassation-{{ i }}-{{ j }}-{{ k }}" class="mr-2"><small>Cassation</small></label>
+	<input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][translator_cassation]"
+	       class="float-right mt-1" value="1" disabled="disabled" id="translator-cassation-{{ i }}-{{ j }}-{{ k }}" />
+    </div>
     </div>
 </div>
 

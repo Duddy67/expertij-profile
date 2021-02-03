@@ -14,7 +14,9 @@ class CreateLanguagesTable extends Migration
             $table->integer('attestation_id')->unsigned()->index()->nullable();
             $table->char('alpha_2', 2)->nullable();
             $table->boolean('interpreter')->nullable();
+            $table->boolean('interpreter_cassation')->nullable();
             $table->boolean('translator')->nullable();
+            $table->boolean('translator_cassation')->nullable();
             $table->tinyInteger('ordering')->unsigned()->nullable();
         });
     }

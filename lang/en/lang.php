@@ -37,6 +37,10 @@ return [
     'licence' => [
 	'expert' => 'Expert',
 	'ceseda' => 'CESEDA',
+	'appeal_court' => 'Appeal court',
+	'court' => 'Court',
+	'interpreter' => 'Interpreter',
+	'translator' => 'Translator',
     ],
     'citizenship' => [
 	'AD' => 'Andorian',

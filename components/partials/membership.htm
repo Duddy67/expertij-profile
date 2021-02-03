@@ -2,8 +2,8 @@
     <div class="form-group col-sm-6">
 	<label for="inputProStatus">{{ sharedFields.pro_status }}</label>
 	<select name="membership[pro_status]" class="form-control custom-select" id="inputProStatus">
-	  {% for id, name in sharedFields.pro_status_options %}
-	      <option value="{{ id }}">{{ name }}</option>
+	  {% for value, name in sharedFields.pro_status_options %}
+	      <option value="{{ value }}">{{ sharedFields[value] }}</option>
 	  {% endfor %}
 	</select>
     </div>

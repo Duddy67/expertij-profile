@@ -23,7 +23,11 @@
 	$('#appeal-court-'+index).prop('disabled', false);
 
 	$('[id^="interpreter-'+index+'-"],[id^="translator-'+index+'-"]').attr('type', 'checkbox');
+	$('[id^="interpreter-cassation-'+index+'-"],[id^="translator-cassation-'+index+'-"]').attr('type', 'checkbox');
 	$('label[for|="interpreter-'+index+'"],label[for|="translator-'+index+'"]').css({'visibility':'visible','display':'inline'});
+	$('label[for|="interpreter-cassation-'+index+'"],label[for|="translator-cassation-'+index+'"]').css({'visibility':'visible','display':'inline'});
+
+	$.fn.linkCassation(index);
 	break;
 
       case 'ceseda':
@@ -31,12 +35,38 @@
 	$('#appeal-court-'+index).prop('disabled', true);
 
 	$('[id^="interpreter-'+index+'-"],[id^="translator-'+index+'-"]').attr('type', 'hidden').removeAttr('checked');
+	$('[id^="interpreter-cassation-'+index+'-"],[id^="translator-cassation-'+index+'-"]').attr('type', 'hidden').removeAttr('checked').val('');
 	$('label[for|="interpreter-'+index+'"],label[for|="translator-'+index+'"]').css({'visibility':'hidden','display':'none'});
+	$('label[for|="interpreter-cassation-'+index+'"],label[for|="translator-cassation-'+index+'"]').css({'visibility':'hidden','display':'none'});
 	break;
 
       default:
 	$('#court-'+index).prop('disabled', true);
 	$('#appeal-court-'+index).prop('disabled', true);
+    }
+  };
+
+  $.fn.linkCassation = function(licenceIndex) {
+    let skills = ['interpreter', 'translator'];
+
+    for (let i = 0; i < skills.length; i++) {
+      $('[id^="'+skills[i]+'-'+licenceIndex+'-"]').each(function( index ) {
+	// Gets the pattern index.
+	let regex = new RegExp(skills[i]+'-([0-9]+-[0-9]+-[0-9]+)');
+	let results = $(this).attr('id').match(regex);
+
+	// When the skill checkbox is clicked the corresponding cassation 
+	// checkbox is enabled or disabled accordingly.
+	$(this).click(function() { 
+	  if ($(this).is(':checked')) {
+	    $('#'+skills[i]+'-cassation-'+results[1]).prop('disabled', false);
+	  }
+	  else {
+	    $('#'+skills[i]+'-cassation-'+results[1]).prop('checked', false);
+	    $('#'+skills[i]+'-cassation-'+results[1]).prop('disabled', true);
+	  }
+	});
+      });
     }
   };
 
@@ -131,6 +161,8 @@
       $('#add-attestation-'+item.i+'-'+lastIndex).click(function() { $.fn.addItem(this); });
       $('#add-language-'+item.i+'-'+lastIndex).click(function() { $.fn.addItem(this); });
       $.fn.setDateFields('#dp_expiry-date-'+item.i+'-'+lastIndex);
+      // Sets the interpreter/translator attributes according to the licence type.
+      $.fn.setLicenceType($('#licence-type-'+item.i)); 
     }
     else if (item.type == 'language' && item.action == 'add') {
       // Sets the interpreter/translator attributes according to the licence type.
