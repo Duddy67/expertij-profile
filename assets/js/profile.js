@@ -55,6 +55,14 @@
 	let regex = new RegExp(skills[i]+'-([0-9]+-[0-9]+-[0-9]+)');
 	let results = $(this).attr('id').match(regex);
 
+	// Initialises the cassation checkboxes.
+	if ($(this).is(':checked')) {
+	  $('#'+skills[i]+'-cassation-'+results[1]).prop('disabled', false);
+	}
+	else {
+	  $('#'+skills[i]+'-cassation-'+results[1]).prop('disabled', true);
+	}
+
 	// When the skill checkbox is clicked the corresponding cassation 
 	// checkbox is enabled or disabled accordingly.
 	$(this).click(function() { 

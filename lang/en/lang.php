@@ -41,6 +41,7 @@ return [
 	'court' => 'Court',
 	'interpreter' => 'Interpreter',
 	'translator' => 'Translator',
+	'cassation' => 'Cassation',
     ],
     'citizenship' => [
 	'AD' => 'Andorian',
