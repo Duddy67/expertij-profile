@@ -71,9 +71,11 @@ class Plugin extends PluginBase
 		    // Creates a new profile model for this user.
 		    $profile = ProfileModel::getFromUser($model, $data);
 
-		    if (isset($data['_context'])) {
+		    if (\Session::has('registration_context')) {
+		        // Retrieves and deletes registration_context variable from the session.
+		        $regContext = \Session::pull('registration_context');
 		        // Informs the Membership or Training plugin according to the context.
-		        $itemName = ($data['_context'] == 'membership') ? 'Member' : 'Trainee';
+		        $itemName = ($regContext == 'membership') ? 'Member' : 'Trainee';
 			Event::fire('codalia.profile.register'.$itemName, [$profile, $data]);
 		    }
 		}
@@ -120,7 +122,7 @@ class Plugin extends PluginBase
 
 		// Informs the Membership and Training plugins about a user deletion.
 		Event::fire('codalia.profile.userDeletion', [$profileId]);
-		// N.B: An afterDelete event is going to be triggered after the member deletion (if any).
+		// N.B: An afterDelete event is going to be triggered after the member or trainee deletion (if any).
 	    });
 	});
 

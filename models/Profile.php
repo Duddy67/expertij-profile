@@ -20,13 +20,12 @@ class Profile extends Model
     /**
      * @var array Guarded fields
      */
-    protected $guarded = ['id', 'user_id', 'created_at', 'updated_at'];
+    protected $guarded = ['id', 'user_id', 'created_at', 'updated_at', 'honorary_member'];
 
     /**
      * @var array Fillable fields
      */
     protected $fillable = [];
-    //protected $fillable = [];
 
     /**
      * @var array Validation rules for attributes
@@ -94,15 +93,26 @@ class Profile extends Model
 
 	$profile = new static;
 	$profile->user = $user;
-	//$profile->first_name = $data['profile']['first_name'];
-	//$profile->last_name = $data['profile']['last_name'];
-	// Important: Creates a profile without validation.
-	// NB. The validation has been performed earlier in the code.
+	$input = $data['profile'];
+
+	// Checks for honorary members (only available in the membership registration context).
+	if (\Session::has('registration_context') && \Session::get('registration_context') == 'membership' && isset($data['profile']['honorary_member'])) {
+	    $profile->honorary_member = 1;
+	    // Removes the field from the data or an exception will be thrown while updating.
+	    $input = Arr::except($data['profile'], ['honorary_member']);
+	}
+
 	$profile->save();
 	$user->profile = $profile;
 
 	// Updates the newly created profile with the corresponding data.
-	$profile->update($data['profile']);
+	$profile->update($input);
+
+	// Honorary members don't have licences.
+	if ($profile->honorary_member) {
+	    return $profile;
+	}
+
 	$profile->saveLicences($data['licences']);
 
 	return $profile;

@@ -10,8 +10,21 @@
     });
 
     $('[id^="add-language-"],[id^="add-attestation-"],[id^="add-licence-"]').click(function() { $.fn.addItem(this); });
+
+    $('#honorary-member').click(function() { $.fn.honoraryMemberSetting($(this)); });
   });
 
+
+  $.fn.honoraryMemberSetting = function(elem) {
+      if (elem.is(':checked')) {
+	$('#membership').css({'visibility':'hidden','display':'none'});
+	$('#licences').css({'visibility':'hidden','display':'none'});
+      }
+      else {
+	$('#membership').css({'visibility':'visible','display':'block'});
+	$('#licences').css({'visibility':'visible','display':'block'});
+      }
+  };
 
   $.fn.setLicenceType = function(elem) {
     // Gets the index number set after "licence-type-".

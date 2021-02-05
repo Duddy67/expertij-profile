@@ -128,7 +128,16 @@
 		    </div>
 		</div>
 
-		{% partial '@licences/register' %}
+		<div class="row">
+		    <div class="form-group checkbox custom-checkbox col-sm-6">
+			<label for="honorary-member" class="mr-2">Honorary member</label>
+			<input type="checkbox" name="profile[honorary_member]" class="" value="1" id="honorary-member" />
+		    </div>
+		</div>
+
+		<div class="row" id="licences">
+		    {% partial '@licences/register' %}
+		</div>
 
 		<input name="name" type="hidden" id="registerName" />
 		<input type="hidden" id="locale" value="{{ locale }}" />
@@ -136,15 +145,15 @@
 		<button type="submit" class="btn btn-success">Register</button>
 	    </div>
 
-	    <div class="col">
-		{% if sharedPartial %}
-		    {% set pluginPartial = '@' ~  sharedPartial %}
+	    {% if sharedPartial %}
+		{% set pluginPartial = '@' ~  sharedPartial %}
 
-		    {% if partial(pluginPartial) %}
-		      {% partial pluginPartial %}
-		    {% endif %}
+		{% if partial(pluginPartial) %}
+		<div class="col" id="{{ sharedPartial }}">
+			{% partial pluginPartial %}
+		    </div>
 		{% endif %}
-	    </div>
+	    {% endif %}
 	</div>
 
     {{ form_close() }}

@@ -79,10 +79,6 @@ class Account extends \RainLab\User\Components\Account
 	$this->addJs('assets/js/profile.js');
         $this->page['template'] = $this->property('template');
 	$this->page['locale'] = \App::getLocale();
-        // Gets the external plugin name and model.
-	$plugin = explode(':', $this->property('sharedFields'));
-	$this->page['sharedPartial'] = strtolower($plugin[0]);
-	$this->page['sharedFields'] = $this->getSharedFields($plugin);
 
 	$this->page['appealCourts'] = Profile::getAppealCourts();
 	$this->page['courts'] = Profile::getCourts();
@@ -93,6 +89,19 @@ class Account extends \RainLab\User\Components\Account
 
 	if ($this->page['user']) {
 	    $this->page['profile'] = $this->page['user']->profile;
+
+	    if (\Session::has('registration_context')) {
+	        \Session::forget('registration_context');
+	    }
+	}
+	// Registration
+	else {
+	    // Gets the external plugin name and model.
+	    $plugin = explode(':', $this->property('sharedFields'));
+	    $this->page['sharedPartial'] = strtolower($plugin[0]);
+	    $this->page['sharedFields'] = $this->getSharedFields($plugin);
+            // Sets the registration context according to the external plugin. 
+	    \Session::put('registration_context', $plugin[0]);
 	}
     }
 
@@ -106,7 +115,7 @@ class Account extends \RainLab\User\Components\Account
 	$messages = [];
 
 	// Adds Membership extra rules.
-	if (isset($data['_context']) && $data['_context'] == 'membership') {
+	if (\Session::has('registration_context') && \Session::get('registration_context') == 'membership') {
 	    $extra = (new MemberModel)->rules;
 	    $rules = array_merge($rules, $extra);
 	    $messages = (new MemberModel)->ruleMessages;
@@ -156,7 +165,11 @@ class Account extends \RainLab\User\Components\Account
 	$user = $this->user();
         $profile = Profile::where('user_id', $user->id)->first();
 	$profile->update($data['profile']);
-	$profile->saveLicences($data['licences']);
+
+	// Saves the licences of the regular members.
+	if (!$profile->honorary_member) {
+	    $profile->saveLicences($data['licences']);
+	}
 
         /*
          * Redirect

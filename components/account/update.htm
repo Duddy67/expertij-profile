@@ -122,9 +122,11 @@
 	<button type="submit" class="btn btn-success">Save</button>
     </div>
 
-    <div class="col col-md-6">
-	{% partial '@licences/update' %}
-    </div>
+    {% if not profile.honorary_member %}
+	<div class="col col-md-6">
+	    {% partial '@licences/update' %}
+	</div>
+    {% endif %}
 </div>
 
 {{ form_close() }}

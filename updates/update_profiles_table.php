@@ -15,6 +15,7 @@ class UpdateProfilesTable extends Migration
             $table->string('birth_location', 30)->nullable()->after('birth_date');
             $table->char('citizenship', 2)->nullable()->after('birth_location');
             $table->string('phone', 15)->nullable()->after('country');
+            $table->boolean('honorary_member')->nullable()->after('phone');
         });
     }
 
@@ -59,6 +60,13 @@ class UpdateProfilesTable extends Migration
             Schema::table('codalia_profile_profiles', function($table)
             {
                 $table->dropColumn('phone');
+            });
+        }
+
+        if (Schema::hasColumn('codalia_profile_profiles', 'honorary_member')) {
+            Schema::table('codalia_profile_profiles', function($table)
+            {
+                $table->dropColumn('honorary_member');
             });
         }
     }
