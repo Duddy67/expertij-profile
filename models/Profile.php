@@ -81,7 +81,9 @@ class Profile extends Model
     public $morphTo = [];
     public $morphOne = [];
     public $morphMany = [];
-    public $attachOne = [];
+    public $attachOne = [
+        'photo' => ['System\Models\File', 'delete' => true],
+    ];
     public $attachMany = [];
 
 

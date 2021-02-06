@@ -23,48 +23,48 @@
 
 		<div class="row">
 		    <div class="form-group col-sm-6">
-		      <label for="inputLastName">Last Name</label>
-		      <input type="text" name="profile[last_name]" class="form-control" id="inputLastName">
+			<label for="inputLastName">Last Name</label>
+			<input type="text" name="profile[last_name]" class="form-control" id="inputLastName">
 		    </div>
 
 		    <div class="form-group col-sm-6">
-		      <label for="inputFirstName">First Name</label>
-		      <input type="text" name="profile[first_name]" class="form-control" id="inputFirstName">
+			<label for="inputFirstName">First Name</label>
+			<input type="text" name="profile[first_name]" class="form-control" id="inputFirstName">
 		    </div>
 		</div>
 
 		<div class="row">
 		    <div class="form-group col-sm-6">
-		      <label for="inputBirthName">Birth Name</label>
-		      <input type="text" name="profile[birth_name]" class="form-control" id="inputBirthName">
+			<label for="inputBirthName">Birth Name</label>
+			<input type="text" name="profile[birth_name]" class="form-control" id="inputBirthName">
 		    </div>
 
 		    <div class="form-group col-sm-6">
-		      <label>Birth Date</label>
+			<label>Birth Date</label>
 			<div class="input-group">
-			  <input type="text" class="form-control date-picker" id="dp_birth-date" autocomplete="off" aria-describedby="basic-addon1">
-			  <div class="input-group-append">
-			    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-			  </div>
+			    <input type="text" class="form-control date-picker" id="dp_birth-date" autocomplete="off" aria-describedby="basic-addon1">
+			    <div class="input-group-append">
+				<span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+			    </div>
 			</div>
-		      <input type="hidden" name="profile[birth_date]" id="birth-date" value="">
+			<input type="hidden" name="profile[birth_date]" id="birth-date" value="">
 		    </div>
 		</div>
 
 		<div class="row">
 		    <div class="form-group col-sm-6">
-		      <label for="inputBirthLocation">Birth Location</label>
-		      <input type="text" name="profile[birth_location]" class="form-control" id="inputBirthLocation">
+			<label for="inputBirthLocation">Birth Location</label>
+			<input type="text" name="profile[birth_location]" class="form-control" id="inputBirthLocation">
 		    </div>
 
 		    <div class="form-group col-sm-6">
-		      <label for="inputCitizenship">Citizenship</label>
-		      <select name="profile[citizenship]" class="form-control" id="inputCitizenship">
-			<option value="">- Select -</option>
-			{% for alpha_2, text in citizenships %}
-			  <option value="{{ alpha_2 }}">{{ text }}</option>
-			{% endfor %}
-		      </select>
+			<label for="inputCitizenship">Citizenship</label>
+			<select name="profile[citizenship]" class="form-control" id="inputCitizenship">
+			    <option value="">- Select -</option>
+			    {% for alpha_2, text in citizenships %}
+				<option value="{{ alpha_2 }}">{{ text }}</option>
+			    {% endfor %}
+			</select>
 		    </div>
 		</div>
 
@@ -99,15 +99,15 @@
 		<div class="row">
 		    <div class="col-sm-6">
 			<div class="form-group">
-			  <label for="inputStreet">Street</label>
-			  <input type="text" name="profile[street]" class="form-control" id="inputStreet">
+			    <label for="inputStreet">Street</label>
+			    <input type="text" name="profile[street]" class="form-control" id="inputStreet">
 			</div>
 		    </div>
 
 		    <div class="col-sm-6">
 			<div class="form-group">
-			  <label for="inputPostcode">Postcode</label>
-			  <input type="text" name="profile[postcode]" class="form-control" id="inputPostcode">
+			    <label for="inputPostcode">Postcode</label>
+			    <input type="text" name="profile[postcode]" class="form-control" id="inputPostcode">
 			</div>
 		    </div>
 		</div>
@@ -115,15 +115,15 @@
 		<div class="row">
 		    <div class="col-sm-6">
 			<div class="form-group">
-			  <label for="inputCity">City</label>
-			  <input type="text" name="profile[city]" class="form-control" id="inputCity">
+			    <label for="inputCity">City</label>
+			    <input type="text" name="profile[city]" class="form-control" id="inputCity">
 			</div>
 		    </div>
 
 		    <div class="col-sm-6">
 			<div class="form-group">
-			  <label for="inputPhone">Phone</label>
-			  <input type="text" name="profile[phone]" class="form-control" id="inputPhone">
+			    <label for="inputPhone">Phone</label>
+			    <input type="text" name="profile[phone]" class="form-control" id="inputPhone">
 			</div>
 		    </div>
 		</div>
@@ -133,6 +133,11 @@
 			<label for="honorary-member" class="mr-2">Honorary member</label>
 			<input type="checkbox" name="profile[honorary_member]" class="" value="1" id="honorary-member" />
 		    </div>
+		</div>
+
+		<div class="form-group">
+		    <label for="inputPhoto">Photo</label>
+		    <input type="file" name="photo" class="form-control" id="inputPhoto">
 		</div>
 
 		<div class="row" id="licences">
@@ -149,7 +154,7 @@
 		{% set pluginPartial = '@' ~  sharedPartial %}
 
 		{% if partial(pluginPartial) %}
-		<div class="col" id="{{ sharedPartial }}">
+		    <div class="col" id="{{ sharedPartial }}">
 			{% partial pluginPartial %}
 		    </div>
 		{% endif %}

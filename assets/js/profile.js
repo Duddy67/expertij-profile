@@ -12,8 +12,18 @@
     $('[id^="add-language-"],[id^="add-attestation-"],[id^="add-licence-"]').click(function() { $.fn.addItem(this); });
 
     $('#honorary-member').click(function() { $.fn.honoraryMemberSetting($(this)); });
+
+    $('#update-data, #replace-photo').click(function() { $.fn.setTask($(this)); });
   });
 
+
+  $.fn.setTask = function(btn) {
+    $('#task').val(btn.attr('id'));
+  }
+
+  $.fn.testFunc = function() {
+    alert('Hello');
+  };
 
   $.fn.honoraryMemberSetting = function(elem) {
       if (elem.is(':checked')) {

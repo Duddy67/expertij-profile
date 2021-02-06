@@ -19,49 +19,49 @@
 
 	<div class="row">
 	    <div class="form-group col-md-6">
-	      <label for="inputFirstname">First Name</label>
-	      <input type="text" name="profile[first_name]" class="form-control" id="inputFirstname" value="{{ profile.first_name }}">
+		<label for="inputFirstname">First Name</label>
+		<input type="text" name="profile[first_name]" class="form-control" id="inputFirstname" value="{{ profile.first_name }}">
 	    </div>
 
 	    <div class="form-group col-md-6">
-	      <label for="inputLastname">Last Name</label>
-	      <input type="text" name="profile[last_name]" class="form-control" id="inputLastname" value="{{ profile.last_name }}">
+		<label for="inputLastname">Last Name</label>
+		<input type="text" name="profile[last_name]" class="form-control" id="inputLastname" value="{{ profile.last_name }}">
 	    </div>
 	</div>
 
 	{% if profile.member %}
 	    <div class="row">
 		<div class="form-group col-md-6">
-		  <label for="inputBirthName">Birth Name</label>
-		  <input type="text" name="profile[birth_name]" class="form-control" id="inputBirthName" value="{{ profile.birth_name }}">
+		    <label for="inputBirthName">Birth Name</label>
+		    <input type="text" name="profile[birth_name]" class="form-control" id="inputBirthName" value="{{ profile.birth_name }}">
 		</div>
 
 		<div class="form-group col-md-6">
-		  <label for="birth-datepiker">Birth Date</label>
+		    <label for="birth-datepiker">Birth Date</label>
 		    <div class="input-group">
-		      <input type="text" class="form-control date-picker" id="dp_birth-date" autocomplete="off" aria-describedby="basic-addon1">
-		      <div class="input-group-append">
-			<span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-		      </div>
+			<input type="text" class="form-control date-picker" id="dp_birth-date" autocomplete="off" aria-describedby="basic-addon1">
+			<div class="input-group-append">
+			    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+			</div>
 		    </div>
-		  <input type="hidden" name="profile[birth_date]" id="birth-date" value="{{ profile.birth_date }}">
+		    <input type="hidden" name="profile[birth_date]" id="birth-date" value="{{ profile.birth_date }}">
 		</div>
 	    </div>
 
 	    <div class="row">
 		<div class="form-group col-sm-6">
-		  <label for="inputBirthLocation">Birth Location</label>
-		  <input type="text" name="profile[birth_location]" class="form-control" id="inputBirthLocation" value="{{ profile.birth_location }}">
+		    <label for="inputBirthLocation">Birth Location</label>
+		    <input type="text" name="profile[birth_location]" class="form-control" id="inputBirthLocation" value="{{ profile.birth_location }}">
 		</div>
 
 		<div class="form-group col-sm-6">
-		  <label for="inputCitizenship">Citizenship</label>
-		  <select name="profile[citizenship]" class="form-control" id="inputCitizenship">
-		    <option value="">- Select -</option>
-		    {% for alpha_2, text in citizenships %}
-		      <option value="{{ alpha_2 }}" {{ (profile.citizenship == alpha_2) ? 'selected' : '' }}>{{ text }}</option>
-		    {% endfor %}
-		  </select>
+		    <label for="inputCitizenship">Citizenship</label>
+		    <select name="profile[citizenship]" class="form-control" id="inputCitizenship">
+			<option value="">- Select -</option>
+			{% for alpha_2, text in citizenships %}
+			    <option value="{{ alpha_2 }}" {{ (profile.citizenship == alpha_2) ? 'selected' : '' }}>{{ text }}</option>
+			{% endfor %}
+		    </select>
 		</div>
 	    </div>
 	{% endif %}
@@ -94,32 +94,59 @@
 
 	<div class="row">
 	    <div class="form-group col-sm-6">
-	      <label for="inputStreet">Street</label>
-	      <input type="text" name="profile[street]" class="form-control" id="inputStreet" value="{{ profile.street }}">
+		<label for="inputStreet">Street</label>
+		<input type="text" name="profile[street]" class="form-control" id="inputStreet" value="{{ profile.street }}">
 	    </div>
 
 	    <div class="form-group col-sm-6">
-	      <label for="inputPostcode">Postcode</label>
-	      <input type="text" name="profile[postcode]" class="form-control" id="inputPostcode" value="{{ profile.postcode }}">
+		<label for="inputPostcode">Postcode</label>
+		<input type="text" name="profile[postcode]" class="form-control" id="inputPostcode" value="{{ profile.postcode }}">
 	    </div>
 	</div>
 
 	<div class="row">
 	    <div class="form-group col-sm-6">
-	      <label for="inputCity">City</label>
-	      <input type="text" name="profile[city]" class="form-control" id="inputCity" value="{{ profile.city }}">
+		<label for="inputCity">City</label>
+		<input type="text" name="profile[city]" class="form-control" id="inputCity" value="{{ profile.city }}">
 	    </div>
 
 	    <div class="form-group col-sm-6">
-	      <label for="inputPhone">Phone</label>
-	      <input type="text" name="profile[phone]" class="form-control" id="inputPhone" value="{{ profile.phone }}">
+		<label for="inputPhone">Phone</label>
+		<input type="text" name="profile[phone]" class="form-control" id="inputPhone" value="{{ profile.phone }}">
 	    </div>
 	</div>
 
+	<hr/>
+
+	<div class="row">
+	    <div class="form-group col-sm-12">
+		<p class="h5 mt-3">Photo</p>
+		<div id="new-photo">
+		    {% if profile.photo %}	
+			<img src="{{ profile.photo.thumb(thumbSize.width, thumbSize.height, 'auto') }}" />
+		    {% else %}
+			<img src="plugins/codalia/membership/assets/img/userportrait.jpg" width="{{ thumbSize.width }}" height="{{ thumbSize.height }}" />
+		    {% endif %}
+		</div>
+		<p class="mb-0"><small>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</small></p>
+		<div class="row">
+		    <div id="photo-upload-field" class="col-sm-8">
+			<input type="file" name="photo" class="form-control">
+		    </div>
+		    <div class="col-sm-2">
+			<button type="submit" id="replace-photo" class="btn btn-success">Replace</button>
+		    </div>
+		</div>
+	    </div>
+	</div>
+
+	<hr/>
+
 	<input name="name" type="hidden" id="accountName" value="{{ user.name }}">
 	<input type="hidden" id="locale" value="{{ locale }}" />
+	<input name="task" type="hidden" id="task" value="">
 
-	<button type="submit" class="btn btn-success">Save</button>
+	<button type="submit" id="update-data" class="btn btn-success">Save</button>
     </div>
 
     {% if not profile.honorary_member %}
@@ -130,3 +157,4 @@
 </div>
 
 {{ form_close() }}
+
