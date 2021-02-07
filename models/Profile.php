@@ -86,6 +86,9 @@ class Profile extends Model
     ];
     public $attachMany = [];
 
+    const THUMBNAIL_WIDTH = 100;
+    const THUMBNAIL_HEIGHT = 100;
+
 
     public static function getFromUser($user, $data)
     {
@@ -197,6 +200,16 @@ class Profile extends Model
 	}
 
 	return $years;
+    }
+
+    public static function getThumbnailSize()
+    {
+        return ['width' => self::THUMBNAIL_WIDTH, 'height' => self::THUMBNAIL_HEIGHT];
+    }
+
+    public static function getBlankProfileUrl()
+    {
+        return url('/').'/plugins/codalia/profile/assets/img/blank_profile.jpg';
     }
 
     public function saveLicences($licences)

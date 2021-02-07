@@ -6,7 +6,6 @@ use RainLab\User\Models\Settings as UserSettings;
 use Cms\Classes\CodeBase;
 use Codalia\Profile\Models\Profile;
 use Codalia\Membership\Models\Member as MemberModel;
-use Codalia\Membership\Models\Settings;
 use System\Models\File;
 use Auth;
 use Validator;
@@ -81,8 +80,8 @@ class Account extends \RainLab\User\Components\Account
 	$this->addJs('assets/js/profile.js');
         $this->page['template'] = $this->property('template');
 	$this->page['locale'] = \App::getLocale();
-	$thumbSize = explode(':', Settings::get('photo_thumbnail', '100:100'));
-	$this->page['thumbSize'] = ['width' => $thumbSize[0], 'height' => $thumbSize[1]];
+	$this->page['thumbSize'] = Profile::getThumbnailSize();
+	$this->page['blankProfile'] = Profile::getBlankProfileUrl();
 
 	$this->page['appealCourts'] = Profile::getAppealCourts();
 	$this->page['courts'] = Profile::getCourts();
@@ -206,8 +205,10 @@ class Account extends \RainLab\User\Components\Account
 
         Flash::success(Lang::get('codalia.membership::lang.action.file_replace_success'));
 
+	$size = Profile::getThumbnailSize();
+
 	return [
-	  '#new-photo' => '<img src="'.$file->getThumb(100, 100).'" />',
+	  '#new-photo' => '<img src="'.$file->getThumb($size['width'], $size['height']).'" />',
 	  // Replaces the old file input by a new one to clear the previous file selection. 
 	  '#photo-upload-field' => '<input type="file" name="photo" class="form-control">'
 	];
