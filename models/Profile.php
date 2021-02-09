@@ -30,14 +30,7 @@ class Profile extends Model
     /**
      * @var array Validation rules for attributes
      */
-    public $rules = [
-	'profile.first_name' => 'sometimes|required|between:2,255',
-	'profile.last_name' => 'sometimes|required|between:2,255',
-	'profile.street' => 'sometimes|required|between:5,255',
-	'profile.city' => 'sometimes|required|between:2,255',
-	'profile.postcode' => 'sometimes|required|between:2,255',
-    ];
-    //public $rules = [];
+    public $rules = [];
 
     /**
      * @var array Attributes to be cast to native types
@@ -121,6 +114,33 @@ class Profile extends Model
 	$profile->saveLicences($data['licences']);
 
 	return $profile;
+    }
+
+    public static function getRules($licences = true) 
+    {
+	$rules = [
+	    'profile.civility' => 'required',
+	    'profile.first_name' => 'required|between:2,255',
+	    'profile.last_name' => 'required|between:2,255',
+	    'profile.street' => 'sometimes|required|between:5,255',
+	    'profile.city' => 'sometimes|required|between:2,255',
+	    'profile.postcode' => 'sometimes|required|between:2,255',
+	    'profile.phone' => 'sometimes|required',
+	    'profile.citizenship' => 'sometimes|required',
+	    'profile.birth_date' => 'sometimes|required|date',
+	    'profile.birth_name' => 'sometimes|required|between:2,255',
+	    'profile.birth_location' => 'sometimes|required|between:2,255',
+	];
+
+	if ($licences ) {
+	    $rules['licences.*.type'] = 'required';
+	    $rules['licences.*.since'] = 'required';
+	    $rules['licences.*.appeal_court_id'] = 'required_if:licences.*.type,expert';
+	    $rules['licences.*.court_id'] = 'required_if:licences.*.type,ceseda';
+	    $rules['licences.*.attestations.*.languages.*.alpha_2'] = 'required';
+	}
+
+	return $rules;
     }
 
     public function getCivilityOptions()

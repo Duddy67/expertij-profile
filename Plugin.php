@@ -10,6 +10,7 @@ use Codalia\Profile\Helpers\ProfileHelper;
 use Codalia\Membership\Models\Member as MemberModel;
 use Codalia\Training\Models\Trainee as TraineeModel;
 use BackendAuth;
+use Input;
 use Event;
 use Lang;
 use Flash;
@@ -70,6 +71,11 @@ class Plugin extends PluginBase
 		    $data = post();
 		    // Creates a new profile model for this user.
 		    $profile = ProfileModel::getFromUser($model, $data);
+
+		    if (Input::hasFile('photo')) {
+			$profile->photo = Input::file('photo');
+			$profile->save();
+		    }
 
 		    if (\Session::has('registration_context')) {
 		        // Retrieves and deletes registration_context variable from the session.

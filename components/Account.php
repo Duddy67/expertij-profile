@@ -114,8 +114,14 @@ class Account extends \RainLab\User\Components\Account
 	// Concatenates the first and last name in the User plugin's 'name' field.
 	Input::merge(['name' => $data['profile']['first_name'].' '.$data['profile']['last_name']]);
 
-        $rules = (new Profile)->rules;
+	$licences = (isset($data['profile']['honorary_member'])) ? false : true;
+        $rules = Profile::getRules($licences);
 	$messages = [];
+
+	if ($licences) {
+	    $rules = $this->setFileValidationRules($rules, $data);
+	    $rules = $this->setLanguageValidationRules($rules, $data);
+	}
 
 	// Adds Membership extra rules.
 	if (\Session::has('registration_context') && \Session::get('registration_context') == 'membership') {
@@ -159,8 +165,13 @@ class Account extends \RainLab\User\Components\Account
 
 	// Concatenates the first and last name in the User plugin's 'name' field.
 	Input::merge(['name' => $data['profile']['first_name'].' '.$data['profile']['last_name']]);
-	// TODO: Find a way to delete 'email' variable from post (just in case).
-        $rules = (new Profile)->rules;
+
+	$licences = (isset($data['licences'])) ? true : false;
+        $rules = Profile::getRules($licences);
+
+	if ($licences) {
+	    $rules = $this->setLanguageValidationRules($rules, $data);
+	}
 
 	$validation = Validator::make($data, $rules);
 	if ($validation->fails()) {
@@ -278,6 +289,34 @@ class Account extends \RainLab\User\Components\Account
 
 	// Removes the given item from the div container.
 	return ['#'.$params['type'].'-'.$indexPattern => ''];
+    }
+
+    protected function setFileValidationRules($rules, $data)
+    {
+        for($i = 0; $i < count($data['licences']); $i++) {
+	    for($j = 0; $j < count($data['licences'][$i]['attestations']); $j++) {
+	        $rules['file_'.$i.'_'.$j] = 'required';
+	    }
+	}
+
+	return $rules;
+    }
+
+    protected function setLanguageValidationRules($rules, $data)
+    {
+        for($i = 0; $i < count($data['licences']); $i++) {
+	    if ($data['licences'][$i]['type'] == 'expert') {
+		for($j = 0; $j < count($data['licences'][$i]['attestations']); $j++) {
+		    for($k = 0; $k < count($data['licences'][$i]['attestations'][$j]['languages']); $k++) {
+		        $path = 'licences.'.$i.'.attestations.'.$j.'.languages.'.$k;
+			$rules[$path.'.interpreter'] = 'required_unless:'.$path.'.translator,1';
+			$rules[$path.'.translator'] = 'required_unless:'.$path.'.interpreter,1';
+		    }
+		}
+	    }
+	}
+//file_put_contents('debog_file.txt', print_r($rules, true));
+	return $rules;
     }
 
     /*
