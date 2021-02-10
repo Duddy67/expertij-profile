@@ -92,18 +92,39 @@ class Account extends \RainLab\User\Components\Account
 
 	if ($this->page['user']) {
 	    $this->page['profile'] = $this->page['user']->profile;
+	}
+	else {
+	    // Gets the external plugin name and model.
+	    //$plugin = explode(':', $this->property('sharedFields'));
+	}
+
+	$this->setExternalPluginRegistration();
+    }
+
+    protected function setExternalPluginRegistration()
+    {
+        // It's not a registration page.
+	if ($this->property('template') != 'register') {
 
 	    if (\Session::has('registration_context')) {
 	        \Session::forget('registration_context');
 	    }
+
+	    return;
 	}
-	// Registration
-	else {
-	    // Gets the external plugin name and model.
-	    $plugin = explode(':', $this->property('sharedFields'));
-	    $this->page['sharedPartial'] = strtolower($plugin[0]);
-	    $this->page['sharedFields'] = $this->getSharedFields($plugin);
-            // Sets the registration context according to the external plugin. 
+
+	// Gets the external plugin name and model.
+	$plugin = explode(':', $this->property('sharedFields'));
+
+	if (empty($plugin[0])) {
+	    return;
+	}
+
+	$this->page['sharedPartial'] = strtolower($plugin[0]);
+	$this->page['sharedFields'] = $this->getSharedFields($plugin);
+
+	if (!\Session::has('registration_context')) {
+	    // Sets the registration context according to the external plugin. 
 	    \Session::put('registration_context', $plugin[0]);
 	}
     }
@@ -125,12 +146,11 @@ class Account extends \RainLab\User\Components\Account
 
 	// Adds Membership extra rules.
 	if (\Session::has('registration_context') && \Session::get('registration_context') == 'membership') {
-	    $extra = (new MemberModel)->rules;
+	    $extra = MemberModel::getRules();
 	    $rules = array_merge($rules, $extra);
-	    $messages = (new MemberModel)->ruleMessages;
 	}
 
-	$validation = Validator::make(Input::all(), $rules, $messages);
+	$validation = Validator::make(Input::all(), $rules);
 	if ($validation->fails()) {
 	    throw new ValidationException($validation);
 	}
@@ -140,7 +160,7 @@ class Account extends \RainLab\User\Components\Account
 
     public function getTemplateOptions()
     {
-        return ['signin' => 'Sign in', 'register' => 'Register', 'both' => 'Both'];
+        return ['signin' => 'Sign in', 'register' => 'Register'];
     }
 
     public function setOptionTexts($optionName)

@@ -2,9 +2,10 @@
     <div class="form-group col-sm-6">
 	<label for="inputProStatus">{{ sharedFields.pro_status }}</label>
 	<select name="membership[pro_status]" class="form-control custom-select" id="inputProStatus">
-	  {% for value, name in sharedFields.pro_status_options %}
-	      <option value="{{ value }}">{{ sharedFields[value] }}</option>
-	  {% endfor %}
+	    <option value="">- Select -</option>
+	    {% for value, name in sharedFields.pro_status_options %}
+		<option value="{{ value }}">{{ sharedFields[value] }}</option>
+	    {% endfor %}
 	</select>
     </div>
 
@@ -40,4 +41,8 @@
     <label for="inputAttestation">{{ sharedFields.attestation }}</label>
     <input type="file" name="attestation" class="form-control" id="inputAttestation">
 </div>
+
+{% put scripts %}
+    <script type="text/javascript" src="plugins/codalia/membership/assets/js/member-space.js"></script>
+{% endput %}
 
