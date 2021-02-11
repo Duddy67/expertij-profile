@@ -26,12 +26,13 @@ return [
     ],
     'messages' => [
 	'required_field' => 'This field is required',
+	'skill_checkboxes' => 'At least one of both checkboxes (Interpreter or Translator) must be checked.',
     ],
     'account' => [
 	'template' => 'Template',
 	'template_desc' => 'The template to display when the user is logged out.',
-	'sharedFields' => 'Shared Fields',
-	'sharedFields_desc' => '',
+	'hostedFields' => 'Hosted Fields',
+	'hostedFields_desc' => '',
 	'extraRegistrationFields_desc' => 'The name of a partial which provides extra registration fields on the behalf of another plugin. Only used with the register template.',
     ],
     'licence' => [
@@ -42,6 +43,21 @@ return [
 	'interpreter' => 'Interpreter',
 	'translator' => 'Translator',
 	'cassation' => 'Cassation',
+    ],
+    'licences' => [
+	'type' => 'Type',
+	'since' => 'Since',
+	'appeal_court_id' => 'Appeal Court',
+	'court_id' => 'Court',
+        'attestations' => [
+	    'file' => 'Attestation',
+	    'expiry_date' => 'Expiry Date',
+	    'languages' => [
+		'alpha_2' => 'Language',
+		'interpreter' => 'Interpreter',
+		'translator' => 'Translator',
+	    ],
+	],
     ],
     'citizenship' => [
 	'AD' => 'Andorian',

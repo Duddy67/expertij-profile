@@ -18,7 +18,7 @@
 	<div class="form-group checkbox custom-checkbox mb-0">
 	    <label for="interpreter-cassation-{{ i }}-{{ j }}-{{ k }}" class="mr-2"><small>Cassation</small></label>
 	    <input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][interpreter_cassation]"
-		   class="float-right mt-1" value="1" disabled="disabled" id="interpreter-cassation-{{ i }}-{{ j }}-{{ k }}" { (language.interpreter_cassation) ? 'checked' : '' }} />
+		   class="float-right mt-1" value="1" disabled="disabled" id="interpreter-cassation-{{ i }}-{{ j }}-{{ k }}" {{ (language.interpreter_cassation) ? 'checked' : '' }} />
 	</div>
     </div>
 

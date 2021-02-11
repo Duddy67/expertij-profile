@@ -150,11 +150,11 @@
 		<button type="submit" class="btn btn-success">Register</button>
 	    </div>
 
-	    {% if sharedPartial %}
-		{% set pluginPartial = '@' ~  sharedPartial %}
+	    {% if hostedPartial %}
+		{% set pluginPartial = '@' ~  hostedPartial %}
 
 		{% if partial(pluginPartial) %}
-		    <div class="col" id="{{ sharedPartial }}">
+		    <div class="col" id="{{ hostedPartial }}">
 			{% partial pluginPartial %}
 		    </div>
 		{% endif %}

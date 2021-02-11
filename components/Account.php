@@ -41,9 +41,9 @@ class Account extends \RainLab\User\Components\Account
                 'type'        => 'dropdown',
                 'default'     => ''
             ],
-            'sharedFields' => [
-                'title'       => 'codalia.profile::lang.account.sharedFields',
-                'description' => 'codalia.profile::lang.account.sharedFields_desc',
+            'hostedFields' => [
+                'title'       => 'codalia.profile::lang.account.hostedFields',
+                'description' => 'codalia.profile::lang.account.hostedFields_desc',
                 'type'        => 'string',
                 'default'     => '',
 		'showExternalParam' => false
@@ -93,10 +93,6 @@ class Account extends \RainLab\User\Components\Account
 	if ($this->page['user']) {
 	    $this->page['profile'] = $this->page['user']->profile;
 	}
-	else {
-	    // Gets the external plugin name and model.
-	    //$plugin = explode(':', $this->property('sharedFields'));
-	}
 
 	$this->setExternalPluginRegistration();
     }
@@ -114,14 +110,14 @@ class Account extends \RainLab\User\Components\Account
 	}
 
 	// Gets the external plugin name and model.
-	$plugin = explode(':', $this->property('sharedFields'));
+	$plugin = explode(':', $this->property('hostedFields'));
 
 	if (empty($plugin[0])) {
 	    return;
 	}
 
-	$this->page['sharedPartial'] = strtolower($plugin[0]);
-	$this->page['sharedFields'] = $this->getSharedFields($plugin);
+	$this->page['hostedPartial'] = strtolower($plugin[0]);
+	$this->page['hostedFields'] = $this->getHostedFields($plugin);
 
 	if (!\Session::has('registration_context')) {
 	    // Sets the registration context according to the external plugin. 
@@ -137,20 +133,28 @@ class Account extends \RainLab\User\Components\Account
 
 	$licences = (isset($data['profile']['honorary_member'])) ? false : true;
         $rules = Profile::getRules($licences);
-	$messages = [];
 
 	if ($licences) {
 	    $rules = $this->setFileValidationRules($rules, $data);
 	    $rules = $this->setLanguageValidationRules($rules, $data);
 	}
 
-	// Adds Membership extra rules.
+	$attributes = $this->getValidationRuleAttributes($rules);
+	$messages = ['licences.*.attestations.*.languages.*.interpreter.required_unless' => Lang::get('codalia.profile::lang.messages.skill_checkboxes')];
+
+	// Adds the validation rules of the hosted fields.
 	if (\Session::has('registration_context') && \Session::get('registration_context') == 'membership') {
-	    $extra = MemberModel::getRules();
-	    $rules = array_merge($rules, $extra);
+	    if (\Session::get('registration_context') == 'membership' && !isset($data['profile']['honorary_member'])) {
+		$extra = MemberModel::getRules();
+		$rules = array_merge($rules, $extra);
+		$extra = $this->getExternalValidationRuleAttributes();
+		$attributes = array_merge($attributes, $extra);
+		$extra = $this->getExternalValidationRuleMessages();
+		$messages = array_merge($messages, $extra);
+	    }
 	}
 
-	$validation = Validator::make(Input::all(), $rules);
+	$validation = Validator::make(Input::all(), $rules, $messages, $attributes);
 	if ($validation->fails()) {
 	    throw new ValidationException($validation);
 	}
@@ -193,7 +197,10 @@ class Account extends \RainLab\User\Components\Account
 	    $rules = $this->setLanguageValidationRules($rules, $data);
 	}
 
-	$validation = Validator::make($data, $rules);
+	$attributes = $this->getValidationRuleAttributes($rules);
+	$messages = ['licences.*.attestations.*.languages.*.interpreter.required_unless' => Lang::get('codalia.profile::lang.messages.skill_checkboxes')];
+
+	$validation = Validator::make($data, $rules, $messages, $attributes);
 	if ($validation->fails()) {
 	    throw new ValidationException($validation);
 	}
@@ -228,7 +235,7 @@ class Account extends \RainLab\User\Components\Account
 	    $user = $this->user();
 	    $profile = Profile::where('user_id', $user->id)->first();
 	    $profile->photo()->add($file);
-	    $profile->forceSave();
+	    $profile->save();
 	}
 	else {
 	    return;
@@ -311,7 +318,7 @@ class Account extends \RainLab\User\Components\Account
 	return ['#'.$params['type'].'-'.$indexPattern => ''];
     }
 
-    protected function setFileValidationRules($rules, $data)
+    private function setFileValidationRules($rules, $data)
     {
         for($i = 0; $i < count($data['licences']); $i++) {
 	    for($j = 0; $j < count($data['licences'][$i]['attestations']); $j++) {
@@ -322,9 +329,13 @@ class Account extends \RainLab\User\Components\Account
 	return $rules;
     }
 
-    protected function setLanguageValidationRules($rules, $data)
+    /*
+     * Sets the validation rules of the skill checkboxes (interpreter / translator).
+     */
+    private function setLanguageValidationRules($rules, $data)
     {
         for($i = 0; $i < count($data['licences']); $i++) {
+	    // Skill checkboxes are only available for experts.
 	    if ($data['licences'][$i]['type'] == 'expert') {
 		for($j = 0; $j < count($data['licences'][$i]['attestations']); $j++) {
 		    for($k = 0; $k < count($data['licences'][$i]['attestations'][$j]['languages']); $k++) {
@@ -335,8 +346,66 @@ class Account extends \RainLab\User\Components\Account
 		}
 	    }
 	}
-//file_put_contents('debog_file.txt', print_r($rules, true));
+
 	return $rules;
+    }
+
+    private function getValidationRuleAttributes($rules)
+    {
+        $attributes = [];
+
+        foreach ($rules as $attribute => $rule) {
+	    if (strpos($attribute, 'file_') !== false) {
+		$attributes[$attribute] = Lang::get('codalia.profile::lang.licences.attestations.file');
+	    }
+	    elseif (strpos($attribute, '*.') !== false) {
+	        $lang = str_replace('*.', '', $attribute);
+		$attributes[$attribute] = Lang::get('codalia.profile::lang.'.$lang);
+	    }
+	    elseif (strpos($attribute, '.interpreter') !== false || strpos($attribute, '.translator') !== false) {
+	        preg_match('#\.([a-z]*)$#', $attribute, $matches);
+		$attributes[$attribute] = Lang::get('codalia.profile::lang.licences.attestations.languages.'.$matches[1]);
+	    }
+	    else {
+		$attributes[$attribute] = Lang::get('codalia.profile::lang.'.$attribute);
+	    }
+	}
+
+	return $attributes;
+    }
+
+    private function getExternalValidationRuleAttributes()
+    {
+        $attributes = [];
+	$plugin = explode(':', $this->property('hostedFields'));
+
+	if (isset($plugin[0]) && isset($plugin[1])) {
+	    $model = '\Codalia\\'.$plugin[0].'\\Models\\'.$plugin[1];
+	    $attributes = $model::getValidationRuleAttributes();
+
+	    foreach ($attributes as $key => $langVar) {
+	        $attributes[$key] = Lang::get($langVar);
+	    }
+	}
+
+	return $attributes;
+    }
+
+    private function getExternalValidationRuleMessages()
+    {
+        $messages = [];
+	$plugin = explode(':', $this->property('hostedFields'));
+
+	if (isset($plugin[0]) && isset($plugin[1])) {
+	    $model = '\Codalia\\'.$plugin[0].'\\Models\\'.$plugin[1];
+	    $messages = $model::getValidationRuleMessages();
+
+	    foreach ($messages as $key => $langVar) {
+	        $messages[$key] = Lang::get($langVar);
+	    }
+	}
+
+	return $messages;
     }
 
     /*
@@ -356,27 +425,27 @@ class Account extends \RainLab\User\Components\Account
 	return ['i' => $i, 'j' => $j, 'k' => $k, 'newIndex' => $newIndex, 'type' => $type, 'context' => $context, 'id' => $id];
     }
 
-    private function getSharedFields($plugin)
+    private function getHostedFields($plugin)
     {
-	$sharedFields = [];
+	$hostedFields = [];
 
 	if (isset($plugin[0]) && isset($plugin[1])) {
 	    $model = '\Codalia\\'.$plugin[0].'\\Models\\'.$plugin[1];
 
 	    // Ensures the class and method exists.
-	    if (method_exists($model, 'getSharedFields')) {
-		$sharedFields = $model::getSharedFields();
+	    if (method_exists($model, 'getHostedFields')) {
+		$hostedFields = $model::getHostedFields();
 
-		foreach ($sharedFields as $key => $value) {
+		foreach ($hostedFields as $key => $value) {
 		    // Ensures a language variable is available.
 		    if (!is_array($value) && strpos($value, '::lang') !== false) {
 		        // Replaces the language variable with the actual label.
-			$sharedFields[$key] = Lang::get($value);
+			$hostedFields[$key] = Lang::get($value);
 		    }
 		}
 	    }
 	}
 
-	return $sharedFields;
+	return $hostedFields;
     }
 }
