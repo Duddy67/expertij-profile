@@ -21,6 +21,33 @@
       $('#task').val(btn.attr('id'));
   }
 
+  $.fn.setTabs = function(xhr) {
+    let keys = Object.keys(xhr.responseJSON.X_OCTOBER_ERROR_FIELDS);
+    let key = keys[0];
+    let path = key.split('.');
+
+    //alert($.fn.setElementName(path));
+    let name = $.fn.setElementName(path);
+    console.log(name);
+    $('#myTab a[href="#'+path[0]+'"]').tab('show');
+    //setTimeout(function(){ $('[name="'+name+'"]').focus(); }, 1000);
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
+	$('[name="'+name+'"]').focus();
+    });
+  }
+
+  $.fn.setElementName = function(path) {
+      let name = path[0];
+
+      if (path.length > 1) {
+          for (let i = 1; i < path.length; i++) {
+	      name = name+'['+path[i]+']';
+	  }
+      }
+      
+      return name;
+  };
+
   /*
    * Only one licence can be of the Expert type.
    */

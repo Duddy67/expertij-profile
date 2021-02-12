@@ -4,10 +4,22 @@
 
 <h4>Profile</h4>
 
-{{ form_ajax('onUpdate', {files: 1, flash: ''}) }}
+{{ form_ajax('onUpdate', {files: 1, flash: '', 'data-request-error': '$.fn.setTabs(jqXHR);'}) }}
 
-<div class="row">
-    <div class="form-group col-sm-6">
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item waves-effect waves-light">
+	<a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+    </li>
+    <li class="nav-item waves-effect waves-light">
+	<a class="nav-link" id="licences-tab" data-toggle="tab" href="#licences" role="tab" aria-controls="licences" aria-selected="true">Licences</a>
+    </li>
+</ul>
+
+
+<div class="tab-content" id="myTabContent">
+  <!--<div class="row">-->
+    <div class="tab-pane fade active show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+    <!--<div class="form-group col-sm-6">-->
 	<div class="form-group">
 	    <label for="inputCivility">Civility</label>
 	    <select name="profile[civility]" class="form-control col-md-6" id="inputCivility">
@@ -146,15 +158,17 @@
 	<input type="hidden" id="locale" value="{{ locale }}" />
 	<input name="task" type="hidden" id="task" value="">
 
-	<button type="submit" id="update-data" class="btn btn-success">Save</button>
     </div>
 
     {% if not profile.honorary_member %}
-	<div class="col col-md-6">
-	    {% partial '@licences/update' %}
+	<div class="tab-pane fade" id="licences" role="tabpanel" aria-labelledby="licences-tab">
+	  <!--<div class="col col-md-6">-->
+	  {% partial '@licences/update' %}
 	</div>
     {% endif %}
 </div>
+
+<button type="submit" id="update-data" class="btn btn-success">Save</button>
 
 {{ form_close() }}
 
