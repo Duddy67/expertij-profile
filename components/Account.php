@@ -322,7 +322,7 @@ class Account extends \RainLab\User\Components\Account
     {
         for($i = 0; $i < count($data['licences']); $i++) {
 	    for($j = 0; $j < count($data['licences'][$i]['attestations']); $j++) {
-	        $rules['file_'.$i.'_'.$j] = 'required';
+	        $rules['licences__file_'.$i.'_'.$j] = 'required';
 	    }
 	}
 
@@ -355,7 +355,7 @@ class Account extends \RainLab\User\Components\Account
         $attributes = [];
 
         foreach ($rules as $attribute => $rule) {
-	    if (strpos($attribute, 'file_') !== false) {
+	    if (strpos($attribute, 'licences__file_') !== false) {
 		$attributes[$attribute] = Lang::get('codalia.profile::lang.licences.attestations.file');
 	    }
 	    elseif (strpos($attribute, '*.') !== false) {

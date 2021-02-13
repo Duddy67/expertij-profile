@@ -5,10 +5,26 @@
     {% endput %}
 
     <h3>Register</h3>
-    {{ form_ajax('onRegister', {files: 1, flash: ''}) }}
+    {{ form_ajax('onRegister', {files: 1, flash: '', 'data-request-error': '$.fn.setTabs(jqXHR);'}) }}
 
-	<div class="row">
-	    <div class="col-sm-6">
+	<ul class="nav nav-tabs" id="myTab" role="tablist">
+	    <li class="nav-item waves-effect waves-light">
+		<a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Details</a>
+	    </li>
+	    <li class="nav-item waves-effect waves-light">
+		<a class="nav-link" id="licences-tab" data-toggle="tab" href="#licences" role="tab" aria-controls="licences" aria-selected="true">Licences</a>
+	    </li>
+	    <li class="nav-item waves-effect waves-light">
+		<a class="nav-link" id="photo-tab" data-toggle="tab" href="#photo" role="tab" aria-controls="photo" aria-selected="true">Photo</a>
+	    </li>
+	    <li class="nav-item waves-effect waves-light">
+		<a class="nav-link" id="membership-tab" data-toggle="tab" href="#membership" role="tab" aria-controls="membership" aria-selected="true">Professional status</a>
+	    </li>
+	</ul>
+
+	<div class="tab-content mt-3" id="myTabContent">
+	  <!--<div class="col-sm-6">-->
+	    <div class="tab-pane fade active show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 
 		<div class="row">
 		    <div class="form-group col-sm-6">
@@ -134,32 +150,35 @@
 			<input type="checkbox" name="profile[honorary_member]" class="" value="1" id="honorary-member" />
 		    </div>
 		</div>
-
-		<div class="form-group">
-		    <label for="inputPhoto">Photo</label>
-		    <input type="file" name="photo" class="form-control" id="inputPhoto">
-		</div>
-
-		<div class="row" id="licences">
-		    {% partial '@licences/register' %}
-		</div>
-
-		<input name="name" type="hidden" id="registerName" />
-		<input type="hidden" id="locale" value="{{ locale }}" />
-
-		<button type="submit" class="btn btn-success">Register</button>
 	    </div>
+
+	    <!--<div class="row" id="licences">-->
+	    <div class="tab-pane fade" id="licences" role="tabpanel" aria-labelledby="licences-tab">
+		{% partial '@licences/register' %}
+	    </div>
+
+	    <!--<div class="form-group">-->
+	    <div class="tab-pane fade" id="photo" role="tabpanel" aria-labelledby="photo-tab">
+		<label for="inputPhoto">Photo</label>
+		<input type="file" name="photo" class="form-control" id="inputPhoto">
+	    </div>
+
+	    <input name="name" type="hidden" id="registerName" />
+	    <input type="hidden" id="locale" value="{{ locale }}" />
 
 	    {% if hostedPartial %}
 		{% set pluginPartial = '@' ~  hostedPartial %}
 
 		{% if partial(pluginPartial) %}
-		    <div class="col" id="{{ hostedPartial }}">
+		<!--<div class="col" id="{{ hostedPartial }}">-->
+		    <div class="tab-pane fade" id="{{ hostedPartial }}" role="tabpanel" aria-labelledby="{{ hostedPartial }}-tab">
 			{% partial pluginPartial %}
 		    </div>
 		{% endif %}
 	    {% endif %}
 	</div>
+
+	<button type="submit" class="btn btn-success mt-5">Register</button>
 
     {{ form_close() }}
 {% else %}

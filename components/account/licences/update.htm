@@ -1,7 +1,5 @@
-<label>Licences</label>
-
 {% set lastIndex  = (profile.licences|length > 0) ? profile.licences|length - 1 : 0 %}
-<div class="form-group" id="licence-container" data-last-index="{{ lastIndex }}">
+<div class="form-group mt-4" id="licence-container" data-last-index="{{ lastIndex }}">
     {% for i, licence in profile.licences %}
 	<div class="row licence-row" id="licence-{{ i }}">
 	    {% partial '@licences/update-licence' i=i licence=licence %}

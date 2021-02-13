@@ -22,18 +22,27 @@
   }
 
   $.fn.setTabs = function(xhr) {
-    let keys = Object.keys(xhr.responseJSON.X_OCTOBER_ERROR_FIELDS);
-    let key = keys[0];
-    let path = key.split('.');
+      let keys = Object.keys(xhr.responseJSON.X_OCTOBER_ERROR_FIELDS);
+      let key = keys[0];
+      let path = key.split('.');
 
-    //alert($.fn.setElementName(path));
-    let name = $.fn.setElementName(path);
-    console.log(name);
-    $('#myTab a[href="#'+path[0]+'"]').tab('show');
-    //setTimeout(function(){ $('[name="'+name+'"]').focus(); }, 1000);
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
-	$('[name="'+name+'"]').focus();
-    });
+      let name = $.fn.setElementName(path);
+      console.log(name);
+      let tab = path[0];
+
+      // Checks for uploaded file (ie: 2 underscores suffix).
+      if (tab.includes('__')) {
+	  tab = tab.substr(0, tab.indexOf('_'));
+      }
+      // The User attributes are contained in the profile tab.
+      else if (tab == 'email' || tab == 'password' || tab == 'password_confirmation' || tab == 'password_current' || tab == 'username') {
+	  tab = 'profile';
+      }
+
+      $('#myTab a[href="#'+tab+'"]').tab('show');
+      $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
+	  $('[name="'+name+'"]').focus();
+      });
   }
 
   $.fn.setElementName = function(path) {
@@ -46,7 +55,7 @@
       }
       
       return name;
-  };
+  }
 
   /*
    * Only one licence can be of the Expert type.

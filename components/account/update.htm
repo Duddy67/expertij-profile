@@ -8,18 +8,19 @@
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item waves-effect waves-light">
-	<a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+	<a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Details</a>
     </li>
     <li class="nav-item waves-effect waves-light">
 	<a class="nav-link" id="licences-tab" data-toggle="tab" href="#licences" role="tab" aria-controls="licences" aria-selected="true">Licences</a>
     </li>
+    <li class="nav-item waves-effect waves-light">
+	<a class="nav-link" id="photo-tab" data-toggle="tab" href="#photo" role="tab" aria-controls="photo" aria-selected="true">Photo</a>
+    </li>
 </ul>
 
 
-<div class="tab-content" id="myTabContent">
-  <!--<div class="row">-->
+<div class="tab-content mt-3" id="myTabContent">
     <div class="tab-pane fade active show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-    <!--<div class="form-group col-sm-6">-->
 	<div class="form-group">
 	    <label for="inputCivility">Civility</label>
 	    <select name="profile[civility]" class="form-control col-md-6" id="inputCivility">
@@ -128,32 +129,6 @@
 	    </div>
 	</div>
 
-	<hr/>
-
-	<div class="row">
-	    <div class="form-group col-sm-12">
-		<p class="h5 mt-3">Photo</p>
-		<div id="new-photo">
-		    {% if profile.photo %}	
-			<img src="{{ profile.photo.thumb(thumbSize.width, thumbSize.height, 'auto') }}" />
-		    {% else %}
-		    <img src="{{ blankProfile }}" width="{{ thumbSize.width }}" height="{{ thumbSize.height }}" />
-		    {% endif %}
-		</div>
-		<p class="mb-0"><small>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</small></p>
-		<div class="row">
-		    <div id="photo-upload-field" class="col-sm-8">
-			<input type="file" name="photo" class="form-control">
-		    </div>
-		    <div class="col-sm-2">
-			<button type="submit" id="replace-photo" class="btn btn-success">Replace</button>
-		    </div>
-		</div>
-	    </div>
-	</div>
-
-	<hr/>
-
 	<input name="name" type="hidden" id="accountName" value="{{ user.name }}">
 	<input type="hidden" id="locale" value="{{ locale }}" />
 	<input name="task" type="hidden" id="task" value="">
@@ -162,10 +137,30 @@
 
     {% if not profile.honorary_member %}
 	<div class="tab-pane fade" id="licences" role="tabpanel" aria-labelledby="licences-tab">
-	  <!--<div class="col col-md-6">-->
 	  {% partial '@licences/update' %}
 	</div>
     {% endif %}
+
+    <div class="tab-pane fade" id="photo" role="tabpanel" aria-labelledby="photo-tab">
+	<div class="form-group col-sm-12 pt-2">
+	    <div id="new-photo">
+		{% if profile.photo %}	
+		    <img src="{{ profile.photo.thumb(thumbSize.width, thumbSize.height, 'auto') }}" />
+		{% else %}
+		<img src="{{ blankProfile }}" width="{{ thumbSize.width }}" height="{{ thumbSize.height }}" />
+		{% endif %}
+	    </div>
+	    <p class="mb-0"><small>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</small></p>
+	    <div class="row">
+		<div id="photo-upload-field" class="col-sm-8">
+		    <input type="file" name="photo" class="form-control">
+		</div>
+		<div class="col-sm-2">
+		    <button type="submit" id="replace-photo" class="btn btn-success">Replace</button>
+		</div>
+	    </div>
+	</div>
+    </div>
 </div>
 
 <button type="submit" id="update-data" class="btn btn-success">Save</button>

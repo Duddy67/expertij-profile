@@ -100,8 +100,8 @@ class Licence extends Model
 		    $item = $this->attestations()->create($input);
 		}
 
-		if (Input::hasFile('file_'.$licenceKey.'_'.$key)) {
-		    $item->file = Input::file('file_'.$licenceKey.'_'.$key);
+		if (Input::hasFile('licences__file_'.$licenceKey.'_'.$key)) {
+		    $item->file = Input::file('licences__file_'.$licenceKey.'_'.$key);
 		    $item->save();
                 }
 

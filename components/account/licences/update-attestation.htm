@@ -1,10 +1,10 @@
 <label class="col-sm-12 mb-0" for="file-{{ i }}-{{ j }}">Attestation{{ hostedFields.attestation }}</label>
-<div class="col-sm-12" id="new-attestation">
+<div class="col-sm-12" id="new-attestation-{{ i }}-{{ j }}">
     <a target="_blank" href="{{ attestation.file.path }}">{{ attestation.file.filename}}</a>
 </div>
 <p class="col-sm-12 mb-1"><small>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</small></p>
 <div class="form-group col-sm-12">
-    <input type="file" name="file_{{ i }}_{{ j }}" class="form-control" id="file-{{ i }}-{{ j }}">
+    <input type="file" name="licences__file_{{ i }}_{{ j }}" class="form-control" id="file-{{ i }}-{{ j }}">
 </div>
 
 <div class="form-group col-sm-6">
