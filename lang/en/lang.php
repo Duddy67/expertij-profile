@@ -17,6 +17,10 @@ return [
 	'country' => 'Country',
 	'phone' => 'Phone',
 	'email' => 'Email',
+	'username' => 'User Name',
+	'password' => 'Password',
+	'password_confirmation' => 'Password Confirmation',
+	'password_current' => 'Current Password',
     ],
     'action' => [
 	'check_in_success' => ':count item(s) successfully checked-in.',

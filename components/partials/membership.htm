@@ -37,9 +37,11 @@
     </div>
 </div>
 
-<div class="form-group">
-    <label for="inputAttestation">{{ hostedFields.attestation }}</label>
-    <input type="file" name="membership__attestation" class="form-control" id="inputAttestation">
+<div class="row">
+    <div class="form-group col-sm-6">
+	<label for="inputAttestation">{{ hostedFields.attestation }}</label>
+	<input type="file" name="membership__attestation" class="form-control" id="inputAttestation">
+    </div>
 </div>
 
 {% put scripts %}

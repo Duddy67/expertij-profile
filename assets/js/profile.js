@@ -30,7 +30,7 @@
       console.log(name);
       let tab = path[0];
 
-      // Checks for uploaded file (ie: 2 underscores suffix).
+      // Checks for uploaded files (ie: 2 underscores suffix).
       if (tab.includes('__')) {
 	  tab = tab.substr(0, tab.indexOf('_'));
       }
@@ -91,12 +91,16 @@
 
   $.fn.honoraryMemberSetting = function(elem) {
       if (elem.is(':checked')) {
-	  $('#membership').css({'visibility':'hidden','display':'none'});
-	  $('#licences').css({'visibility':'hidden','display':'none'});
+	  $('#licences-tab').parent().css({'visibility':'hidden','display':'none'});
+	  $('#membership-tab').parent().css({'visibility':'hidden','display':'none'});
+	  $('#details-navigation').css({'visibility':'hidden','display':'none'});
+	  $('#photo-navigation').css({'visibility':'hidden','display':'none'});
       }
       else {
-	  $('#membership').css({'visibility':'visible','display':'block'});
-	  $('#licences').css({'visibility':'visible','display':'block'});
+	  $('#licences-tab').parent().css({'visibility':'visible','display':'inline'});
+	  $('#membership-tab').parent().css({'visibility':'visible','display':'inline'});
+	  $('#details-navigation').css({'visibility':'visible','display':'block'});
+	  $('#photo-navigation').css({'visibility':'visible','display':'block'});
       }
   };
 

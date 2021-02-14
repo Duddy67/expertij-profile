@@ -366,8 +366,11 @@ class Account extends \RainLab\User\Components\Account
 	        preg_match('#\.([a-z]*)$#', $attribute, $matches);
 		$attributes[$attribute] = Lang::get('codalia.profile::lang.licences.attestations.languages.'.$matches[1]);
 	    }
-	    else {
+	    elseif (strpos($attribute, 'profile.') !== false) {
 		$attributes[$attribute] = Lang::get('codalia.profile::lang.'.$attribute);
+	    }
+	    else {
+		$attributes[$attribute] = Lang::get('codalia.profile::lang.profile.'.$attribute);
 	    }
 	}
 
