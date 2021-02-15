@@ -127,9 +127,16 @@ class Account extends \RainLab\User\Components\Account
 
     public function onRegister()
     {
+        /*
+         * Validate input
+         */
 	$data = post();
 	// Concatenates the first and last name in the User plugin's 'name' field.
 	Input::merge(['name' => $data['profile']['first_name'].' '.$data['profile']['last_name']]);
+
+	if (!array_key_exists('password_confirmation', $data)) {
+	    $data['password_confirmation'] = post('password');
+	}
 
 	$licences = (isset($data['profile']['honorary_member'])) ? false : true;
         $rules = Profile::getRules($licences);
@@ -154,7 +161,10 @@ class Account extends \RainLab\User\Components\Account
 	    }
 	}
 
-	$validation = Validator::make(Input::all(), $rules, $messages, $attributes);
+	// Adds the file array to the data.
+	$data = array_merge($data, Input::file());
+
+	$validation = Validator::make($data, $rules, $messages, $attributes);
 	if ($validation->fails()) {
 	    throw new ValidationException($validation);
 	}
@@ -181,6 +191,10 @@ class Account extends \RainLab\User\Components\Account
 
     public function onUpdate()
     {
+	if (!$user = $this->user()) {
+            return;
+        }
+
 	$data = post();
 
 	if ($data['task'] == 'replace-photo') {
@@ -200,6 +214,16 @@ class Account extends \RainLab\User\Components\Account
 	$attributes = $this->getValidationRuleAttributes($rules);
 	$messages = ['licences.*.attestations.*.languages.*.interpreter.required_unless' => Lang::get('codalia.profile::lang.messages.skill_checkboxes')];
 
+	// Removes the unecessary rules.
+	if ($data['email'] == $user->email) {
+            unset($rules['email']);
+	}
+
+	if (empty($data['password'])) {
+            unset($rules['password']);
+            unset($rules['password_confirmation']);
+	}
+
 	$validation = Validator::make($data, $rules, $messages, $attributes);
 	if ($validation->fails()) {
 	    throw new ValidationException($validation);
@@ -208,7 +232,6 @@ class Account extends \RainLab\User\Components\Account
 	// Updates first the User data.
         parent::onUpdate();
 
-	$user = $this->user();
         $profile = Profile::where('user_id', $user->id)->first();
 	$profile->update($data['profile']);
 
@@ -223,6 +246,21 @@ class Account extends \RainLab\User\Components\Account
         if ($redirect = $this->makeRedirection()) {
             return $redirect;
         }
+
+	return $this->refreshAttestationFiles($profile);
+    }
+
+    private function refreshAttestationFiles($profile)
+    {
+        $refresh = [];
+        foreach ($profile->licences as $i => $licence) {
+	    foreach ($licence->attestations as $j => $attestation) {
+		$refresh['#new-attestation-'.$i.'-'.$j] = '<a target="_blank" href="'.$attestation->file->getPath().'">'.$attestation->file->file_name.'</a>'; 
+		$refresh['#attestation-file-'.$i.'-'.$j] = '<input type="file" name="licences__file_'.$i.'_'.$j.'" class="form-control" id="file-'.$i.'-'.$j.'">';
+	    }
+	}
+
+	return $refresh;
     }
 
     public function replacePhoto()

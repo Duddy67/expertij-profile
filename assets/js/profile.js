@@ -115,8 +115,9 @@
 
 	      $('[id^="interpreter-'+index+'-"],[id^="translator-'+index+'-"]').attr('type', 'checkbox');
 	      $('[id^="interpreter-cassation-'+index+'-"],[id^="translator-cassation-'+index+'-"]').attr('type', 'checkbox');
-	      $('label[for|="interpreter-'+index+'"],label[for|="translator-'+index+'"]').css({'visibility':'visible','display':'inline'});
-	      $('label[for|="interpreter-cassation-'+index+'"],label[for|="translator-cassation-'+index+'"]').css({'visibility':'visible','display':'inline'});
+	      //$('label[for|="interpreter-'+index+'"],label[for|="translator-'+index+'"]').css({'visibility':'visible','display':'inline'});
+	      //$('label[for|="interpreter-cassation-'+index+'"],label[for|="translator-cassation-'+index+'"]').css({'visibility':'visible','display':'inline'});
+	      $('[id^="language-skills-'+index+'-"]').css({'visibility':'visible','display':'block'});
 
 	      $.fn.linkCassation(index);
 	      $.fn.setExpertOptions(index);
@@ -128,8 +129,9 @@
 
 	      $('[id^="interpreter-'+index+'-"],[id^="translator-'+index+'-"]').attr('type', 'hidden').removeAttr('checked');
 	      $('[id^="interpreter-cassation-'+index+'-"],[id^="translator-cassation-'+index+'-"]').attr('type', 'hidden').removeAttr('checked').val('');
-	      $('label[for|="interpreter-'+index+'"],label[for|="translator-'+index+'"]').css({'visibility':'hidden','display':'none'});
-	      $('label[for|="interpreter-cassation-'+index+'"],label[for|="translator-cassation-'+index+'"]').css({'visibility':'hidden','display':'none'});
+	      //$('label[for|="interpreter-'+index+'"],label[for|="translator-'+index+'"]').css({'visibility':'hidden','display':'none'});
+	      //$('label[for|="interpreter-cassation-'+index+'"],label[for|="translator-cassation-'+index+'"]').css({'visibility':'hidden','display':'none'});
+	      $('[id^="language-skills-'+index+'-"]').css({'visibility':'hidden','display':'none'});
 	      break;
 
 	  default:

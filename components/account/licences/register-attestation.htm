@@ -24,13 +24,6 @@
 	    {% partial '@licences/register-language' k=k %}
 	</div> <!-- language row -->
     {% endfor %}
-
-    <div class="row mt-3">
-	<div class="form-group col-sm-12">
-	    <button type="button" data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _item_type: 'language', _item_context: 'register'" 
-		    data-request="onAddItem" data-request-success="$.fn.initNewItem(this)" class="btn btn-info float-right mb-3" id="add-language-{{ i }}-{{ j }}">Add Language</button>
-	</div>
-    </div>
 </div> <!-- language container -->
 
 <div class="form-group col-sm-12">

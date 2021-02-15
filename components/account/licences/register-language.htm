@@ -8,7 +8,7 @@
     </select>
 </div>
 
-<div class="form-group col-sm-4 mb-0 mt-4">
+<div class="form-group col-sm-2 mb-0 mt-4" id="language-skills-{{ i }}-{{ j }}-{{ k }}">
     <div class="row">
 	<div class="form-group checkbox custom-checkbox mb-0 mr-2">
 	    <label for="interpreter-{{ i }}-{{ j }}-{{ k }}" class="mr-2">Interpreter</label>
@@ -37,11 +37,16 @@
 <input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][_id]" value="" />
 
 {% if k > 0 %}
-<div class="form-group col-sm-2 mt-4">
-    <button type="button" data-request="onDeleteItem" data-request-success="$.fn.deleteItem(this);" 
-			  data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _language_index: {{ k }}, _item_type: 'language', _item_id: ''"
-			  class="btn btn-danger mt-2" id="delete-language-{{ i }}-{{ j }}-{{ k }}">Delete</button>
-</div>
+    <div class="form-group col-sm-2 mt-4">
+	<button type="button" data-request="onDeleteItem" data-request-success="$.fn.deleteItem(this);" 
+			      data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _language_index: {{ k }}, _item_type: 'language', _item_id: ''"
+			      class="btn btn-danger mt-2" id="delete-language-{{ i }}-{{ j }}-{{ k }}">Delete</button>
+    </div>
+{% else %}
+    <div class="form-group col-sm-2 ml-auto mt-4 float-right">
+	<button type="button" data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _item_type: 'language', _item_context: 'register'" 
+		data-request="onAddItem" data-request-success="$.fn.initNewItem(this)" class="btn btn-info float-right mb-3" id="add-language-{{ i }}-{{ j }}">Add Language</button>
+    </div>
 {% endif %}
 
 

@@ -121,9 +121,8 @@ class Profile extends Model
 	$rules = [
 	    'email'    => 'required|between:6,255|email|unique:users',
 	    'username' => 'sometimes|required|between:2,255|unique:users',
-	    //'password' => 'required:create|between:8,255|confirmed',
-	    'password' => 'required:create|between:8,255',
-	    //'password_confirmation' => 'sometimes|required_with:password|between:8,255',
+	    'password' => 'required:create|between:8,255|confirmed',
+	    'password_confirmation' => 'required_with:password|between:8,255',
 	    'profile.civility' => 'required',
 	    'profile.first_name' => 'required|between:2,255',
 	    'profile.last_name' => 'required|between:2,255',

@@ -21,13 +21,15 @@
 
 <div class="tab-content mt-3" id="myTabContent">
     <div class="tab-pane fade active show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-	<div class="form-group">
-	    <label for="inputCivility">Civility</label>
-	    <select name="profile[civility]" class="form-control col-md-6" id="inputCivility">
-	        <option value="">- Select -</option>
-	        <option value="mr" {{ (profile.civility == 'mr') ? 'selected' : '' }}>Mr</option>
-	        <option value="mrs" {{ (profile.civility == 'mrs') ? 'selected' : '' }}>Mrs</option>
-	    </select>
+	<div class="row">
+	    <div class="form-group col-sm-6">
+		<label for="inputCivility">Civility</label>
+		<select name="profile[civility]" class="form-control" id="inputCivility">
+		    <option value="">- Select -</option>
+		    <option value="mr" {{ (profile.civility == 'mr') ? 'selected' : '' }}>Mr</option>
+		    <option value="mrs" {{ (profile.civility == 'mrs') ? 'selected' : '' }}>Mrs</option>
+		</select>
+	    </div>
 	</div>
 
 	<div class="row">
@@ -80,9 +82,11 @@
 	{% endif %}
 
 
-	<div class="form-group">
-	    <label for="accountEmail">Email</label>
-	    <input name="email" type="email" class="form-control col-md-6" disabled="disabled" id="accountEmail" value="{{ user.email }}">
+	<div class="row">
+	    <div class="form-group col-sm-6">
+		<label for="accountEmail">Email</label>
+		<input name="email" type="email" class="form-control" id="accountEmail" value="{{ user.email }}">
+	    </div>
 	</div>
 
 	<div class="row">
