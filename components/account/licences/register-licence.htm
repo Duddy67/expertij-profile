@@ -1,7 +1,7 @@
 <div class="form-group col-sm-6">
-    <label for="licence-type-{{ i }}">Type</label>
+    <label for="licence-type-{{ i }}">{{ texts['licences.type'] }}</label>
     <select name="licences[{{ i }}][type]" class="form-control" id="licence-type-{{ i }}">
-	<option value="">- Select -</option>
+	<option value="">{{ texts['action.select'] }}</option>
 	{% for value, text in licenceTypes %}
 	    <option value="{{ value }}">{{ text }}</option>
 	{% endfor %}
@@ -9,9 +9,9 @@
 </div>
 
 <div class="form-group col-sm-6">
-    <label for="since-{{ i }}">Since</label>
+    <label for="since-{{ i }}">{{ texts['licences.since'] }}</label>
     <select name="licences[{{ i }}][since]" class="form-control" id="since-{{ i }}">
-	<option value="">- Select -</option>
+	<option value="">{{ texts['action.select'] }}</option>
 	{% for year in years %}
 	    <option value="{{ year }}">{{ year }}</option>
 	{% endfor %}
@@ -19,9 +19,9 @@
 </div>
 
 <div class="form-group col-sm-6">
-    <label for="appeal-court-{{ i }}">Appeal court</label>
+    <label for="appeal-court-{{ i }}">{{ texts['licences.appeal_court_id'] }}</label>
     <select name="licences[{{ i }}][appeal_court_id]" class="form-control" id="appeal-court-{{ i }}">
-	<option value="">- Select -</option>
+	<option value="">{{ texts['action.select'] }}</option>
 	{% for value, text in appealCourts %}
 	    <option value="{{ value }}">{{ text }}</option>
 	{% endfor %}
@@ -29,9 +29,9 @@
 </div>
 
 <div class="form-group col-sm-6">
-    <label for="court-{{ i }}">Court</label>
+    <label for="court-{{ i }}">{{ texts['licences.court_id'] }}</label>
     <select name="licences[{{ i }}][court_id]" class="form-control" id="court-{{ i }}">
-	<option value="">- Select -</option>
+	<option value="">{{ texts['action.select'] }}</option>
 	{% for value, text in courts %}
 	    <option value="{{ value }}">{{ text }}</option>
 	{% endfor %}
@@ -53,13 +53,13 @@
     <div class="row">
 	<div class="form-group col-sm-6">
 	    <button type="button" data-request="onAddItem" data-request-data="_licence_index: {{ i }}, _item_type: 'licence', _item_context: 'register'"
-		    data-request-success="$.fn.initNewItem(this)" class="btn btn-info" id="add-licence-{{ i }}">New Licence</button>
+		    data-request-success="$.fn.initNewItem(this)" class="btn btn-info" id="add-licence-{{ i }}">{{ texts['action.new_licence'] }}</button>
 	</div>
 
 	{% if i > 0 %}
 	    <div class="form-group col-sm-6">
 		<button type="button" data-request="onDeleteItem" data-request-data="_licence_index: {{ i }}, _item_type: 'licence', _item_id: ''"
-			data-request-success="$.fn.deleteItem(this);" class="btn btn-danger float-right" id="delete-licence-{{ i }}">Delete Licence</button>
+			data-request-success="$.fn.deleteItem(this);" class="btn btn-danger float-right" id="delete-licence-{{ i }}">{{ texts['action.delete_licence'] }}</button>
 	    </div>
 	{% endif %}
     </div>

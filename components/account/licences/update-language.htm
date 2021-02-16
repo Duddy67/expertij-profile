@@ -1,7 +1,7 @@
 <div class="form-group col-sm-6">
-    <label for="alpha2-{{ i }}-{{ j }}-{{ k }}">Language {{ k + 1 }}</label>
+    <label for="alpha2-{{ i }}-{{ j }}-{{ k }}">{{ texts['licences.attestations'].languages.alpha_2 }} {{ k + 1 }}</label>
     <select name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][alpha_2]" class="form-control" id="alpha2-{{ i }}-{{ j }}-{{ k }}">
-	<option value="">- Select -</option>
+	<option value="">{{ texts['action.select'] }}</option>
 	{% for value, text in languages %}
 	    <option value="{{ value }}" {{ (language.alpha_2 == value) ? 'selected' : '' }}>{{ text }}</option>
 	{% endfor %}
@@ -11,12 +11,12 @@
 <div class="form-group col-sm-2 mb-0 mt-4" id="language-skills-{{ i }}-{{ j }}-{{ k }}">
     <div class="row">
 	<div class="form-group checkbox custom-checkbox mb-0 mr-2">
-	    <label for="interpreter-{{ i }}-{{ j }}-{{ k }}" class="mr-2">Interpreter</label>
+	    <label for="interpreter-{{ i }}-{{ j }}-{{ k }}" class="mr-2">{{ texts['licences.attestations'].languages.interpreter }}</label>
 	    <input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][interpreter]" value="1"
 		   class="float-right mt-1" id="interpreter-{{ i }}-{{ j }}-{{ k }}" {{ (language.interpreter) ? 'checked' : '' }} />
 	</div>
 	<div class="form-group checkbox custom-checkbox mb-0">
-	    <label for="interpreter-cassation-{{ i }}-{{ j }}-{{ k }}" class="mr-2"><small>Cassation</small></label>
+	    <label for="interpreter-cassation-{{ i }}-{{ j }}-{{ k }}" class="mr-2"><small>{{ texts['licences.attestations'].languages.cassation }}</small></label>
 	    <input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][interpreter_cassation]"
 		   class="float-right mt-1" value="1" disabled="disabled" id="interpreter-cassation-{{ i }}-{{ j }}-{{ k }}" {{ (language.interpreter_cassation) ? 'checked' : '' }} />
 	</div>
@@ -24,12 +24,12 @@
 
     <div class="row">
 	<div class="form-group checkbox custom-checkbox mb-0 mr-2">
-	    <label for="translator-{{ i }}-{{ j }}-{{ k }}" class="mr-2">Translator</label>
+	    <label for="translator-{{ i }}-{{ j }}-{{ k }}" class="mr-2">{{ texts['licences.attestations'].languages.translator }}</label>
 	    <input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][translator]" value="1"
 		   class="float-right mt-1" id="translator-{{ i }}-{{ j }}-{{ k }}" {{ (language.translator) ? 'checked' : '' }} />
 	</div>
 	<div class="form-group checkbox custom-checkbox mb-0">
-	    <label for="translator-cassation-{{ i }}-{{ j }}-{{ k }}" class="mr-2"><small>Cassation</small></label>
+	    <label for="translator-cassation-{{ i }}-{{ j }}-{{ k }}" class="mr-2"><small>{{ texts['licences.attestations'].languages.cassation }}</small></label>
 	    <input type="checkbox" name="licences[{{ i }}][attestations][{{ j }}][languages][{{ k }}][translator_cassation]"
 		   class="float-right mt-1" value="1" disabled="disabled" id="translator-cassation-{{ i }}-{{ j }}-{{ k }}" {{ (language.translator_cassation) ? 'checked' : '' }} />
 	</div>
@@ -41,14 +41,14 @@
 {% if k > 0 %}
     {% set languageId = (language.id) ? language.id : '\'\'' %}
     <div class="form-group col-sm-2 mt-4">
-	<button type="button" data-request="onDeleteItem" data-request-success="$.fn.deleteItem(this);" data-request-confirm="Are you sure ?" 
+	<button type="button" data-request="onDeleteItem" data-request-success="$.fn.deleteItem(this);" data-request-confirm="{{ texts['message.delete_confirmation'] }}" 
 			      data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _language_index: {{ k }}, _item_type: 'language', _item_id: {{ languageId }}"
-			      class="btn btn-danger mt-2" id="delete-language-{{ i }}-{{ j }}-{{ k }}">Delete</button>
+			      class="btn btn-danger mt-2" id="delete-language-{{ i }}-{{ j }}-{{ k }}">{{ texts['action.delete'] }}</button>
     </div>
 {% else %}
     <div class="form-group col-sm-2 ml-auto mt-4 float-right">
 	<button type="button" data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _item_type: 'language', _item_context: 'update'" 
-		data-request="onAddItem" data-request-success="$.fn.initNewItem(this)" class="btn btn-info float-right mb-3" id="add-language-{{ i }}-{{ j }}">Add Language</button>
+		data-request="onAddItem" data-request-success="$.fn.initNewItem(this)" class="btn btn-info float-right mb-3" id="add-language-{{ i }}-{{ j }}">{{ texts['action.add_language'] }}</button>
     </div>
 {% endif %}
 

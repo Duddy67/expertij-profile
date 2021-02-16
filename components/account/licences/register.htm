@@ -5,17 +5,17 @@
 	    {% partial '@licences/register-licence' i=i %}
 	</div>
     {% endfor %}
-
-    <div class="row">
-	<div class="col-sm-12">
-	    <a class="btn btn-secondary float-left" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
-	       onclick="$('#myTab a[href=&quot;#profile&quot;]').tab('show');" aria-controls="profile" aria-selected="true">Previous</a>
-
-	    <a class="btn btn-secondary float-right" id="photo-tab" data-toggle="tab" href="#photo" role="tab" onclick="$('#myTab a[href=&quot;#photo&quot;]').tab('show');"
-	       aria-controls="photo" aria-selected="true">Next >></a>
-	</div>
-    </div>
 </div> <!-- licence container -->
+
+<div class="row">
+    <div class="col-sm-12">
+	<a class="btn btn-secondary float-left" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+	   onclick="$('#myTab a[href=&quot;#profile&quot;]').tab('show');" aria-controls="profile" aria-selected="true">{{ texts['action.previous'] }}</a>
+
+	<a class="btn btn-secondary float-right" id="photo-tab" data-toggle="tab" href="#photo" role="tab" onclick="$('#myTab a[href=&quot;#photo&quot;]').tab('show');"
+	   aria-controls="photo" aria-selected="true">{{ texts['action.next'] }}</a>
+    </div>
+</div>
 
 <input type="hidden" name="_item_new_index" id="item-new-index" value="" />
 

@@ -89,6 +89,7 @@ class Account extends \RainLab\User\Components\Account
 	$this->page['languages'] = $this->setOptionTexts('language');
 	$this->page['citizenships'] = $this->setOptionTexts('citizenship');
 	$this->page['licenceTypes'] = $this->setOptionTexts('licenceType');
+	$this->page['texts'] = $this->getTexts();
 
 	if ($this->page['user']) {
 	    $this->page['profile'] = $this->page['user']->profile;
@@ -147,7 +148,7 @@ class Account extends \RainLab\User\Components\Account
 	}
 
 	$attributes = $this->getValidationRuleAttributes($rules);
-	$messages = ['licences.*.attestations.*.languages.*.interpreter.required_unless' => Lang::get('codalia.profile::lang.messages.skill_checkboxes')];
+	$messages = ['licences.*.attestations.*.languages.*.interpreter.required_unless' => Lang::get('codalia.profile::lang.message.skill_checkboxes')];
 
 	// Adds the validation rules of the hosted fields.
 	if (\Session::has('registration_context') && \Session::get('registration_context') == 'membership') {
@@ -212,7 +213,7 @@ class Account extends \RainLab\User\Components\Account
 	}
 
 	$attributes = $this->getValidationRuleAttributes($rules);
-	$messages = ['licences.*.attestations.*.languages.*.interpreter.required_unless' => Lang::get('codalia.profile::lang.messages.skill_checkboxes')];
+	$messages = ['licences.*.attestations.*.languages.*.interpreter.required_unless' => Lang::get('codalia.profile::lang.message.skill_checkboxes')];
 
 	// Removes the unecessary rules.
 	if ($data['email'] == $user->email) {
@@ -309,18 +310,18 @@ class Account extends \RainLab\User\Components\Account
 	    $params['courts'] = Profile::getCourts();
 	    $params['years'] = Profile::getYears();
 	    $params['licenceTypes'] = $this->setOptionTexts('licenceType');
-	    $params['languages'] = $this->setOptionTexts('language');
 	}
 	elseif ($params['type'] == 'attestation') {
 	    $indexPattern = $params['i'].'-'.$params['newIndex'];
 	    $params['j'] = $params['newIndex'];
-	    $params['languages'] = $this->setOptionTexts('language');
 	}
 	elseif ($params['type'] == 'language') {
 	    $indexPattern = $params['i'].'-'.$params['j'].'-'.$params['newIndex'];
 	    $params['k'] = $params['newIndex'];
-	    $params['languages'] = $this->setOptionTexts('language');
 	}
+
+	$params['texts'] = $this->getTexts();
+	$params['languages'] = $this->setOptionTexts('language');
 
         // Renders the new item in the div container previously created in JS.
 	return ['#'.$params['type'].'-'.$indexPattern => $this->renderPartial('@licences/'.$params['context'].'-'.$params['type'], $params)];
@@ -488,5 +489,23 @@ class Account extends \RainLab\User\Components\Account
 	}
 
 	return $hostedFields;
+    }
+
+    private function getTexts()
+    {
+        $langVars = require 'plugins/codalia/profile/lang/en/lang.php';
+	// Removes the unused sections.
+	unset($langVars['citizenship']);
+	unset($langVars['language']);
+	$texts = [];
+
+	foreach ($langVars as $level1 => $section1) {
+	    foreach ($section1 as $level2 => $section2) {
+		$texts[$level1.'.'.$level2] = Lang::get('codalia.profile::lang.'.$level1.'.'.$level2);
+	    }
+
+	}
+
+	return $texts;
     }
 }

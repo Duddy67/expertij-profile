@@ -1,5 +1,5 @@
 <div class="col-sm-6">
-    <label for="file-{{ i }}-{{ j }}">Attestation{{ hostedFields.attestation }}</label>
+    <label for="file-{{ i }}-{{ j }}">{{ texts['licences.attestations'].file }}</label>
     <div class="form-group mb-1" id="attestation-file-{{ i }}-{{ j }}">
 	<input type="file" name="licences__file_{{ i }}_{{ j }}" class="form-control" id="file-{{ i }}-{{ j }}">
     </div>
@@ -10,7 +10,7 @@
 </div>
 
 <div class="form-group col-sm-6">
-    <label for="dp_expert-expiry-{{ i }}-{{ j }}">Expiry Date</label>
+    <label for="dp_expert-expiry-{{ i }}-{{ j }}">{{ texts['licences.attestations'].expiry_date }}</label>
     <div class="input-group">
 	<input type="text" class="form-control date-picker" id="dp_expiry-date-{{ i }}-{{ j }}" autocomplete="off" aria-describedby="basic-addon1">
 	<div class="input-group-append">
@@ -43,15 +43,15 @@
     <div class="row">
 	<div class="form-group col-sm-6">
 	    <button type="button" data-request="onAddItem" data-request-data="_licence_index: {{ i }}, _item_type: 'attestation', _item_context: 'update'" 
-		    data-request-success="$.fn.initNewItem(this)" class="btn btn-info" id="add-attestation-{{ i }}-{{ j }}">New Attestation</button>
+		    data-request-success="$.fn.initNewItem(this)" class="btn btn-info" id="add-attestation-{{ i }}-{{ j }}">{{ texts['action.new_attestation'] }}</button>
 	</div>
 
 	{% if j > 0 %}
 	{% set attestationId = (attestation.id) ? attestation.id : '\'\'' %}
 	    <div class="form-group col-sm-6">
 		<button type="button" data-request="onDeleteItem" data-request-data="_licence_index: {{ i }}, _attestation_index: {{ j }}, _item_type: 'attestation', _item_id: {{ attestationId }}"
-			data-request-success="$.fn.deleteItem(this);" data-request-confirm="Are you sure ?"
-			class="btn btn-danger float-right" id="delete-attestation-{{ i }}-{{ j }}">Delete Attestation</button>
+			data-request-success="$.fn.deleteItem(this);" data-request-confirm="{{ texts['message.delete_confirmation'] }}"
+			class="btn btn-danger float-right" id="delete-attestation-{{ i }}-{{ j }}">{{ texts['action.delete_attestation'] }}</button>
 	    </div>
 	{% endif %}
     </div>
