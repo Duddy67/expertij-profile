@@ -2,7 +2,7 @@
     <div class="form-group col-sm-6">
 	<label for="inputProStatus">{{ hostedFields.pro_status }}</label>
 	<select name="membership[pro_status]" class="form-control custom-select" id="inputProStatus">
-	    <option value="">- Select -</option>
+	    <option value="">{{ texts['action.select'] }}</option>
 	    {% for value, name in hostedFields.pro_status_options %}
 		<option value="{{ value }}">{{ hostedFields[value] }}</option>
 	    {% endfor %}
@@ -12,7 +12,7 @@
     <div class="form-group col-sm-6">
         <label for="inputSince">{{ hostedFields.since }}</label>
         <select name="membership[since]" class="form-control" id="inputSince">
-	    <option value="">- Select -</option>
+	    <option value="">{{ texts['action.select'] }}</option>
 	    {% for year in years %}
 		<option value="{{ year }}">{{ year }}</option>
 	    {% endfor %}

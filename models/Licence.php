@@ -66,6 +66,12 @@ class Licence extends Model
     public $hasMany = [
         'attestations' => ['Codalia\Profile\Models\Attestation', 'delete' => true],
     ];
+    public $hasManyThrough = [
+        'languages' => [
+            'Codalia\Profile\Models\Language',
+            'through' => 'Codalia\Profile\Models\Attestation'
+        ],
+    ];
     public $belongsTo = [
         'profile' => ['Codalia\Profile\Models\Profile'],
     ];
