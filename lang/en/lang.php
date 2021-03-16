@@ -54,8 +54,8 @@ return [
     'account' => [
 	'template' => 'Template',
 	'template_desc' => 'The template to display when the user is logged out.',
-	'hostedFields' => 'Hosted Fields',
-	'hostedFields_desc' => '',
+	'guestPlugin' => 'Guest Plugin',
+	'guestPlugin_desc' => '',
 	'extraRegistrationFields_desc' => 'The name of a partial which provides extra registration fields on the behalf of another plugin. Only used with the register template.',
     ],
     'licence' => [

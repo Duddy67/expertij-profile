@@ -69,6 +69,14 @@ class Plugin extends PluginBase
 		// A brand new user has just been registered.
 		if ($model->profile === null) {
 		    $data = post();
+		    $regContext = null;
+
+		    // Deletes the session variable before creating the new profile to prevent the afterSave method to use it again.
+		    if (\Session::has('registration_context')) {
+		        // Retrieves and deletes registration_context variable from the session.
+		        $regContext = \Session::pull('registration_context');
+		    }
+
 		    // Creates a new profile model for this user.
 		    $profile = ProfileModel::getFromUser($model, $data);
 
@@ -77,9 +85,7 @@ class Plugin extends PluginBase
 			$profile->save();
 		    }
 
-		    if (\Session::has('registration_context')) {
-		        // Retrieves and deletes registration_context variable from the session.
-		        $regContext = \Session::pull('registration_context');
+		    if ($regContext) {
 		        // Informs the Membership or Training plugin according to the context.
 		        $itemName = ($regContext == 'membership') ? 'Member' : 'Trainee';
 			Event::fire('codalia.profile.register'.$itemName, [$profile, $data]);
@@ -311,8 +317,6 @@ class Plugin extends PluginBase
      */
     public function registerComponents()
     {
-        //return []; // Remove this line to activate
-
         return [
             'Codalia\Profile\Components\Account' => 'account',
         ];

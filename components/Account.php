@@ -41,9 +41,9 @@ class Account extends \RainLab\User\Components\Account
                 'type'        => 'dropdown',
                 'default'     => ''
             ],
-            'hostedFields' => [
-                'title'       => 'codalia.profile::lang.account.hostedFields',
-                'description' => 'codalia.profile::lang.account.hostedFields_desc',
+            'guestPlugin' => [
+                'title'       => 'codalia.profile::lang.account.guestPlugin',
+                'description' => 'codalia.profile::lang.account.guestPlugin_desc',
                 'type'        => 'string',
                 'default'     => '',
 		'showExternalParam' => false
@@ -95,13 +95,13 @@ class Account extends \RainLab\User\Components\Account
 	    $this->page['profile'] = $this->page['user']->profile;
 	}
 
-	$this->setExternalPluginRegistration();
+	$this->setGuestPluginRegistration();
     }
 
-    protected function setExternalPluginRegistration()
+    protected function setGuestPluginRegistration()
     {
-        // It's not a registration page.
-	if ($this->property('template') != 'register') {
+        // It's not a registration page or there is no guest plugin data available.
+	if ($this->property('template') != 'register' || !$this->getGuestPluginData()) {
 
 	    if (\Session::has('registration_context')) {
 	        \Session::forget('registration_context');
@@ -110,24 +110,30 @@ class Account extends \RainLab\User\Components\Account
 	    return;
 	}
 
-	// Gets the external plugin name and model.
-	$plugin = explode(':', $this->property('hostedFields'));
+	$guestPlugin = $this->getGuestPluginData();
 
-	if (empty($plugin[0])) {
-	    return;
-	}
+	$this->page['guestPartial'] = $guestPlugin['name'];
+	$this->page['guestFields'] = $this->getGuestFields($guestPlugin);
 
-	$this->page['hostedPartial'] = strtolower($plugin[0]);
-	$this->page['hostedFields'] = $this->getHostedFields($plugin);
-
-	if (!\Session::has('registration_context')) {
-	    // Sets the registration context according to the external plugin. 
-	    \Session::put('registration_context', $plugin[0]);
+	if (!\Session::has('registration_context') || \Session::get('registration_context') != $guestPlugin['name']) {
+	    // Sets the registration context according to the guest plugin. 
+	    \Session::put('registration_context', $guestPlugin['name']);
 	}
     }
 
     public function onRegister()
     {
+        // First check the User plugin settings.
+	if (!$this->canRegister()) {
+	    Flash::error(Lang::get(/*Registrations are currently disabled.*/'rainlab.user::lang.account.registration_disabled'));
+	    return;
+	}
+
+	if ($this->isRegisterThrottled()) {
+	    Flash::error(Lang::get(/*Registration is throttled. Please try again later.*/'rainlab.user::lang.account.registration_throttled'));
+	    return;
+	}
+
         /*
          * Validate input
          */
@@ -150,20 +156,7 @@ class Account extends \RainLab\User\Components\Account
 	$attributes = $this->getValidationRuleAttributes($rules);
 	$messages = ['licences.*.attestations.*.languages.*.interpreter.required_unless' => Lang::get('codalia.profile::lang.message.skill_checkboxes')];
 
-	// Adds the validation rules of the hosted fields.
-	if (\Session::has('registration_context') && \Session::get('registration_context') == 'membership') {
-	    if (\Session::get('registration_context') == 'membership' && !isset($data['profile']['honorary_member'])) {
-		$extra = MemberModel::getRules();
-		$rules = array_merge($rules, $extra);
-		$extra = $this->getExternalValidationRuleAttributes();
-		$attributes = array_merge($attributes, $extra);
-		$extra = $this->getExternalValidationRuleMessages();
-		$messages = array_merge($messages, $extra);
-	    }
-	}
-
-	// Adds the file array to the data.
-	$data = array_merge($data, Input::file());
+	$this->setValidationRules($data, $rules, $messages, $attributes);
 
 	$validation = Validator::make($data, $rules, $messages, $attributes);
 	if ($validation->fails()) {
@@ -225,6 +218,8 @@ class Account extends \RainLab\User\Components\Account
             unset($rules['password_confirmation']);
 	}
 
+	$this->setValidationRules($data, $rules, $messages, $attributes, $user);
+
 	$validation = Validator::make($data, $rules, $messages, $attributes);
 	if ($validation->fails()) {
 	    throw new ValidationException($validation);
@@ -253,6 +248,11 @@ class Account extends \RainLab\User\Components\Account
 
     private function refreshAttestationFiles($profile)
     {
+        if (!$profile->member) {
+	    // Only members use attestations.
+	    return;
+	}
+
         $refresh = [];
         foreach ($profile->licences as $i => $licence) {
 	    foreach ($licence->attestations as $j => $attestation) {
@@ -357,6 +357,45 @@ class Account extends \RainLab\User\Components\Account
 	return ['#'.$params['type'].'-'.$indexPattern => ''];
     }
 
+    /*
+     * Sets the validation rules according to the guest plugins the user is subscribed to.
+     */
+    private function setValidationRules(&$data, &$rules, &$messages, &$attributes, $user = null)
+    {
+	if (\Session::has('registration_context') && $guestPlugin = $this->getGuestPluginData()) {
+	    $model = $guestPlugin['model'];
+
+	    if ($guestPlugin['name'] == 'membership') {
+	        // Activates the licence file rules.
+		$rules = $this->setFileValidationRules($rules, $data);
+		// Adds the file array to the data.
+		$data = array_merge($data, Input::file());
+	    }
+	}
+	// Updating context.
+	elseif (!\Session::has('registration_context') && $user) {
+	    if ($user->profile->member) {
+	        // Uses the default profile validation rules.
+	        return;
+	    }
+	    elseif ($user->profile->trainee) {
+		$model = '\Codalia\\Training\\Models\\Trainee';
+	    }
+	}
+
+	// Sets and adds the guest validation rules.
+	$rules = $model::getProfileRules($rules, $data);
+	$extra = $model::getRules($data);
+
+	if (!empty($extra)) {
+	    $rules = array_merge($rules, $extra);
+	    $extra = $this->getGuestValidationRuleAttributes($model);
+	    $attributes = array_merge($attributes, $extra);
+	    $extra = $this->getGuestValidationRuleMessages($model);
+	    $messages = array_merge($messages, $extra);
+	}
+    }
+
     private function setFileValidationRules($rules, $data)
     {
         for($i = 0; $i < count($data['licences']); $i++) {
@@ -416,35 +455,25 @@ class Account extends \RainLab\User\Components\Account
 	return $attributes;
     }
 
-    private function getExternalValidationRuleAttributes()
+    private function getGuestValidationRuleAttributes($model)
     {
         $attributes = [];
-	$plugin = explode(':', $this->property('hostedFields'));
+	$attributes = $model::getValidationRuleAttributes();
 
-	if (isset($plugin[0]) && isset($plugin[1])) {
-	    $model = '\Codalia\\'.$plugin[0].'\\Models\\'.$plugin[1];
-	    $attributes = $model::getValidationRuleAttributes();
-
-	    foreach ($attributes as $key => $langVar) {
-	        $attributes[$key] = Lang::get($langVar);
-	    }
+	foreach ($attributes as $key => $langVar) {
+	    $attributes[$key] = Lang::get($langVar);
 	}
 
 	return $attributes;
     }
 
-    private function getExternalValidationRuleMessages()
+    private function getGuestValidationRuleMessages($model)
     {
         $messages = [];
-	$plugin = explode(':', $this->property('hostedFields'));
+	$messages = $model::getValidationRuleMessages();
 
-	if (isset($plugin[0]) && isset($plugin[1])) {
-	    $model = '\Codalia\\'.$plugin[0].'\\Models\\'.$plugin[1];
-	    $messages = $model::getValidationRuleMessages();
-
-	    foreach ($messages as $key => $langVar) {
-	        $messages[$key] = Lang::get($langVar);
-	    }
+	foreach ($messages as $key => $langVar) {
+	    $messages[$key] = Lang::get($langVar);
 	}
 
 	return $messages;
@@ -467,28 +496,39 @@ class Account extends \RainLab\User\Components\Account
 	return ['i' => $i, 'j' => $j, 'k' => $k, 'newIndex' => $newIndex, 'type' => $type, 'context' => $context, 'id' => $id];
     }
 
-    private function getHostedFields($plugin)
+    private function getGuestPluginData()
     {
-	$hostedFields = [];
+	// Ensures first that the plugin data has been properly set in the component.
+        if (!preg_match('#^[a-zA-Z0-9]+:[a-zA-Z0-9]+$#', $this->property('guestPlugin'))) {
+	    return null;
+	}
+	// Gets the guest plugin name and model.
+	$plugin = explode(':', $this->property('guestPlugin'));
 
-	if (isset($plugin[0]) && isset($plugin[1])) {
-	    $model = '\Codalia\\'.$plugin[0].'\\Models\\'.$plugin[1];
+	$data['name'] = strtolower($plugin[0]);
+	$data['model'] = '\Codalia\\'.ucfirst($plugin[0]).'\\Models\\'.ucfirst($plugin[1]);
 
-	    // Ensures the class and method exists.
-	    if (method_exists($model, 'getHostedFields')) {
-		$hostedFields = $model::getHostedFields();
+	return $data;
+    }
 
-		foreach ($hostedFields as $key => $value) {
-		    // Ensures a language variable is available.
-		    if (!is_array($value) && strpos($value, '::lang') !== false) {
-		        // Replaces the language variable with the actual label.
-			$hostedFields[$key] = Lang::get($value);
-		    }
+    private function getGuestFields($guestPlugin)
+    {
+	$guestFields = [];
+
+	// Ensures the class and method exists.
+	if (method_exists($guestPlugin['model'], 'getGuestFields')) {
+	    $guestFields = $guestPlugin['model']::getGuestFields();
+
+	    foreach ($guestFields as $key => $value) {
+		// Ensures a language variable is available.
+		if (!is_array($value) && strpos($value, '::lang') !== false) {
+		    // Replaces the language variable with the actual label.
+		    $guestFields[$key] = Lang::get($value);
 		}
 	    }
 	}
 
-	return $hostedFields;
+	return $guestFields;
     }
 
     private function getTexts()

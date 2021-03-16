@@ -18,6 +18,15 @@
     <li class="nav-item waves-effect waves-light">
 	<a class="nav-link" id="photo-tab" data-toggle="tab" href="#photo" role="tab" aria-controls="photo" aria-selected="true">{{ texts['profile.photo'] }}</a>
     </li>
+    {% if guestPartial == 'membership' %}
+	<li class="nav-item waves-effect waves-light">
+	    <a class="nav-link" id="membership-tab" data-toggle="tab" href="#membership" role="tab" aria-controls="membership" aria-selected="true">Professional status</a>
+	</li>
+    {% elseif guestPartial == 'training' %}
+	<li class="nav-item waves-effect waves-light">
+	    <a class="nav-link" id="training-tab" data-toggle="tab" href="#training" role="tab" aria-controls="training" aria-selected="true">Training</a>
+	</li>
+    {% endif %}
 </ul>
 
 
@@ -46,7 +55,7 @@
 	    </div>
 	</div>
 
-	{% if profile.member %}
+	{% if profile.member or guestPartial == 'membership' %}
 	    <div class="row">
 		<div class="form-group col-md-6">
 		    <label for="inputBirthName">{{ texts['profile.birth_name'] }}</label>
@@ -167,6 +176,17 @@
 	    </div>
 	</div>
     </div>
+
+    {% if guestPartial %}
+	{% set pluginPartial = '@' ~  guestPartial %}
+
+	{% if partial(pluginPartial) %}
+	    <div class="tab-pane fade" id="{{ guestPartial }}" role="tabpanel" aria-labelledby="{{ guestPartial }}-tab">
+		{% partial pluginPartial %}
+	    </div>
+	{% endif %}
+    {% endif %}
+
 </div>
 
 <button type="submit" id="update-data" class="btn btn-success">{{ texts['action.save'] }}</button>

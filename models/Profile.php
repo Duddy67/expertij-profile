@@ -4,6 +4,7 @@ use Model;
 use Codalia\Profile\Models\Licence;
 use Illuminate\Support\Arr;
 use Db;
+use Event;
 
 /**
  * Profile Model
@@ -268,6 +269,19 @@ class Profile extends Model
 	    if ($licence = $this->licences()->where('id', $id)->first()) {
 		$licence->delete();
 	    }
+	}
+    }
+
+    public function afterSave()
+    {
+        // A registered user has suscribed to another plugin.
+	if (\Session::has('registration_context')) {
+            $data = post();
+	    // Retrieves and deletes registration_context variable from the session.
+	    $regContext = \Session::pull('registration_context');
+	    // Informs the Membership or Training plugin according to the context.
+	    $itemName = ($regContext == 'membership') ? 'Member' : 'Trainee';
+	    Event::fire('codalia.profile.register'.$itemName, [$this, $data]);
 	}
     }
 }

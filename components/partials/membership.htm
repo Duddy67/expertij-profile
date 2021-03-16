@@ -1,16 +1,16 @@
 <div class="row">
     <div class="form-group col-sm-6">
-	<label for="inputProStatus">{{ hostedFields.pro_status }}</label>
+	<label for="inputProStatus">{{ guestFields.pro_status }}</label>
 	<select name="membership[pro_status]" class="form-control custom-select" id="inputProStatus">
 	    <option value="">{{ texts['action.select'] }}</option>
-	    {% for value, name in hostedFields.pro_status_options %}
-		<option value="{{ value }}">{{ hostedFields[value] }}</option>
+	    {% for value, name in guestFields.pro_status_options %}
+		<option value="{{ value }}">{{ guestFields[value] }}</option>
 	    {% endfor %}
 	</select>
     </div>
 
     <div class="form-group col-sm-6">
-        <label for="inputSince">{{ hostedFields.since }}</label>
+        <label for="inputSince">{{ guestFields.since }}</label>
         <select name="membership[since]" class="form-control" id="inputSince">
 	    <option value="">{{ texts['action.select'] }}</option>
 	    {% for year in years %}
@@ -21,25 +21,25 @@
 </div>
 
 <div class="form-group">
-    <label for="inputProStatusInfo">{{ hostedFields.pro_status_info}}</label>
+    <label for="inputProStatusInfo">{{ guestFields.pro_status_info}}</label>
     <input type="text" name="membership[pro_status_info]" class="form-control" id="inputProStatusInfo">
 </div>
 
 <div class="row">
     <div class="form-group col-sm-6">
-	<label for="inputSiretNumber">{{ hostedFields.siret_number }}</label>
+	<label for="inputSiretNumber">{{ guestFields.siret_number }}</label>
 	<input type="text" name="membership[siret_number]" class="form-control" id="inputSiretNumber">
     </div>
 
     <div class="form-group col-sm-6">
-	<label for="inputNafCode">{{ hostedFields.naf_code }}</label>
+	<label for="inputNafCode">{{ guestFields.naf_code }}</label>
 	<input type="text" name="membership[naf_code]" class="form-control" id="inputNafCode">
     </div>
 </div>
 
 <div class="row">
     <div class="form-group col-sm-6">
-	<label for="inputAttestation">{{ hostedFields.attestation }}</label>
+	<label for="inputAttestation">{{ guestFields.attestation }}</label>
 	<input type="file" name="membership__attestation" class="form-control" id="inputAttestation">
     </div>
 </div>

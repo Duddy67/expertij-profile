@@ -93,30 +93,31 @@ class Licence extends Model
         $ids = $this->attestations->pluck('id')->toArray();
 
         foreach ($attestations as $key => $attestation) {
-	    if (!empty($attestation['expiry_date'])) {
-	        // Searches for an existing attestation item in the collection.
-		$item = $this->attestations->where('id', $attestation['_id'])->first();
-		// Removes data which is not part of the Attestation model attributes.
-		$input = Arr::except($attestation, ['languages', '_id']);
+	    // Searches for an existing attestation item in the collection.
+	    $item = $this->attestations->where('id', (int)$attestation['_id'])->first();
+	    // Removes data which is not part of the Attestation model attributes.
+	    $input = Arr::except($attestation, ['languages', '_id']);
 
-	        if ($item) {
-		    $item->update($input);
-		}
-		else {
-		    $item = $this->attestations()->create($input);
-		}
+	    // expiry_date is the only and optional field to set. 
+	    $input = (!empty($input['expiry_date'])) ? $input : [];
 
-		if (Input::hasFile('licences__file_'.$licenceKey.'_'.$key)) {
-		    $item->file = Input::file('licences__file_'.$licenceKey.'_'.$key);
-		    $item->save();
-                }
+	    if ($item) {
+		$item->update($input);
+	    }
+	    else {
+		$item = $this->attestations()->create($input);
+	    }
 
-		$item->saveLanguages($attestation['languages']);
+	    if (Input::hasFile('licences__file_'.$licenceKey.'_'.$key)) {
+		$item->file = Input::file('licences__file_'.$licenceKey.'_'.$key);
+		$item->save();
+	    }
 
-		// Removes the newly created or updated attestations from the id array.
-                if (($key = array_search($attestation['_id'], $ids)) !== false) {
-		    unset($ids[$key]);
-		}
+	    $item->saveLanguages($attestation['languages']);
+
+	    // Removes the newly created or updated attestations from the id array.
+	    if (($key = array_search($attestation['_id'], $ids)) !== false) {
+		unset($ids[$key]);
 	    }
 	}
 

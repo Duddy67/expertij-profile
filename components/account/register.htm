@@ -18,9 +18,15 @@
 	    <li class="nav-item waves-effect waves-light">
 		<a class="nav-link" id="photo-tab" data-toggle="tab" href="#photo" role="tab" aria-controls="photo" aria-selected="true">Photo</a>
 	    </li>
-	    <li class="nav-item waves-effect waves-light">
-		<a class="nav-link" id="membership-tab" data-toggle="tab" href="#membership" role="tab" aria-controls="membership" aria-selected="true">Professional status</a>
-	    </li>
+	    {% if guestPartial == 'membership' %}
+		<li class="nav-item waves-effect waves-light">
+		    <a class="nav-link" id="membership-tab" data-toggle="tab" href="#membership" role="tab" aria-controls="membership" aria-selected="true">Professional status</a>
+		</li>
+	    {% elseif guestPartial == 'training' %}
+		<li class="nav-item waves-effect waves-light">
+		    <a class="nav-link" id="training-tab" data-toggle="tab" href="#training" role="tab" aria-controls="training" aria-selected="true">Training</a>
+		</li>
+	    {% endif %}
 	</ul>
 
 	<div class="tab-content mt-3" id="myTabContent">
@@ -67,22 +73,24 @@
 		    </div>
 		</div>
 
-		<div class="row">
-		    <div class="form-group col-sm-6">
-			<label for="inputBirthLocation">{{ texts['profile.birth_location'] }}</label>
-			<input type="text" name="profile[birth_location]" class="form-control" id="inputBirthLocation">
-		    </div>
+		{% if guestPartial == 'membership' %}
+		    <div class="row">
+			<div class="form-group col-sm-6">
+			    <label for="inputBirthLocation">{{ texts['profile.birth_location'] }}</label>
+			    <input type="text" name="profile[birth_location]" class="form-control" id="inputBirthLocation">
+			</div>
 
-		    <div class="form-group col-sm-6">
-			<label for="inputCitizenship">{{ texts['profile.citizenship'] }}</label>
-			<select name="profile[citizenship]" class="form-control" id="inputCitizenship">
-			    <option value="">{{ texts['action.select'] }}</option>
-			    {% for alpha_2, text in citizenships %}
-				<option value="{{ alpha_2 }}">{{ text }}</option>
-			    {% endfor %}
-			</select>
+			<div class="form-group col-sm-6">
+			    <label for="inputCitizenship">{{ texts['profile.citizenship'] }}</label>
+			    <select name="profile[citizenship]" class="form-control" id="inputCitizenship">
+				<option value="">{{ texts['action.select'] }}</option>
+				{% for alpha_2, text in citizenships %}
+				    <option value="{{ alpha_2 }}">{{ text }}</option>
+				{% endfor %}
+			    </select>
+			</div>
 		    </div>
-		</div>
+		{% endif %}
 
 		{% if loginAttribute == "username" %}
 		    <div class="form-group">
@@ -147,14 +155,16 @@
 		    </div>
 		</div>
 
-		<div class="row">
-		    <div class="form-group checkbox custom-checkbox col-sm-6">
-			<p><small>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.
-			   Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit</small></p>
-			<label for="honorary-member" class="mr-2">{{ texts['profile.honorary_member'] }}</label>
-			<input type="checkbox" name="profile[honorary_member]" class="" value="1" id="honorary-member" />
+		{% if guestPartial == 'membership' %}
+		    <div class="row">
+			<div class="form-group checkbox custom-checkbox col-sm-6">
+			    <p><small>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.
+			       Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit</small></p>
+			    <label for="honorary-member" class="mr-2">{{ texts['profile.honorary_member'] }}</label>
+			    <input type="checkbox" name="profile[honorary_member]" class="" value="1" id="honorary-member" />
+			</div>
 		    </div>
-		</div>
+		{% endif %}
 
 		<div class="row" id="details-navigation">
 		    <div class="col-sm-12">
@@ -182,8 +192,8 @@
 			<a class="btn btn-secondary float-left" id="licences-tab" data-toggle="tab" href="#licences" role="tab"
 			   onclick="$('#myTab a[href=&quot;#licences&quot;]').tab('show');" aria-controls="licences" aria-selected="true">{{ texts['action.previous'] }}</a>
 
-			<a class="btn btn-secondary float-right" id="{{ hostedPartial }}-tab" data-toggle="tab" href="#{{ hostedPartial }}"
-			   role="tab" onclick="$('#myTab a[href=&quot;#{{ hostedPartial }}&quot;]').tab('show');" aria-controls="{{ hostedPartial }}" aria-selected="true">{{ texts['action.next'] }}</a>
+			<a class="btn btn-secondary float-right" id="{{ guestPartial }}-tab" data-toggle="tab" href="#{{ guestPartial }}"
+			   role="tab" onclick="$('#myTab a[href=&quot;#{{ guestPartial }}&quot;]').tab('show');" aria-controls="{{ guestPartial }}" aria-selected="true">{{ texts['action.next'] }}</a>
 		    </div>
 		</div>
 	    </div>
@@ -191,11 +201,11 @@
 	    <input name="name" type="hidden" id="registerName" />
 	    <input type="hidden" id="locale" value="{{ locale }}" />
 
-	    {% if hostedPartial %}
-		{% set pluginPartial = '@' ~  hostedPartial %}
+	    {% if guestPartial %}
+		{% set pluginPartial = '@' ~  guestPartial %}
 
 		{% if partial(pluginPartial) %}
-		    <div class="tab-pane fade" id="{{ hostedPartial }}" role="tabpanel" aria-labelledby="{{ hostedPartial }}-tab">
+		    <div class="tab-pane fade" id="{{ guestPartial }}" role="tabpanel" aria-labelledby="{{ guestPartial }}-tab">
 			{% partial pluginPartial %}
 
 			<div class="row mt-5">
