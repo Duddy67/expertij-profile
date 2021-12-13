@@ -22,7 +22,7 @@
   }
 
   $.fn.setTabs = function(xhr) {
-      let keys = Object.keys(xhr.responseJSON.X_OCTOBER_ERROR_FIELDS);
+      let keys = Object.keys(xhr.responseJSON.X_WINTER_ERROR_FIELDS);
       let key = keys[0];
       let path = key.split('.');
 
