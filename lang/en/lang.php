@@ -50,6 +50,7 @@ return [
 	'required_field' => 'This field is required',
 	'skill_checkboxes' => 'At least one of both checkboxes (Interpreter or Translator) must be checked.',
 	'delete_confirmation' => 'You are about to delete an element. Are you sure ?',
+	'welcome_message' => 'Congratulation ! Your application has been taken into account. An administrator will inform you about the progess of your file.',
     ],
     'account' => [
 	'template' => 'Template',

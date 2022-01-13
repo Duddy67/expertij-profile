@@ -4,6 +4,10 @@
 
 <h4>Profile</h4>
 
+{% if not user.last_seen %}
+    <div class="alert alert-success" role="alert">{{ texts['message.welcome_message'] }}</div>
+{% endif %}
+
 {{ form_ajax('onUpdate', {files: 1, flash: '', 'data-request-error': '$.fn.setTabs(jqXHR);'}) }}
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
