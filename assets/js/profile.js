@@ -14,6 +14,8 @@
       $('[id^="add-language-"],[id^="add-attestation-"],[id^="add-licence-"]').click(function() { $.fn.addItem(this); });
       $('#honorary-member').click(function() { $.fn.honoraryMemberSetting($(this)); });
       $('#update-data, #replace-photo').click(function() { $.fn.setTask($(this)); });
+
+      $('#register').click(function(e) { $.fn.checkCheckboxes(e); });
   });
 
 
@@ -55,6 +57,41 @@
       }
       
       return name;
+  }
+
+  $.fn.checkCheckboxes = function(e) {
+      const checkboxes = ['inputCodeOfEthics', 'inputStatuses', 'inputInternalRules'];
+      // Reset the color of the checkbox labels.
+      $.each(checkboxes, function(index, checkbox) {
+	$('#'+checkbox+'Label').css('color', '#212529');
+      });
+
+      let unchecked = null;
+
+      if (!$('#inputCodeOfEthics').prop('checked')) {
+          unchecked = 'inputCodeOfEthics';	
+      }
+      else if (!$('#inputStatuses').prop('checked')) {
+          unchecked = 'inputStatuses';	
+      }
+      else if (!$('#inputInternalRules').prop('checked')) {
+          unchecked = 'inputInternalRules';	
+      }
+
+      if (unchecked) {
+	  alert('unchecked: '+unchecked);
+
+	  $('#myTab a[href="#membership"]').tab('show');
+	  $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
+	      $('[name="'+name+'"]').focus();
+	  });
+
+	  $('#'+unchecked+'Label').css('color', 'red');
+
+          e.preventDefault();
+	  e.stopPropagation();
+	  return false;
+      }
   }
 
   /*
