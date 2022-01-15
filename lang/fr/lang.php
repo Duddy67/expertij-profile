@@ -2,7 +2,7 @@
 
 return [
     'profile' => [
-	'civility' => 'Civility',
+	'civility' => 'Civilité',
 	'mr' => 'Mr',
 	'mrs' => 'Mme',
 	'first_name' => 'Prénom',
