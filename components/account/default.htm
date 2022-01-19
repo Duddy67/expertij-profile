@@ -5,10 +5,10 @@
         {% if template == "signin" %}
 
 	  <div class="col-md-6">
-	      <h3>Sign in</h3>
+	      <h3>{{ texts['action.sign_in'] }}</h3>
 	      {% partial __SELF__ ~ '::signin' %}
 	      <br />
-	      <a href="{{ "#{url('/')}/register" }}">Not registered yet ?</a>
+	      <a href="{{ "#{url('/')}/register" }}">{{ texts['action.not_registered_yet'] }}</a>
 	  </div>
 
         {% elseif template == "register" %}
@@ -16,7 +16,7 @@
 	  <div class="col">
 	      {% partial __SELF__ ~ '::register' %}
 	      <br />
-	      <a href="{{ "#{url('/')}/signin" }}">Already registered ?</a>
+	      <a href="{{ "#{url('/')}/signin" }}">{{ texts['action.already_registered'] }}</a>
 	  </div>
 
         {% else %}

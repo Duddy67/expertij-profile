@@ -28,6 +28,7 @@ return [
 	'details' => 'Détails',
 	'licences' => 'Licences',
 	'photo' => 'Photo',
+	'professional_status' => 'Statut professionnel',
     ],
     'action' => [
 	'check_in_success' => ':count item(s) successfully checked-in.',
@@ -46,6 +47,11 @@ return [
 	'new_attestation' => 'Nouvelle Attestation',
 	'delete_attestation' => 'Supprimer Attestation',
 	'add_language' => 'Ajouter Language',
+	'sign_in' => 'Se connecter',
+	'not_registered_yet' => 'Pas encore adhérent(e) ?',
+	'already_registered' => 'Déjà adhérent(e) ?',
+	'enter_your' => 'Entrez votre ',
+	'stay_logged_in' => 'Rester connecté(e)',
     ],
     'message' => [
 	'required_field' => 'Ce champ est requis',

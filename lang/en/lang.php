@@ -28,6 +28,7 @@ return [
 	'details' => 'Details',
 	'licences' => 'Licences',
 	'photo' => 'Photo',
+	'professional_status' => 'Professional status',
     ],
     'action' => [
 	'check_in_success' => ':count item(s) successfully checked-in.',
@@ -46,6 +47,11 @@ return [
 	'new_attestation' => 'New Attestation',
 	'delete_attestation' => 'Delete Attestation',
 	'add_language' => 'Add Language',
+	'sign_in' => 'Sign in',
+	'not_registered_yet' => 'Not registered yet ?',
+	'already_registered' => 'Already registered ?',
+	'enter_your' => 'Enter your ',
+	'stay_logged_in' => 'Stay logged in',
     ],
     'message' => [
 	'required_field' => 'This field is required',
