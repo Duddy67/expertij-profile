@@ -2,7 +2,7 @@
     <link rel="stylesheet" href="plugins/codalia/profile/assets/css/profile.css">
 {% endput %}
 
-<h4>Profile</h4>
+<h4>{{ texts['profile.title'] }}</h4>
 
 {% if not user.last_seen %}
     <div class="alert alert-success" role="alert">{{ texts['message.welcome_message'] }}</div>

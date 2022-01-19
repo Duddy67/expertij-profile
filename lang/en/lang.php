@@ -2,6 +2,7 @@
 
 return [
     'profile' => [
+	'title' => 'Profile',
 	'civility' => 'Civility',
 	'mr' => 'Mr',
 	'mrs' => 'Mrs',
