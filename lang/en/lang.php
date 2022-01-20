@@ -91,6 +91,11 @@ return [
 	    ],
 	],
     ],
+    'javascript' => [
+	'alert_inputCodeOfEthics' => 'You must read and agree to the code of ethics.',
+	'alert_inputStatuses' => 'You must read and agree to the statuses.',
+	'alert_inputInternalRues' => 'You must read and agree to the internal rules.',
+    ],
     'citizenship' => [
 	'AD' => 'Andorian',
 	'AE' => 'Emirian',

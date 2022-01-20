@@ -91,6 +91,11 @@ return [
 	    ],
 	],
     ],
+    'javascript' => [
+	'alert_inputCodeOfEthics' => 'Vous devez certifier avoir pris connaissance du code de déontologie.',
+	'alert_inputStatuses' => 'Vous devez certifier avoir pris connaissance des statuts de l\'association.',
+	'alert_inputInternalRues' => 'Vous devez certifier avoir pris connaissance du réglement intérieur.',
+    ],
     'citizenship' => [
 	'AD' => 'Andorian',
 	'AE' => 'Emirian',

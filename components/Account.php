@@ -90,6 +90,7 @@ class Account extends \RainLab\User\Components\Account
 	$this->page['citizenships'] = $this->setOptionTexts('citizenship');
 	$this->page['licenceTypes'] = $this->setOptionTexts('licenceType');
 	$this->page['texts'] = $this->getTexts();
+	$this->page['javascriptMessages'] = json_encode($this->page['texts']['javascript']);
 
 	if ($this->page['user']) {
 	    $this->page['profile'] = $this->page['user']->profile;
@@ -540,6 +541,19 @@ class Account extends \RainLab\User\Components\Account
 	$texts = [];
 
 	foreach ($langVars as $level1 => $section1) {
+	    // The javascript messages are treated separately.
+	    if ($level1 == 'javascript') {
+	        $javascript = [];
+
+		foreach ($section1 as $langVar => $val) {
+		    $javascript[$langVar] = Lang::get('codalia.profile::lang.javascript.'.$langVar);;
+		}
+
+	        $texts['javascript'] = $javascript;
+
+		continue;
+	    }
+
 	    foreach ($section1 as $level2 => $section2) {
 		$texts[$level1.'.'.$level2] = Lang::get('codalia.profile::lang.'.$level1.'.'.$level2);
 	    }

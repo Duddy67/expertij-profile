@@ -79,7 +79,10 @@
       }
 
       if (unchecked) {
-	  alert('unchecked: '+unchecked);
+	  const messages = JSON.parse($('#javascript_messages').val());
+	  const langVar = 'alert_'+unchecked;
+
+	  alert(messages[langVar]);
 
 	  $('#myTab a[href="#membership"]').tab('show');
 	  $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
