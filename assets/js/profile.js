@@ -3,10 +3,12 @@
   // Run a function when the page is fully loaded including graphics.
   $(window).on('load', function() {
       $.fn.setDateFields();
-      $('[id^="licence-type-"]').change(function() { $.fn.setLicenceType($(this)); });
+      $('[id^="licence-type-"]').click(function() { $.fn.setLicenceType($(this)); });
 
       $('[id^="licence-type-"]').each(function() { 
-	  $.fn.setLicenceType($(this)); 
+          if ($(this).is(':checked')) {
+            $.fn.setLicenceType($(this)); 
+          }
       });
 
       $.fn.setExpertOptions();
@@ -146,7 +148,8 @@
 
   $.fn.setLicenceType = function(elem) {
       // Gets the index number set after "licence-type-".
-      let index = elem.attr('id').substring(13);
+      let parts = elem.attr('id').substring(13);
+      let index = parts[parts.length - 1];
 
       switch (elem.val()) {
 	  case 'expert':
@@ -294,8 +297,10 @@
 	  $('#add-attestation-'+lastIndex+'-0').click(function() { $.fn.addItem(this); });
 	  $('#add-language-'+lastIndex+'-0').click(function() { $.fn.addItem(this); });
 	  $.fn.setDateFields('#dp_expiry-date-'+lastIndex+'-0');
-	  $('#licence-type-'+lastIndex).change(function() { $.fn.setLicenceType($(this)); });
-	  $.fn.setLicenceType($('#licence-type-'+lastIndex));
+          $('[id^="licence-type-"]').click(function() { $.fn.setLicenceType($(this)); });
+          // Check the expert type by default.
+          $('#licence-type-expert-'+lastIndex).prop('checked',true);
+	  $.fn.setLicenceType($('#licence-type-expert-'+lastIndex));
 	  $('#add-licence-'+lastIndex).click(function() { $.fn.addItem(this); });
 	  $.fn.setExpertOptions();
       }
@@ -304,12 +309,23 @@
 	  $('#add-attestation-'+item.i+'-'+lastIndex).click(function() { $.fn.addItem(this); });
 	  $('#add-language-'+item.i+'-'+lastIndex).click(function() { $.fn.addItem(this); });
 	  $.fn.setDateFields('#dp_expiry-date-'+item.i+'-'+lastIndex);
+
 	  // Sets the interpreter/translator attributes according to the licence type.
-	  $.fn.setLicenceType($('#licence-type-'+item.i)); 
+          if ($('#licence-type-expert-'+item.i).is(':checked')) {
+              $.fn.setLicenceType($('#licence-type-expert-'+item.i)); 
+          }
+          else {
+              $.fn.setLicenceType($('#licence-type-ceseda-'+item.i)); 
+          }
       }
       else if (item.type == 'language' && item.action == 'add') {
 	  // Sets the interpreter/translator attributes according to the licence type.
-	  $.fn.setLicenceType($('#licence-type-'+item.i)); 
+          if ($('#licence-type-expert-'+item.i).is(':checked')) {
+              $.fn.setLicenceType($('#licence-type-expert-'+item.i)); 
+          }
+          else {
+              $.fn.setLicenceType($('#licence-type-ceseda-'+item.i)); 
+          }
       }
   };
 

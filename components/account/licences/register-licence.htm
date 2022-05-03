@@ -1,11 +1,10 @@
 <div class="form-group col-sm-6">
-    <label for="licence-type-{{ i }}">{{ texts['licences.type'] }}</label>
-    <select name="licences[{{ i }}][type]" class="form-control" id="licence-type-{{ i }}">
-	<option value="">{{ texts['action.select'] }}</option>
-	{% for value, text in licenceTypes %}
-	    <option value="{{ value }}">{{ text }}</option>
-	{% endfor %}
-    </select>
+    {% for value, text in licenceTypes %}
+        <div class="form-check"> <label class="form-check-label">
+            <input type="radio" class="form-check-input" name="licences[{{ i }}][type]" {{ (value == 'expert') ? 'checked="checked"' : '' }}
+                   id="licence-type-{{ value }}-{{ i }}" value="{{ value }}">{{ text }}</label>
+        </div>
+    {% endfor %}
 </div>
 
 <div class="form-group col-sm-6">
