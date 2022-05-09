@@ -207,7 +207,7 @@ class Profile extends Model
 
     public static function getLanguages()
     {
-	return Db::table('codalia_profile_language_list')->get()->pluck('alpha_2')->toArray();
+	return Db::table('codalia_profile_language_list')->get()->pluck('fr')->toArray();
     }
 
     public static function getCitizenships()

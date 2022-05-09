@@ -18,6 +18,10 @@
 	</div>
     </div>
     <input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][expiry_date]" id="expiry-date-{{ i }}-{{ j }}" value="{{ attestation.expiry_date }}">
+
+    {% if "now"|date_modify("+1 year")|date('Y-m-d') > attestation.expiry_date|date('Y-m-d') %}
+        <p>Alerte: Pensez à renouveler votre attestation.</p>
+    {% endif %}
 </div>
 
 <input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][_id]" value="{{ attestation.id }}">
