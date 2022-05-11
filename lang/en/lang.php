@@ -411,4 +411,7 @@ return [
 	'zh' => 'Chinese',
 	'zu' => 'Zulu',
     ],
+    'extra' => [
+	'foo' => 'xxx',
+    ]
 ];
