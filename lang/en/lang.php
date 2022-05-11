@@ -52,6 +52,7 @@ return [
 	'already_registered' => 'Already registered ?',
 	'enter_your' => 'Enter your ',
 	'stay_logged_in' => 'Stay logged in',
+	'submit_registration' => 'xxx',
     ],
     'message' => [
 	'required_field' => 'This field is required',
