@@ -161,6 +161,11 @@
 	      //$('label[for|="interpreter-'+index+'"],label[for|="translator-'+index+'"]').css({'visibility':'visible','display':'inline'});
 	      //$('label[for|="interpreter-cassation-'+index+'"],label[for|="translator-cassation-'+index+'"]').css({'visibility':'visible','display':'inline'});
 	      $('[id^="language-skills-'+index+'-"]').css({'visibility':'visible','display':'block'});
+              // Radio button toggle.
+	      $('#licence-type-expert-'+index).parent().removeClass('exp-radio-tab-label-grey');
+	      $('#licence-type-ceseda-'+index).parent().removeClass('exp-radio-tab-label');
+	      $('#licence-type-expert-'+index).parent().addClass('exp-radio-tab-label');
+	      $('#licence-type-ceseda-'+index).parent().addClass('exp-radio-tab-label-grey');
 
 	      $.fn.linkCassation(index);
 	      $.fn.setExpertOptions(index);
@@ -175,6 +180,11 @@
 	      //$('label[for|="interpreter-'+index+'"],label[for|="translator-'+index+'"]').css({'visibility':'hidden','display':'none'});
 	      //$('label[for|="interpreter-cassation-'+index+'"],label[for|="translator-cassation-'+index+'"]').css({'visibility':'hidden','display':'none'});
 	      $('[id^="language-skills-'+index+'-"]').css({'visibility':'hidden','display':'none'});
+              // Radio button toggle.
+	      $('#licence-type-expert-'+index).parent().removeClass('exp-radio-tab-label');
+	      $('#licence-type-ceseda-'+index).parent().removeClass('exp-radio-tab-label-grey');
+	      $('#licence-type-expert-'+index).parent().addClass('exp-radio-tab-label-grey');
+	      $('#licence-type-ceseda-'+index).parent().addClass('exp-radio-tab-label');
 	      break;
 
 	  default:
