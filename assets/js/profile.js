@@ -238,6 +238,7 @@
 
 	  let picker = new Pikaday({
 	    field: $(this)[0],
+            yearRange: 90,
 	    onSelect: date => {
 		// Format the selected date in MySQL date, (ie: yyyy-m-d).
 		const year = date.getFullYear(),
