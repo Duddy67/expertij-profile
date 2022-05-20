@@ -401,7 +401,7 @@ class Account extends \RainLab\User\Components\Account
     {
         for($i = 0; $i < count($data['licences']); $i++) {
 	    for($j = 0; $j < count($data['licences'][$i]['attestations']); $j++) {
-	        $rules['licences__file_'.$i.'_'.$j] = 'required';
+	        $rules['licences__file_'.$i.'_'.$j] = 'required|mimes:pdf,doc,docx,png,jpg,jpeg|max:10000';
 	    }
 	}
 
