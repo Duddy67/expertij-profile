@@ -6,6 +6,7 @@ use RainLab\User\Models\Settings as UserSettings;
 use Cms\Classes\CodeBase;
 use Codalia\Profile\Models\Profile;
 use Codalia\Membership\Models\Member as MemberModel;
+use Codalia\Profile\Models\Attestation;
 use System\Models\File;
 use Auth;
 use Validator;
@@ -196,6 +197,10 @@ class Account extends \RainLab\User\Components\Account
             return $this->replacePhoto();
 	}
 
+	if (substr($data['task'], 0, 13) === 'replace-file_') {
+            return $this->replaceFile($data);
+	}
+
 	// Concatenates the first and last name in the User plugin's 'name' field.
 	Input::merge(['name' => $data['profile']['first_name'].' '.$data['profile']['last_name']]);
 
@@ -265,6 +270,33 @@ class Account extends \RainLab\User\Components\Account
 	return $refresh;
     }
 
+    public function replaceFile($data)
+    {
+        preg_match('#replace-file_([0-9]*)_([0-9]*)#', $data['task'], $matches);
+        $i = $matches[1];
+        $j = $matches[2];
+
+        if (Input::hasFile('licences__file_'.$i.'_'.$j)) {
+	    $file = (new File())->fromPost(Input::file('licences__file_'.$i.'_'.$j));
+            $attestationId = $data['licences'][$i]['attestations'][$j]['_id'];
+	    $attestation = Attestation::where('id', $attestationId)->first();
+            $attestation->file = $file;
+            $attestation->save();
+        }
+        else {
+            Flash::error(Lang::get('codalia.membership::lang.action.no_file_selected'));
+            return;
+        }
+
+        Flash::success(Lang::get('codalia.membership::lang.action.file_replace_success'));
+        $label = Lang::get('codalia.profile::lang.action.download_attestation');
+
+        return [
+            '#new-attestation-'.$i.'-'.$j => '<a target="_blank" href="'.$attestation->file->getPath().'">'.$label.' : '.$attestation->file->file_name.'</a>', 
+            '#attestation-file-'.$i.'-'.$j => '<input type="file" name="licences__file_'.$i.'_'.$j.'" class="form-control" id="file-'.$i.'-'.$j.'">',
+        ];
+    }
+
     public function replacePhoto()
     {
 	$file = null;
@@ -278,6 +310,7 @@ class Account extends \RainLab\User\Components\Account
 	    $profile->save();
 	}
 	else {
+            Flash::error(Lang::get('codalia.membership::lang.action.no_file_selected'));
 	    return;
 	}
 

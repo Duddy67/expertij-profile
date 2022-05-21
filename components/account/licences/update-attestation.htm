@@ -3,10 +3,9 @@
     <div class="form-group mb-1" id="attestation-file-{{ i }}-{{ j }}">
 	<input type="file" name="licences__file_{{ i }}_{{ j }}" class="form-control" id="file-{{ i }}-{{ j }}">
     </div>
-    <div class="" id="new-attestation-{{ i }}-{{ j }}">
-	<a target="_blank" href="{{ attestation.file.path }}">{{ attestation.file.filename}}</a>
+    <div class="col-sm-2">
+        <button type="submit" id="replace-file_{{ i }}_{{ j }}" class="btn btn-success">{{ texts['action.replace'] }}</button>
     </div>
-    <p class="mb-3"><small>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</small></p>
 </div>
 
 <div class="form-group col-sm-6">
@@ -17,9 +16,16 @@
 	    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
 	</div>
     </div>
+    <div class="">
+        {% if attestation.file.filename|length %}
+            <button type="button" id="new-attestation-{{ i }}-{{ j }}" class="btn btn-success">
+                <a target="_blank" href="{{ attestation.file.path }}">{{ texts['action.download_attestation'] }} : {{ attestation.file.filename}}</a>
+            </button>
+        {% endif %}
+    </div>
     <input type="hidden" name="licences[{{ i }}][attestations][{{ j }}][expiry_date]" id="expiry-date-{{ i }}-{{ j }}" value="{{ attestation.expiry_date }}">
 
-    {% if "now"|date_modify("+1 year")|date('Y-m-d') > attestation.expiry_date|date('Y-m-d') %}
+    {% if attestation.expiry_date|length and ("now"|date_modify("+1 year")|date('Y-m-d') > attestation.expiry_date|date('Y-m-d')) %}
         <p>Alerte: Pensez à renouveler votre attestation.</p>
     {% endif %}
 </div>
@@ -45,10 +51,12 @@
 
 <div class="form-group col-sm-12">
     <div class="row">
+        {% if (j + 1) == licence.attestations|length %}
 	<div class="form-group col-sm-6">
 	    <button type="button" data-request="onAddItem" data-request-data="_licence_index: {{ i }}, _item_type: 'attestation', _item_context: 'update'" 
 		    data-request-success="$.fn.initNewItem(this)" class="btn btn-info" id="add-attestation-{{ i }}-{{ j }}">{{ texts['action.new_attestation'] }}</button>
 	</div>
+        {% endif %}
 
 	{% if j > 0 %}
 	{% set attestationId = (attestation.id) ? attestation.id : '\'\'' %}

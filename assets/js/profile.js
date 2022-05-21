@@ -15,9 +15,14 @@
 
       $('[id^="add-language-"],[id^="add-attestation-"],[id^="add-licence-"]').click(function() { $.fn.addItem(this); });
       $('#honorary-member').click(function() { $.fn.honoraryMemberSetting($(this)); });
-      $('#update-data, #replace-photo').click(function() { $.fn.setTask($(this)); });
+      $('#update-data, #replace-photo, button[id^="replace-file_"]').click(function() { $.fn.setTask($(this)); });
 
       $('#register').click(function(e) { $.fn.checkCheckboxes(e); });
+      //
+      $('.previous-next-arrows').click(function(event) {
+          event.preventDefault();
+          $('html, body').animate({ scrollTop: $($(this).attr('href')).offset().top }, 500);
+      });
   });
 
 

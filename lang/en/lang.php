@@ -46,6 +46,7 @@ return [
 	'delete_licence' => 'Delete Licence',
 	'new_attestation' => 'New Attestation',
 	'delete_attestation' => 'Delete Attestation',
+	'download_attestation' => 'Download Attestation',
 	'add_language' => 'Add Language',
 	'sign_in' => 'Sign in',
 	'not_registered_yet' => 'Not registered yet ?',
