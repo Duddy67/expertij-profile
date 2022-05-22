@@ -19,6 +19,14 @@ use Lang;
 
 class Account extends \RainLab\User\Components\Account
 {
+    /**
+     * @var array Rules set for file types.
+     */
+    public $fileRules = [
+	'attestation' => 'mimes:pdf,doc,docx,png,jpg,jpeg|max:10000', 'photo' => 'mimes:jpg,jpeg,png|max:10000'
+    ];
+
+
     public function componentDetails()
     {
         return [
@@ -191,7 +199,7 @@ class Account extends \RainLab\User\Components\Account
             return;
         }
 
-	$data = post();
+	$data = Input::all();
 
 	if ($data['task'] == 'replace-photo') {
             return $this->replacePhoto();
@@ -209,6 +217,13 @@ class Account extends \RainLab\User\Components\Account
 
 	if ($licences) {
 	    $rules = $this->setLanguageValidationRules($rules, $data);
+
+            // Check for possible files not uploaded through the replace button.
+            foreach ($data as $key => $field) {
+                if (substr($key, 0, 15) === 'licences__file_') {
+                    $rules[$key] = $this->fileRules['attestation'];
+                }
+            }
 	}
 
 	$attributes = $this->getValidationRuleAttributes($rules);
@@ -277,6 +292,13 @@ class Account extends \RainLab\User\Components\Account
         $j = $matches[2];
 
         if (Input::hasFile('licences__file_'.$i.'_'.$j)) {
+
+            $rules = ['licences__file_'.$i.'_'.$j => $this->fileRules['attestation']];
+            $validation = Validator::make(Input::all(), $rules);
+            if ($validation->fails()) {
+                throw new ValidationException($validation);
+            }
+
 	    $file = (new File())->fromPost(Input::file('licences__file_'.$i.'_'.$j));
             $attestationId = $data['licences'][$i]['attestations'][$j]['_id'];
 	    $attestation = Attestation::where('id', $attestationId)->first();
@@ -302,8 +324,14 @@ class Account extends \RainLab\User\Components\Account
 	$file = null;
 
 	if (Input::hasFile('photo')) {
-	    $file = (new File())->fromPost(Input::file('photo'));
 
+            $rules = ['photo' => $this->fileRules['photo']];
+            $validation = Validator::make(Input::all(), $rules);
+            if ($validation->fails()) {
+                throw new ValidationException($validation);
+            }
+
+	    $file = (new File())->fromPost(Input::file('photo'));
 	    $user = $this->user();
 	    $profile = Profile::where('user_id', $user->id)->first();
 	    $profile->photo()->add($file);
