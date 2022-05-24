@@ -60,8 +60,10 @@
 <div class="form-group col-sm-12">
     <div class="row">
 	<div class="form-group col-sm-6">
-	    <button type="button" data-request="onAddItem" data-request-data="_licence_index: {{ i }}, _item_type: 'licence', _item_context: 'update'"
-		    data-request-success="$.fn.initNewItem(this)" class="btn btn-info" id="add-licence-{{ i }}">{{ texts['action.new_licence'] }}</button>
+            {% if i == 0 %}
+                <button type="button" data-request="onAddItem" data-request-data="_licence_index: {{ i }}, _item_type: 'licence', _item_context: 'update'"
+                        data-request-success="$.fn.initNewItem(this)" class="btn btn-info" id="add-licence-{{ i }}">{{ texts['action.new_licence'] }}</button>
+            {% endif %}
 	</div>
 
 	{% if i > 0 %}
