@@ -51,12 +51,12 @@
 
 <div class="form-group col-sm-12">
     <div class="row">
-        {% if (j + 1) == licence.attestations|length %}
-	<div class="form-group col-sm-6">
-	    <button type="button" data-request="onAddItem" data-request-data="_licence_index: {{ i }}, _item_type: 'attestation', _item_context: 'update'" 
-		    data-request-success="$.fn.initNewItem(this)" class="btn btn-info" id="add-attestation-{{ i }}-{{ j }}">{{ texts['action.new_attestation'] }}</button>
-	</div>
-        {% endif %}
+            <div class="form-group col-sm-6">
+            {% if j == 0 %}
+                <button type="button" data-request="onAddItem" data-request-data="_licence_index: {{ i }}, _item_type: 'attestation', _item_context: 'update'" 
+                        data-request-success="$.fn.initNewItem(this)" class="btn btn-info" id="add-attestation-{{ i }}-{{ j }}">{{ texts['action.new_attestation'] }}</button>
+            {% endif %}
+            </div>
 
 	{% if j > 0 %}
 	{% set attestationId = (attestation.id) ? attestation.id : '\'\'' %}
