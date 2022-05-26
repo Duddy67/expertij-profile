@@ -163,10 +163,13 @@ class Account extends \RainLab\User\Components\Account
 	    $rules = $this->setLanguageValidationRules($rules, $data);
 	}
 
+        $attributes = $messages = [];
 	$attributes = $this->getValidationRuleAttributes($rules);
 	$messages = ['licences.*.attestations.*.languages.*.interpreter.required_unless' => Lang::get('codalia.profile::lang.message.skill_checkboxes')];
 
-	$this->setValidationRules($data, $rules, $messages, $attributes);
+        if (!isset($data['profile']['honorary_member'])) {
+            $this->setValidationRules($data, $rules, $messages, $attributes);
+        }
 
 	$validation = Validator::make($data, $rules, $messages, $attributes);
 	if ($validation->fails()) {
@@ -275,9 +278,11 @@ class Account extends \RainLab\User\Components\Account
 	}
 
         $refresh = [];
+        $label = Lang::get('codalia.profile::lang.action.download_attestation');
+
         foreach ($profile->licences as $i => $licence) {
 	    foreach ($licence->attestations as $j => $attestation) {
-		$refresh['#new-attestation-'.$i.'-'.$j] = '<a target="_blank" href="'.$attestation->file->getPath().'">'.$attestation->file->file_name.'</a>'; 
+		$refresh['#new-attestation-'.$i.'-'.$j] = '<a target="_blank" href="'.$attestation->file->getPath().'">'.$label.' : '.$attestation->file->file_name.'</a>'; 
 		$refresh['#attestation-file-'.$i.'-'.$j] = '<input type="file" name="licences__file_'.$i.'_'.$j.'" class="form-control" id="file-'.$i.'-'.$j.'">';
 	    }
 	}

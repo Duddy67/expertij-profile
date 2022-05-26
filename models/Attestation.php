@@ -92,11 +92,11 @@ class Attestation extends Model
 		$input = Arr::except($language, '_id');
 
 		if ($item) {
-		    // Sets to null the possibly unchecked attributes.    
-		    $input['interpreter'] = (isset($input['interpreter'])) ? $input['interpreter'] : null;
-		    $input['interpreter_cassation'] = (isset($input['interpreter_cassation'])) ? $input['interpreter_cassation'] : null;
-		    $input['translator'] = (isset($input['translator'])) ? $input['translator'] : null;
-		    $input['translator_cassation'] = (isset($input['translator_cassation'])) ? $input['translator_cassation'] : null;
+		    // Sets to zero the possibly unchecked attributes.    
+		    $input['interpreter'] = (isset($input['interpreter'])) ? $input['interpreter'] : 0;
+		    $input['interpreter_cassation'] = (isset($input['interpreter_cassation'])) ? $input['interpreter_cassation'] : 0;
+		    $input['translator'] = (isset($input['translator'])) ? $input['translator'] : 0;
+		    $input['translator_cassation'] = (isset($input['translator_cassation'])) ? $input['translator_cassation'] : 0;
 
 		    $item->update($input);
 		}

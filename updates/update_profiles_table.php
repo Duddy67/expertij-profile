@@ -15,7 +15,7 @@ class UpdateProfilesTable extends Migration
             $table->string('birth_location', 30)->nullable()->after('birth_date');
             $table->char('citizenship', 2)->nullable()->after('birth_location');
             $table->string('phone', 15)->nullable()->after('country');
-            $table->boolean('honorary_member')->nullable()->after('phone');
+            $table->boolean('honorary_member')->default(0)->after('phone');
         });
     }
 

@@ -21,7 +21,7 @@ class Profile extends Model
     /**
      * @var array Guarded fields
      */
-    protected $guarded = ['id', 'user_id', 'created_at', 'updated_at', 'honorary_member'];
+    protected $guarded = ['id', 'user_id', 'created_at', 'updated_at'];
 
     /**
      * @var array Fillable fields
@@ -90,22 +90,11 @@ class Profile extends Model
 	    return $user->profile;
 	}
 
-	$profile = new static;
+        $profile = Profile::create($data['profile']);
 	$profile->user = $user;
-	$input = $data['profile'];
-
-	// Checks for honorary members (only available in the membership registration context).
-	if (\Session::has('registration_context') && \Session::get('registration_context') == 'membership' && isset($data['profile']['honorary_member'])) {
-	    $profile->honorary_member = 1;
-	    // Removes the field from the data or an exception will be thrown while updating.
-	    $input = Arr::except($data['profile'], ['honorary_member']);
-	}
 
 	$profile->save();
 	$user->profile = $profile;
-
-	// Updates the newly created profile with the corresponding data.
-	$profile->update($input);
 
 	// Honorary members don't have licences.
 	if ($profile->honorary_member) {
