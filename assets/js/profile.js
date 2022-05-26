@@ -18,6 +18,7 @@
       $('#update-data, #replace-photo, button[id^="replace-file_"]').click(function() { $.fn.setTask($(this)); });
 
       $('#register').click(function(e) { $.fn.checkCheckboxes(e); });
+
       //
       $('.previous-next-arrows').click(function(event) {
           event.preventDefault();
@@ -67,6 +68,11 @@
   }
 
   $.fn.checkCheckboxes = function(e) {
+
+      if ($('#honorary-member').is(':checked')) {
+          return;
+      }
+
       const checkboxes = ['inputCodeOfEthics', 'inputStatuses', 'inputInternalRules'];
       // Reset the color of the checkbox labels.
       $.each(checkboxes, function(index, checkbox) {

@@ -11,7 +11,7 @@ class CreateProfilesTable extends Migration
         Schema::create('codalia_profile_profiles', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->integer('user_id')->unsigned()->index();
+            $table->integer('user_id')->unsigned()->index()->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('street')->nullable();
