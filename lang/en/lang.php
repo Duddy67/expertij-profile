@@ -53,6 +53,7 @@ return [
 	'already_registered' => 'Already registered ?',
 	'enter_your' => 'Enter your ',
 	'stay_logged_in' => 'Stay logged in',
+	'forgotten_password' => 'Password forgotten ?',
 	'submit_registration' => 'xxx',
     ],
     'message' => [

@@ -9,6 +9,8 @@
 	      {% partial __SELF__ ~ '::signin' %}
 	      <br />
 	      <a href="{{ "#{url('/')}/register" }}">{{ texts['action.not_registered_yet'] }}</a>
+	      <br />
+              <a href="{{ "#{url('/')}/forgotten-password" }}">{{ texts['action.forgotten_password'] }}</a>
 	  </div>
 
         {% elseif template == "register" %}

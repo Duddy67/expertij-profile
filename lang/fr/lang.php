@@ -53,6 +53,7 @@ return [
 	'already_registered' => 'Déjà adhérent(e) ?',
 	'enter_your' => 'Entrez votre ',
 	'stay_logged_in' => 'Rester connecté(e)',
+	'forgotten_password' => 'Mot de passe oublié ?',
     ],
     'message' => [
 	'required_field' => 'Ce champ est requis',
