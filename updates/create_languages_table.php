@@ -12,7 +12,7 @@ class CreateLanguagesTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->integer('attestation_id')->unsigned()->index()->nullable();
-            $table->char('alpha_2', 2)->nullable();
+            $table->char('alpha_3', 3)->nullable();
             $table->boolean('interpreter')->default(0);
             $table->boolean('interpreter_cassation')->default(0);
             $table->boolean('translator')->default(0);

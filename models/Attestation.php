@@ -85,7 +85,7 @@ class Attestation extends Model
         $ids = $this->languages->pluck('id')->toArray();
 
         foreach ($languages as $language) {
-	    if (!empty($language['alpha_2'])) {
+	    if (!empty($language['alpha_3'])) {
 	        // Searches for an existing language item in the collection.
 		$item = $this->languages->where('id', $language['_id'])->first();
 		// Removes data which is not part of the Language model attributes.

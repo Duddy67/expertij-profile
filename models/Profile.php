@@ -131,7 +131,7 @@ class Profile extends Model
 	    $rules['licences.*.since'] = 'required';
 	    $rules['licences.*.appeal_court_id'] = 'required_if:licences.*.type,expert';
 	    $rules['licences.*.court_id'] = 'required_if:licences.*.type,ceseda';
-	    $rules['licences.*.attestations.*.languages.*.alpha_2'] = 'required';
+	    $rules['licences.*.attestations.*.languages.*.alpha_3'] = 'required';
 	}
 
 	return $rules;
@@ -196,7 +196,7 @@ class Profile extends Model
 
     public static function getLanguages()
     {
-	return Db::table('codalia_profile_language_list')->get()->pluck('fr')->toArray();
+	return Db::table('codalia_profile_language_list')->get()->pluck('fr_3')->toArray();
     }
 
     public static function getCitizenships()
