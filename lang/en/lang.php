@@ -485,7 +485,14 @@ return [
         'yor' => 'Yoruba',
         'zha' => 'Zhuang',
         'zho' => 'Chinois',
-        'zul' => 'Zoulou'
+        'zul' => 'Zoulou',
+        'cmn' => 'Mandarin',
+        'yue' => 'Cantonais',
+        'nan' => 'Minnan',
+        'wuu' => 'Wu',
+        'arz' => 'Arabe égyptien',
+        'bho' => 'Bhodjpouri',
+        'phi' => 'Philippin',
     ],
     'extra' => [
 	'foo' => 'xxx',
