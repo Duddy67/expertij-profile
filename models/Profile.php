@@ -196,12 +196,12 @@ class Profile extends Model
 
     public static function getLanguages()
     {
-	return Db::table('codalia_profile_language_list')->get()->pluck('fr_3')->toArray();
+	return Db::table('codalia_profile_language_list')->where('published', 1)->orderBy('fr')->get()->pluck('alpha_3')->toArray();
     }
 
     public static function getCitizenships()
     {
-	return Db::table('codalia_profile_country_list')->get()->pluck('fr')->toArray();
+	return Db::table('codalia_profile_citizenship_list')->where('published', 1)->orderBy('fr')->get()->pluck('alpha_3')->toArray();
     }
 
     public static function getYears()

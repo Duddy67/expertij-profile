@@ -4,14 +4,13 @@ use Schema;
 use October\Rain\Database\Schema\Blueprint;
 use October\Rain\Database\Updates\Migration;
 
-class CreateLanguageListTable extends Migration
+class CreateCountryListTable extends Migration
 {
     public function up()
     {
-        Schema::create('codalia_profile_language_list', function (Blueprint $table) {
+        Schema::create('codalia_profile_country_list', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->char('alpha_2', 2)->nullable();
             $table->char('alpha_3', 3)->nullable();
             $table->boolean('published')->nullable();
             $table->string('fr')->nullable();
@@ -20,6 +19,6 @@ class CreateLanguageListTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('codalia_profile_language_list');
+        Schema::dropIfExists('codalia_profile_country_list');
     }
 }

@@ -88,8 +88,8 @@
 		    <label for="inputCitizenship">{{ texts['profile.citizenship'] }}</label>
 		    <select name="profile[citizenship]" class="form-control" id="inputCitizenship">
 			<option value="">{{ texts['action.select'] }}</option>
-			{% for alpha_2, text in citizenships %}
-			    <option value="{{ alpha_2 }}" {{ (profile.citizenship == alpha_2) ? 'selected' : '' }}>{{ text }}</option>
+			{% for alpha_3, text in citizenships %}
+			    <option value="{{ alpha_3 }}" {{ (profile.citizenship == alpha_3) ? 'selected' : '' }}>{{ text }}</option>
 			{% endfor %}
 		    </select>
 		</div>

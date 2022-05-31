@@ -17,7 +17,7 @@ class CreateCountryListTable extends Migration
             $table->char('continent_code', 2)->nullable();
             $table->boolean('citizenship')->nullable();
             $table->boolean('published')->nullable();
-            $table->char('fr', 3)->nullable();
+            $table->string('fr')->nullable();
         });
     }
 
