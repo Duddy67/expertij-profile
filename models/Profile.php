@@ -131,6 +131,7 @@ class Profile extends Model
 	    $rules['licences.*.since'] = 'required';
 	    $rules['licences.*.appeal_court_id'] = 'required_if:licences.*.type,expert';
 	    $rules['licences.*.court_id'] = 'required_if:licences.*.type,ceseda';
+            $rules['licences.*.attestations.*.expiry_date'] = 'required|date';
 	    $rules['licences.*.attestations.*.languages.*.alpha_3'] = 'required';
 	}
 
