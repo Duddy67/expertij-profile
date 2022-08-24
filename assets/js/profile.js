@@ -247,8 +247,17 @@
 	  let hiddenInputId = $(this).attr('id');
 	  hiddenInputId = hiddenInputId.substring(3);
 
+          let frDate = {
+              previousMonth : 'Mois Précédent',
+              nextMonth     : 'Mois Suivant',
+              months        : ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Decembre'],
+              weekdays      : ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
+              weekdaysShort : ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']
+          };
+
 	  let picker = new Pikaday({
 	    field: $(this)[0],
+            i18n: frDate,
             yearRange: 90,
 	    onSelect: date => {
 		// Format the selected date in MySQL date, (ie: yyyy-m-d).

@@ -122,7 +122,7 @@ class Profile extends Model
 	    'profile.phone' => 'sometimes|required',
 	    'profile.citizenship' => 'sometimes|required',
 	    'profile.birth_date' => 'sometimes|required|date',
-	    'profile.birth_name' => 'sometimes|required|between:2,255',
+	    //'profile.birth_name' => 'sometimes|required|between:2,255',
 	    'profile.birth_location' => 'sometimes|required|between:2,255',
 	];
 
