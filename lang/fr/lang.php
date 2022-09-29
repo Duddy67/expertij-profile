@@ -13,6 +13,7 @@ return [
 	'birth_location' => 'Lieu de naissance',
 	'citizenship' => 'Nationalité',
 	'street' => 'Adresse',
+	'additional_address' => 'Adresse complémentaire',
 	'city' => 'Ville',
 	'postcode' => 'Code postal',
 	'country' => 'Pays',

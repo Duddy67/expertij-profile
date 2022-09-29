@@ -13,6 +13,7 @@ return [
 	'birth_location' => 'Birth Location',
 	'citizenship' => 'Citizenship',
 	'street' => 'Street',
+	'additional_address' => 'Additional address',
 	'city' => 'City',
 	'postcode' => 'Postcode',
 	'country' => 'Country',

@@ -131,6 +131,11 @@
 	    </div>
 
 	    <div class="form-group col-sm-6">
+		<label for="inputAdditionalAddress">{{ texts['profile.additional_address'] }}</label>
+		<input type="text" name="profile[additional_address]" class="form-control" id="inputAdditionalAddress" value="{{ profile.additional_address}}">
+	    </div>
+
+	    <div class="form-group col-sm-6">
 		<label for="inputPostcode">{{ texts['profile.postcode'] }}</label>
 		<input type="text" name="profile[postcode]" class="form-control" id="inputPostcode" value="{{ profile.postcode }}">
 	    </div>
